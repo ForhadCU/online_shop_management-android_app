@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:background="@drawable/cross_shape"
+    android:padding="5dp"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/imgBtn_scannerDialogCross"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/cross_shape"
+        android:scaleType="centerInside"
+        android:padding="10dp"
+        android:src="@drawable/cross_2"
+        />
+
+</RelativeLayout>
