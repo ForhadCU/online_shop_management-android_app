@@ -115,6 +115,28 @@
 
 
             </RelativeLayout>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="80dp"
+            android:layout_marginRight="25dp"
+            >
+            <ImageButton
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:id="@+id/imgBtn_prodcutSearch"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="#00FFFFFF"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/product_search2"
+                android:layout_gravity="end|center_vertical"
+                android:scaleType="centerInside"
+
+                />
 
         </FrameLayout>
     </FrameLayout>

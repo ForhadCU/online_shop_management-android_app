@@ -82,8 +82,8 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private TextView textView_subTotal, textView_total;
     private ViewGroup contentFrame;
     private Button btn_nxtProductList;
-    private ImageButton imageButtonFlashOn, imageButtonFlashOff, imageButtonFocusOn, imageButtonFocusOff, imageButtonPersonSearch;
-    private Dialog dialog;
+    private ImageButton imageButtonFlashOn, imageButtonFlashOff, imageButtonFocusOn, imageButtonFocusOff, imageButtonPersonSearch, imageButtonProductSearch;
+    private Dialog dialog, dialogAddCustomer, dialogProductSearch;
     private TextView textViewCustomerName;
     private RelativeLayout relativeLayoutBottomSheetComponents;
     private LinearLayout linearLayoutBottomSheetCustomerName;
@@ -93,6 +93,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private List<InvoiceModel> invoiceModelList;
     private List<InvoiceItem> invoiceItemList;
     private ArrayList<String> customerArrayList;
+    private ArrayList<String> productArrayList;
 
     private ZXingScannerView mScannerView;
     private boolean mFlash;
@@ -142,12 +143,14 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         imageButtonFocusOn = findViewById(R.id.imgBtn_focus_on);
         imageButtonFocusOff = findViewById(R.id.imgBtn_focus_off);
         imageButtonPersonSearch = findViewById(R.id.imgBtn_personSearch);
+        imageButtonProductSearch = findViewById(R.id.imgBtn_prodcutSearch);
         textViewCustomerName = findViewById(R.id.tv_bottomSheetCustomerName);
         relativeLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
         linearLayoutBottomSheetCustomerName = findViewById(R.id.l_bottomSheet_customerName);
         textViewCartBadge = findViewById(R.id.tv_cartBadge);
 
         userList();
+        productList();
         recyclerViewHandler();
         setupFormats();
         contentFrame.addView(mScannerView);
@@ -157,6 +160,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         imageButtonFlashOn.setOnClickListener(this);
         imageButtonFlashOff.setOnClickListener(this);
         imageButtonPersonSearch.setOnClickListener(this);
+        imageButtonProductSearch.setOnClickListener(this);
 //        totalBillHandler();
     }
 
@@ -178,6 +182,25 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         customerArrayList.add("Customer 8");
         customerArrayList.add("Customer 9");
         customerArrayList.add("Customer 10");
+    }
+    private void productList() {
+        productArrayList = new ArrayList<>();
+        productArrayList.add("Product 1");
+        productArrayList.add("Product 2");
+        productArrayList.add("Product 3");
+        productArrayList.add("Product 4");
+        productArrayList.add("Product 5");
+        productArrayList.add("Product 6");
+        productArrayList.add("Product 7");
+        productArrayList.add("Product 8");
+        productArrayList.add("Product 9");
+        productArrayList.add("Product 10");
+        productArrayList.add("Product 11");
+        productArrayList.add("Product 12");
+        productArrayList.add("Product 13");
+        productArrayList.add("Product 14");
+        productArrayList.add("Product 15");
+        productArrayList.add("Product 16");
     }
 
     public void totalBillHandler() {
@@ -466,6 +489,35 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         }
     }
 
+    private void mJSON_parser2(String product_name)
+    {
+        try {
+            JSONObject jsonObject = new JSONObject(Array_JSON.product_details_JSON);
+            JSONObject data = jsonObject.getJSONObject("data");
+
+            String productID = data.getString("product_id");
+            String customer = data.getString("customer");
+//            String product_name = data.getString("product_name");
+            String product_price = data.getString("product_price");
+//            String product_imgUrl = data.getString("product_img_url");
+
+            showMessageDialog2(productID, customer, product_name, product_price);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showMessageDialog2(String productID, String customer, String product_name, String product_price) {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(productID, customer, product_name, product_price);
+        scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");
+    }
+
+
     /*    public void showMessageDialog(String message) {
             DialogFragment fragment = MessageDialogFragment.newInstance("Scan Results", message, this);
             fragment.show(getSupportFragmentManager(), "scan_results");
@@ -661,8 +713,50 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
 
+
                 EditText editText = dialog.findViewById(R.id.edtTxt_searchableText);
                 ListView listView = dialog.findViewById(R.id.lv_searchableCustomerView);
+                ImageButton imageButtonAddCustomer = dialog.findViewById(R.id.imgBtn_addCustomer);
+
+                imageButtonAddCustomer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        dialogAddCustomer = new Dialog(FullScannerActivity.this);
+                        dialogAddCustomer.setContentView(R.layout.dialog_add_customer_layout);
+
+                        WindowManager.LayoutParams wmlp = dialogAddCustomer.getWindow().getAttributes();
+                        wmlp.gravity = Gravity.TOP | Gravity.LEFT;
+                        wmlp.x = 30;
+                        wmlp.y = 100;
+
+                        dialogAddCustomer.getWindow().setLayout(650, 500);
+                        dialogAddCustomer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialogAddCustomer.show();
+//                        dialogAddCustomer.setCancelable(false);
+
+                        EditText editTextAddCustomer = dialogAddCustomer.findViewById(R.id.edtTxt_customerName);
+                        Button buttonAddCustomer = dialogAddCustomer.findViewById(R.id.btn_addCustomer);
+
+                        buttonAddCustomer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String customerName = editTextAddCustomer.getText().toString();
+                                if (!TextUtils.isEmpty(customerName))
+                                {
+                                    textViewCustomerName.setText(customerName);
+                                    customerArrayList.add(customerName);
+                                    linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
+
+                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
+                                         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                                    dialogAddCustomer.dismiss();
+                                }
+                            }
+                        });
+                    }
+                });
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(FullScannerActivity.this, R.layout.lv_customer_search_list, customerArrayList);
 
@@ -695,6 +789,54 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 });
                 break;
 
+            case R.id.imgBtn_prodcutSearch:
+                dialogProductSearch = new Dialog(FullScannerActivity.this);
+                dialogProductSearch.setContentView(R.layout.dialog_product_search_layout);
+
+                WindowManager.LayoutParams wmlp1 = dialogProductSearch.getWindow().getAttributes();
+                wmlp1.gravity = Gravity.BOTTOM | Gravity.LEFT;
+                wmlp1.x = 30;
+                wmlp1.y = 230;
+
+                dialogProductSearch.getWindow().setLayout(650, 800);
+//                dialog.getWindow().setGravity(Gravity.BOTTOM);
+                dialogProductSearch.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogProductSearch.show();
+//                dialogProductSearch.setCancelable(false);
+
+                EditText editText1 = dialogProductSearch.findViewById(R.id.edtTxt_productSearch);
+                ListView listView1 = dialogProductSearch.findViewById(R.id.lv_searchableProductView);
+
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(FullScannerActivity.this, R.layout.lv_customer_search_list, productArrayList);
+
+                listView1.setAdapter(adapter1);
+
+                editText1.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        //filter arrayList
+                        adapter1.getFilter().filter(s);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
+                listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String productName = adapter1.getItem(position);
+                        mJSON_parser2(productName);
+//                        Toast.makeText(FullScannerActivity.this, adapter.getItem(position), Toast.LENGTH_SHORT).show();
+                        dialogProductSearch.dismiss();
+                    }
+                });
+                break;
                 /*case R.id.btn_nxtProductList:
 
                 invoiceItemList = new ArrayList<>();

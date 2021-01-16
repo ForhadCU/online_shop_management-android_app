@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Customer List"
+        android:text="Product List"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/primary_text"
@@ -27,13 +27,13 @@
             android:layout_width="0dp"
             android:layout_weight="5"
             android:layout_height="wrap_content"
-            android:id="@+id/edtTxt_searchableText"
+            android:id="@+id/edtTxt_productSearch"
             android:hint="Search..."
             android:padding="12dp"
             android:singleLine="true"
             android:background="@android:drawable/editbox_background"
             />
-        <ImageButton
+ <!--       <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -42,7 +42,7 @@
             android:backgroundTint="@color/white"
             android:scaleType="centerCrop"
             android:layout_marginLeft="10dp"
-            />
+            />-->
 
 
     </LinearLayout>
@@ -51,7 +51,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lv_searchableCustomerView"
+        android:id="@+id/lv_searchableProductView"
         />
 
 

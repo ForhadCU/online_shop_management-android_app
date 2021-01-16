@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".TestPersistentBtmSheetActivity"></activity>
         <activity android:name=".RofiqActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".activity.RechargeActivity" />
@@ -24,8 +23,6 @@
         <activity android:name=".activity.OrderReportActivity" />
         <activity android:name=".activity.StockReportActivity" />
         <activity android:name=".activity.CardShopActivity" />
-        <activity android:name=".ShopAdminHome" />
-        <activity android:name=".LoginActivity" />
         <activity android:name=".BaseScannerActivity" />
         <activity android:name=".FullScannerActivity" />
         <activity android:name=".InvoiceActivity" />
