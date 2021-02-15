@@ -12,54 +12,53 @@
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <LinearLayout
+        android:id="@+id/l1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/l1"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
+
             <Button
+                android:id="@+id/btn1"
                 android:layout_width="25dp"
                 android:layout_height="15dp"
-                android:backgroundTint="@color/lightgray"
-                android:clickable="false"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/btn1"
-                />
+                android:backgroundTint="@color/lightgray"
+                android:clickable="false" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your Products"
-                android:textSize="16sp"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textStyle="bold"
-                android:layout_marginTop="3dp"
                 android:layout_below="@+id/btn1"
                 android:layout_centerHorizontal="true"
-                />
+                android:layout_marginTop="3dp"
+                android:text="Invoice"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
             <FrameLayout
+                android:id="@+id/l3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/l3"
-                android:clipToPadding="false"
-                android:focusable="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:padding="5dp"
-                >
+                android:clipToPadding="false"
+                android:focusable="true"
+                android:padding="5dp">
+
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_cart"
                     android:backgroundTint="@color/white"
-                    />
+                    android:src="@drawable/ic_cart" />
+
                 <TextView
                     android:id="@+id/tv_cartBadge"
                     android:layout_width="20dp"
@@ -72,35 +71,35 @@
                     android:gravity="center"
                     android:padding="3dp"
                     android:text="0"
-                    android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@android:color/white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
 
             </FrameLayout>
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/l_bottomSheet_customerName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:id="@+id/l_bottomSheet_customerName"
-            android:visibility="gone"
-            >
+            android:orientation="horizontal"
+            android:visibility="gone">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Customer Name: "
-                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat"
-                />
+                android:textStyle="bold" />
+
             <TextView
+                android:id="@+id/tv_bottomSheetCustomerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_bottomSheetCustomerName"
-                android:textAppearance="@style/TextAppearance.AppCompat"
                 android:layout_marginLeft="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat"
 
                 />
         </LinearLayout>
@@ -111,51 +110,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/l1"
-        android:layout_marginTop="12dp"
-        >
+        android:layout_marginTop="12dp">
+
         <RelativeLayout
+            android:id="@+id/l_bottomSheet_components"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/l_bottomSheet_components"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_productView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/rv_productView"
-
                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rv_productView"
-                android:layout_marginTop="35dp"
-                >
+                android:layout_marginTop="35dp">
+
                 <TextView
                     android:id="@+id/tv4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginRight="25dp"
                     android:layout_toLeftOf="@+id/tv_subTotal"
-                    android:text="Sub total: "
-                    android:textColor="@color/primary_text"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="Sub total : "
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/tv_subTotal"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="35dp"
-                    android:layout_marginRight="25dp"
-                    android:gravity="end"
-                    android:text="0.00 "
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="0.00"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/primary_text"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    />
+
 
                 <TextView
                     android:id="@+id/tv5"
@@ -164,87 +164,185 @@
                     android:layout_below="@+id/tv4"
                     android:layout_alignBaseline="@+id/edtTxt_discount"
                     android:layout_marginTop="14dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toLeftOf="@+id/tv_subTotal"
-                    android:text="Discount: "
-                    android:textColor="@color/primary_text"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/btn_discountDecrease"
+                    android:text="Discount : "
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/btn_discountDecrease"
+                    android:layout_width="35dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/tv4"
+                    android:layout_marginTop="20dp"
+                    android:layout_toLeftOf="@+id/edtTxt_discount"
+                    android:background="@drawable/decr_btn_shape"
+                    android:backgroundTint="#F44336"
+                    android:padding="2dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_minus_light" />
 
                 <EditText
                     android:id="@+id/edtTxt_discount"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/tv4"
+                    android:layout_marginTop="20dp"
+                    android:layout_toLeftOf="@+id/btn_discountIncrease"
+                    android:background="@drawable/discount_edttext_shape"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:hint="0.00"
+                    android:inputType="number"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@color/black"
+                    android:textColorHint="#C6C6C6"
+                    android:textSize="14sp" />
+
+                <ImageButton
+                    android:id="@+id/btn_discountIncrease"
+                    android:layout_width="35dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/tv4"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@+id/tv_discountOverAll"
+                    android:background="@drawable/incr_btn_shape"
+                    android:backgroundTint="#2BCA31"
+                    android:padding="2dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_add_light" />
+
+                <RadioGroup
+                    android:id="@+id/radioGroupDiscount"
+                    android:layout_width="105dp"
+                    android:layout_height="25dp"
+                    android:layout_below="@+id/edtTxt_discount"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_toLeftOf="@+id/tv_discountOverAll"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_tk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:checked="true"
+                        android:onClick="onRadioBtnDiscount"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:text="Tk"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:typeface="serif" />
+
+                    <RadioButton
+                        android:id="@+id/radioBtn_percent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:onClick="onRadioBtnDiscount"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:text="%"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:typeface="serif" />
+                </RadioGroup>
+
+
+                <TextView
+                    android:id="@+id/tv_discountOverAll"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tv4"
+                    android:layout_alignBaseline="@+id/edtTxt_discount"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="14dp"
-                    android:layout_marginRight="25dp"
-                    android:backgroundTint="@color/secondary_text"
-                    android:gravity="end"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:paddingRight="5dp"
-                    android:textColor="@color/primary_text"
-                    android:textColorHint="#C6C6C6" />
+                    android:textSize="16sp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:text="0.00"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textStyle="bold"
+                    android:textColor="@color/black" />
+
 
                 <TextView
                     android:id="@+id/tv6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv5"
+                    android:layout_below="@+id/radioGroupDiscount"
                     android:layout_alignBaseline="@+id/edtTxt_deduction"
                     android:layout_marginTop="14dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toLeftOf="@+id/tv_subTotal"
-                    android:text="Deduction: "
-                    android:textColor="@color/primary_text"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/edtTxt_deduction"
+                    android:text="Deduction : "
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/edtTxt_deduction"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv5"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/radioGroupDiscount"
                     android:layout_marginTop="14dp"
-                    android:layout_marginRight="25dp"
-                    android:backgroundTint="@color/secondary_text"
-                    android:gravity="end"
-                    android:hint="0"
+                    android:background="@drawable/discount_edttext_shape"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_toRightOf="@+id/tv5"
+                    android:hint="0.00"
+                    android:textSize="14sp"
                     android:inputType="number"
-                    android:paddingRight="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="3dp"
                     android:textColor="@color/primary_text"
                     android:textColorHint="#C6C6C6" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:id="@+id/view1"
+                    android:background="@color/lightgray"
+                    android:layout_below="@+id/edtTxt_deduction"
+                    android:layout_marginTop="10dp"
+                    />
+
 
                 <TextView
                     android:id="@+id/tv7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv6"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toLeftOf="@+id/tv_subTotal"
-                    android:text="Total: "
+                    android:layout_below="@+id/view1"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_toLeftOf="@+id/tv_Total"
+                    android:text="Total : "
+                    android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/primary_text"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_Total"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv6"
+                    android:layout_below="@+id/view1"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="14dp"
-                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="25dp"
                     android:gravity="end"
-                    android:text="0.00 "
+                    android:text="0.00"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/primary_text"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
 
                     />
 
@@ -261,7 +359,6 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="10dp"
                         android:backgroundTint="#F44336"
                         android:text="Cancel"
                         android:textAllCaps="false"
@@ -274,7 +371,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
+                        android:backgroundTint="#2196F3"
                         android:text="Save"
                         android:textAllCaps="false"
                         android:textColor="#ffff"
@@ -282,13 +379,8 @@
 
                 </RelativeLayout>
             </RelativeLayout>
-
-
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-
-
-
 
 
 </RelativeLayout>

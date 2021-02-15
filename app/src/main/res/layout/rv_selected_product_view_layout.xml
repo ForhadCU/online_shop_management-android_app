@@ -44,7 +44,6 @@
         android:background="@color/white"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="25dp"
         android:layout_marginTop="10dp"
         android:scaleType="fitCenter"
         />
@@ -124,7 +123,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginRight="10dp"
         android:fontFamily="serif"
         android:gravity="center_vertical|center_horizontal"
         android:text="70000.00"

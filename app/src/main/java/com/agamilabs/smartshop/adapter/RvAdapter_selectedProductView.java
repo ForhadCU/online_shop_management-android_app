@@ -11,22 +11,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.FullScannerActivity;
-import com.agamilabs.smartshop.Interfaces.IcallBackTest;
-import com.agamilabs.smartshop.model.InvoiceItem;
-import com.agamilabs.smartshop.model.InvoiceModel;
+import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
 import com.agamilabs.smartshop.R;
-import com.google.android.gms.common.internal.StringResourceValueReader;
-
+import com.agamilabs.smartshop.model.InvoiceItem;
 
 import java.util.List;
 
 public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapter_selectedProductView.MyViewHolder> {
     private List<InvoiceItem> invoiceItemList;
     private Context context;
-    private IcallBackTest icallBackTest;
+    private ICallBackFromFullScannerActivity icallBackTest;
 
-    public RvAdapter_selectedProductView(List<InvoiceItem> invoiceItemList, Context context, IcallBackTest icallBackTest) {
+    public RvAdapter_selectedProductView(List<InvoiceItem> invoiceItemList, Context context, ICallBackFromFullScannerActivity icallBackTest) {
         this.invoiceItemList = invoiceItemList;
         this.context = context;
         this.icallBackTest = icallBackTest;
@@ -50,8 +46,6 @@ public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapte
         holder.tv_productQuantity.setText(String.valueOf((int) current.getQty()));
         holder.tv_productPrice.setText("\u09F3" + String.format("%.2f", current.getUnit_price()));
         holder.tv_productTotalPrice.setText("\u09F3" + String.format("%.2f", current.getItem_bill()));
-
-
     }
 
     @Override
@@ -105,7 +99,7 @@ public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapte
                         tv_productQuantity.setText(String.valueOf((int) qty));
                         tv_productTotalPrice.setText("\u09F3" + String.format("%.2f", itemBillCommon));
                     }
-                    icallBackTest.mCallBackTest();
+                    icallBackTest.mCallbackQty();
                     break;
 
                 case R.id.btn_rvProductView_quantityIncrease:
@@ -117,7 +111,7 @@ public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapte
                         current.setQty(qty2);
                         tv_productQuantity.setText(String.valueOf((int) qty2));
                         tv_productTotalPrice.setText("\u09F3" + String.format("%.2f", itemBillCommon));
-                        icallBackTest.mCallBackTest();
+                        icallBackTest.mCallbackQty();
                     }
                     break;
 
@@ -125,7 +119,7 @@ public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapte
                     invoiceItemList.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                     notifyItemRangeChanged(getAdapterPosition(), invoiceItemList.size());
-                    icallBackTest.mCallBackTest();
+                    icallBackTest.mCallbackQty();
                     break;
             }
         }

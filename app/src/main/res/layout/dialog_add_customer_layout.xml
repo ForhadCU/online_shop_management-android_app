@@ -21,67 +21,92 @@
         android:background="@color/secondary_text"
         android:layout_marginTop="5dp"
         />
-    <TextView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="5dp"
-        />
+        android:layout_marginTop="5dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="25dp"
 
-    <EditText
-        android:textColorHint="@color/secondary_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edtTxt_customerName"
-        android:hint="Enter customer name"
-        android:padding="12dp"
-        android:singleLine="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="5dp"
-        android:background="@android:drawable/editbox_background"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Phone"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="5dp"
-        />
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:layout_marginLeft="5dp"
+                />
 
-    <EditText
-        android:textColorHint="@color/secondary_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edtTxt_customerPhoneNum"
-        android:hint="Enter phone number"
-        android:padding="12dp"
-        android:singleLine="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="5dp"
-        android:background="@android:drawable/editbox_background"
-        android:inputType="number"
-        />
+            <EditText
+                android:textColorHint="@color/secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edtTxt_customerName"
+                android:hint="Enter customer name"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:background="@android:drawable/editbox_background"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Phone"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="5dp"
+                />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:id="@+id/btn_addCustomer"
-        android:text="Add"
-        android:textStyle="bold"
-        android:backgroundTint="#2BCA31"
-        android:layout_gravity="end"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="10dp"
-        />
+            <EditText
+                android:textColorHint="@color/secondary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edtTxt_customerPhoneNum"
+                android:hint="Enter phone number"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:background="@android:drawable/editbox_background"
+                android:inputType="number"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/btn_addCustomer"
+                android:text="Add"
+                android:textStyle="bold"
+                android:backgroundTint="#2BCA31"
+                android:layout_gravity="end"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+                />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressbarAddCustomer"
+                android:layout_gravity="end"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
 
 
 </LinearLayout>

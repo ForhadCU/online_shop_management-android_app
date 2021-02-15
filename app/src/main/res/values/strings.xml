@@ -29,5 +29,16 @@
     <bool name="cameraPreviewShouldFillView">true</bool>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="customer_list">Select Customer</string>
+
+
+
+    <string-array name="reorder_point_array">
+        <item>All</item>
+        <item>Reorder Level Red</item>
+        <item>Reorder Level Yellow</item>
+        <item>Reorder Level Green</item>
+
+    </string-array>
 
 </resources>

@@ -7,7 +7,7 @@ public class Array_JSON {
             "    \"product_id\": \"D7F5S3\",\n" +
             "    \"customer\": \"Forhad\",\n" +
             "    \"date\": \"23/11/2020\",\n" +
-            "    \"product_name\": \"Converse High Ankie white Sneakers\",\n" +
+            "    \"product_name\": \"Converse High Ankie white\",\n" +
             "    \"product_quantity\": \"1\",\n" +
             "    \"product_price\": \"300.00\",\n" +
             "    \"product_discount\": \"0\",\n" +

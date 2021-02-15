@@ -23,10 +23,12 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="lightgray">#DFE3E2</color>
+    <color name="darkblue">#001FCD</color>
 
 
 
-<!--    color outdoor-->
+
+    <!--    color outdoor-->
     <color name="colorSecondary">#880e4f</color>
     <color name="colorSecondaryLight">#bc477b</color>
     <color name="colorSecondaryDark">#560027</color>

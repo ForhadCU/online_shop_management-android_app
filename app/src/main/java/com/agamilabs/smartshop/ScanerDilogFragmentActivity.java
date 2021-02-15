@@ -59,7 +59,7 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
     public ScanerDilogFragmentActivity() {
     }
 
-    ScanerDilogFragmentActivity(String productID, String customer, String product_name, String product_price) {
+    ScanerDilogFragmentActivity(String productID, String product_name, String product_price) {
         this.customer = customer;
         this.product_name = product_name;
         this.product_price = product_price;
@@ -97,7 +97,7 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
 
 //        discountHandler();
 
-        setCancelable(true);
+        setCancelable(false);
         return view;
 
     }

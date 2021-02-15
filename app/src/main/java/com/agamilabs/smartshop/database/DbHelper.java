@@ -130,7 +130,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String status = cursor.getString(cursor.getColumnIndex(dStatus));
                 String action = cursor.getString(cursor.getColumnIndex(dAction));
 
-                storeData.add(new InvoiceModel(invoiceNo, customerName, date, dueDate, Double.parseDouble(discount2), Double.parseDouble(deduction), Double.parseDouble(amount)));
+//                storeData.add(new InvoiceModel(invoiceNo, customerName, date, dueDate, Double.parseDouble(discount2), Double.parseDouble(deduction), Double.parseDouble(amount)));
             } while (cursor.moveToNext());
         }
         cursor.close();

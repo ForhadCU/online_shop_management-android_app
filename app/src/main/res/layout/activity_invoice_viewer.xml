@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:background="@color/lightgray"
     tools:context=".InvoiceViewerActivity">
 
 
@@ -16,9 +14,15 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="25dp"
-        android:background="#E6E6E6"
         android:orientation="vertical">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_invoiceCardView"
+            />
+
+<!--
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -157,11 +161,13 @@
             </LinearLayout>
 
         </HorizontalScrollView>
+-->
 
 
     </LinearLayout>
 
 
+<!--
     <LinearLayout
         android:id="@+id/l2"
         android:layout_width="match_parent"
@@ -201,5 +207,6 @@
             android:textAllCaps="false" />
 
     </LinearLayout>
+-->
 
 </RelativeLayout>

@@ -48,10 +48,17 @@
     </LinearLayout>
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lv_searchableProductView"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lv_filteredProductView"
+        />
+    <include layout="@layout/item_loading"
         />
 
 

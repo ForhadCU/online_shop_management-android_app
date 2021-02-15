@@ -1,3 +1,4 @@
+/*
 package com.agamilabs.smartshop;
 
 import androidx.annotation.NonNull;
@@ -61,7 +62,7 @@ public class InvoiceActivity extends AppCompatActivity implements View.OnClickLi
     private Dialog dialog;
 
     private RvAdapter_invoiceItemList adapterInvoiceItemList;
-    private List<InvoiceItem> invoiceItemList;
+    private ArrayList<InvoiceItem> invoiceItemList;
     private ArrayList<String> customerArrayList;
 
     @Override
@@ -241,7 +242,7 @@ public class InvoiceActivity extends AppCompatActivity implements View.OnClickLi
         Bundle args = intent.getBundleExtra("BUNDLE");
 
         invoiceItemList = (ArrayList<InvoiceItem>) args.getSerializable("selectedProductList");
-        adapterInvoiceItemList = new RvAdapter_invoiceItemList(this, invoiceItemList);
+        adapterInvoiceItemList = new RvAdapter_invoiceItemList(invoiceItemList);
         rv.setAdapter(adapterInvoiceItemList);
         adapterInvoiceItemList.notifyDataSetChanged();
     }
@@ -252,10 +253,12 @@ public class InvoiceActivity extends AppCompatActivity implements View.OnClickLi
         {
             case R.id.btn_invoiceCancel:
 //                dbHelper.mDeleteProductList();
+*/
 /*                Intent intent = new Intent(this, FullScannerActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                this.finish();*/
+                this.finish();*//*
+
                 Toast.makeText(this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -341,11 +344,11 @@ public class InvoiceActivity extends AppCompatActivity implements View.OnClickLi
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Intent rfActivity = new Intent(InvoiceActivity.this, RofiqActivity.class);
-                rfActivity.putExtra("invoiceResponse", response);
-                rfActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(rfActivity);
-                finish();
+//                Intent rfActivity = new Intent(InvoiceActivity.this, RofiqActivity.class);
+//                rfActivity.putExtra("invoiceResponse", response);
+//                rfActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(rfActivity);
+//                finish();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -379,4 +382,4 @@ public class InvoiceActivity extends AppCompatActivity implements View.OnClickLi
 
         return super.onOptionsItemSelected(item);
     }
-}
+}*/

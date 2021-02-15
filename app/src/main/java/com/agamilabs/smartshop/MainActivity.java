@@ -36,12 +36,9 @@ public class MainActivity extends AppCompatActivity  {
         startActivity(new Intent(this, FullScannerActivity.class));
     }
 
-/*    public void launchLogin(View v){
+    public void launchLogin(View v){
         startActivity(new Intent(this, LoginActivity.class));
     }
 
 
-    public void LaunchBottomSheetActivity(View view) {
-        startActivity(new Intent(this, TestPersistentBtmSheetActivity.class));
-    }*/
 }
