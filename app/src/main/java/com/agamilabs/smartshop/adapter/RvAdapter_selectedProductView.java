@@ -44,7 +44,7 @@ public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapte
 
         holder.tv_productName.setText(current.getItem_name());
         holder.tv_productQuantity.setText(String.valueOf((int) current.getQty()));
-        holder.tv_productPrice.setText("\u09F3" + String.format("%.2f", current.getUnit_price()));
+        holder.tv_productPrice.setText("\u09F3" + String.format("%.2f", current.getUnitprice()));
         holder.tv_productTotalPrice.setText("\u09F3" + String.format("%.2f", current.getItem_bill()));
     }
 
@@ -84,7 +84,7 @@ public class RvAdapter_selectedProductView extends RecyclerView.Adapter<RvAdapte
         public void onClick(View v) {
             InvoiceItem current = invoiceItemList.get(getAdapterPosition());
 
-            double unitPrice = current.getUnit_price();
+            double unitPrice = current.getUnitprice();
             double itemBill = current.getItem_bill();
             double itemQty = current.getQty();
             double itemDiscount = (unitPrice * itemQty) - itemBill;

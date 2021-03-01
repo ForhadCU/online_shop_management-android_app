@@ -43,10 +43,11 @@
         <activity android:name=".activity.CardShopActivity" />
         <activity android:name=".ShopAdminHome" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".InvoiceActivity"/>
+<!--        <activity android:name=".InvoiceActivity"/>-->
         <activity android:name=".InvoiceViewerActivity"/>
         <activity android:name=".BaseScannerActivity" />
         <activity android:name=".FullScannerActivity" />
+        <activity android:name=".FullScannerActivityPurchase" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

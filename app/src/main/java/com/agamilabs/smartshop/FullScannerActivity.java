@@ -2,7 +2,6 @@ package com.agamilabs.smartshop;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -44,7 +43,6 @@ import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
 import com.agamilabs.smartshop.adapter.RvAdapter_selectedProductView;
-import com.agamilabs.smartshop.constants.Array_JSON;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.database.DbHelper;
 import com.agamilabs.smartshop.model.Customer;
@@ -61,8 +59,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -107,6 +106,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private InvoiceModel invoiceModel;
     private RvAdapterPersonSearch rvAdapterPersonSearch;
     private RvAdapterProductSearch rvAdapterProductSearch;
+
     private Customer customer;
     private Products products;
 
@@ -131,6 +131,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private String url_2 = "http://pharmacy.egkroy.com/app-module/php/get_org_items_by_name.php";
     private String url_3 = " http://pharmacy.egkroy.com/app-module/php/get_filtered_clients.php";
     private String url_4 = "http://pharmacy.egkroy.com/app-module/php/insert_a_customer.php";
+    private String url_5 = " http://pharmacy.egkroy.com/app-module/php/insert_a_saleinvoice.php";
     private static final String API_KEY = "apikey";
     private static final String PRODUCT_SEARCH_KEY = "search_key";
     private static final String PRODUCT_PAGE_NO = "page";
@@ -142,6 +143,8 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private static final String CUSTOMER_SEARCH_KEY = "searchkey";
 
     private String apikey = "ewfw?f23u#rfg3872r23=jrfg87wefc";
+    private String customer_no;
+    private String currentDate;
 
 //    private int pageno = 1;
 
@@ -165,6 +168,12 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         setContentView(R.layout.activity_simple_scanner);
 //        setupToolbar();
 //        Objects.requireNonNull(getSupportActionBar()).hide();
+
+        /**
+         * pick current date
+         */
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        currentDate = sdf.format(new Date());
 
         contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         bottomsSheetLayout = findViewById(R.id.bottom_sheet);
@@ -223,41 +232,6 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
 
     }
 
-/*    private void userList() {
-        userList = new ArrayList<>();
-
-        userList.add("Rofiq");
-        userList.add("Saruj");
-        userList.add("Forhad Kashem");
-        userList.add("Sifat");
-        userList.add("Rakib");
-        userList.add("Customer 6");
-        userList.add("Customer 7");
-        userList.add("Customer 8");
-        userList.add("Customer 9");
-        userList.add("Customer 10");
-    }*/
-
-/*    private void productList() {
-        productArrayList = new ArrayList<>();
-        productArrayList.add("Product 1");
-        productArrayList.add("Product 2");
-        productArrayList.add("Product 3");
-        productArrayList.add("Product 4");
-        productArrayList.add("Product 5");
-        productArrayList.add("Product 6");
-        productArrayList.add("Product 7");
-        productArrayList.add("Product 8");
-        productArrayList.add("Product 9");
-        productArrayList.add("Product 10");
-        productArrayList.add("Product 11");
-        productArrayList.add("Product 12");
-        productArrayList.add("Product 13");
-        productArrayList.add("Product 14");
-        productArrayList.add("Product 15");
-        productArrayList.add("Product 16");
-    }*/
-
     public void totalBillHandler() {
         subTotal = 0;
         textViewCartBadge.setText(String.valueOf(invoiceItemList.size()));
@@ -267,7 +241,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
             for (int i = 0; i < invoiceItemList.size(); i++) {
                 InvoiceItem current = invoiceItemList.get(i);
                 subTotal = subTotal + current.getItem_bill();
-                //            String num = String.valueOf((int)current.getItem_bill());
+                String num = String.valueOf((int) current.getItem_bill());
             }
             textViewSubtotalScannerDisplay.setText(String.format("%.2f", subTotal));
             textView_subTotal.setText(String.format("%.2f", subTotal));
@@ -528,8 +502,6 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     }
 
     private void mSendVolleyRequest(Result rawResult) {
-
-
         HashMap<String, String> map = new HashMap<>();
         map.put(API_KEY, apikey);
         map.put("sku", "10258");
@@ -537,8 +509,9 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         AppController.getAppController().getAppNetworkController().makeRequest(url_1, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                AppController.getAppController().getInAppNotifier().log("response", response);
                 try {
+//                    Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_SHORT).show();
+
                     JSONObject object = new JSONObject(response);
                     if (object.getString("error").equalsIgnoreCase("false")) {
                         progressBarSkuRequest.setVisibility(View.GONE);
@@ -547,67 +520,38 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                         String itemNo = data.getString("itemno");
                         String product_name = data.getString("itemname");
                         String productRate = data.getString("salerate");
+                        String item_id = data.getString("upc");
+                        String expirydate = data.getString("hasexpiry");
+                        String discount_percentage = data.getString("discount_rate");
+                        String unitid = data.getString("unitid");
 
-                        showMessageDialog("Contents = " + rawResult.getText() + ", Format = " + rawResult.getBarcodeFormat().toString(), itemNo, product_name, productRate);
+/* showMessageDialog("Contents = " + rawResult.getText() + ", Format = " + rawResult.getBarcodeFormat().toString(),
+                                itemNo, product_name, productRate, item_id, unitid, expirydate, discount_percentage);*/
 
-
+                        showMessageDialog(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage);
                     } else {
                         Toast.makeText(FullScannerActivity.this, "response error True", Toast.LENGTH_SHORT).show();
                     }
-
-
+                    
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(FullScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         }, map);
 
     }
 
-    private void mJSON_parser2(String product_name) {
-        try {
-            JSONObject jsonObject = new JSONObject(Array_JSON.product_details_JSON);
-            JSONObject data = jsonObject.getJSONObject("data");
-
-            String productID = data.getString("product_id");
-            String customer = data.getString("customer");
-//            String product_name = data.getString("product_name");
-            String product_price = data.getString("product_price");
-//            String product_imgUrl = data.getString("product_img_url");
-
-            showMessageDialog2(productID, customer, product_name, product_price);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showMessageDialog2(String productID, String customer, String product_name, String product_price) {
+    public void showMessageDialog(String itemNo, String item_id, String product_name, String productRate, String unitid, String expirydate, String discount_percentage) {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(productID, product_name, product_price);
-        scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");
-    }
-
-
-    /*    public void showMessageDialog(String message) {
-            DialogFragment fragment = MessageDialogFragment.newInstance("Scan Results", message, this);
-            fragment.show(getSupportFragmentManager(), "scan_results");
-        }  */
-    public void showMessageDialog(String message, String productID, String product_name, String product_price) {
-        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
-            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(productID, product_name, product_price);
+        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage);
         scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");
 
 /*        dialog_cross = new Dialog(FullScannerActivity.this);
@@ -684,9 +628,9 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
 
 
     @Override
-    public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill) {
+    public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, String item_id, String unitid, String expirydate, String discount_percentage) {
         //product save via Model
-        invoiceItemList.add(new InvoiceItem(productName, Double.parseDouble(productQuantity), Double.parseDouble(product_price), Double.parseDouble(totalBill)));
+        invoiceItemList.add(new InvoiceItem(productName, productID, item_id, expirydate, unitid, Double.parseDouble(product_price), null, discount_percentage, Double.parseDouble(productQuantity), Double.parseDouble(totalBill)));
 
         if (invoiceItemList.size() > 0) {
             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -796,6 +740,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 recyclerViewPersonSearch.setLayoutManager(new LinearLayoutManager(this));
                 ImageButton imageButtonAddCustomer = dialog.findViewById(R.id.imgBtn_addCustomer);
 
+                pageNo = 1;
                 HashMap<String, String> mapGetClients = new HashMap<>();
                 mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(pageNo));
 //                mapGetClients.put(LIMIT, String.valueOf(10));
@@ -803,6 +748,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getString("error").equalsIgnoreCase("false")) {
@@ -812,7 +758,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                 for (int i = 0; i < customerDataArray.length(); i++) {
                                     progressBar.setVisibility(View.GONE);
                                     JSONObject customerData = customerDataArray.getJSONObject(i);
-                                    customer = new Customer(customerData.getString("name"));
+                                    customer = new Customer(customerData.getString("id"), customerData.getString("name"));
                                     customerArrayList.add(customer);
                                     rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivity.this);
                                     recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);
@@ -845,7 +791,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                         if (!isLoading) {
                             if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == customerArrayList.size() - 1) {
                                 //bottom of list!
-                                customerArrayList.add(new Customer(null));
+                                customerArrayList.add(new Customer(null,null));
                                 rvAdapterPersonSearch.notifyItemInserted(customerArrayList.size());
                                 pageNo++;
                                 Toast.makeText(FullScannerActivity.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -882,24 +828,30 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                                     JSONObject jsonObject = new JSONObject(response);
                                                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                                         JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                                        for (int i = 0; i < jsonArray.length(); i++) {
-                                                            JSONObject data = jsonArray.getJSONObject(i);
-                                                            Customer customer = new Customer(data.getString("name"));
-                                                            customerArrayList.add(customer);
-                                                        }
-//                                                        rvAdapterPersonSearch.notifyDataSetChanged();
-                                                        rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivity.this);
-                                                        recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);
+                                                        if (jsonArray.length() > 0) {
+
+                                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                                JSONObject data = jsonArray.getJSONObject(i);
+                                                                Customer customer = new Customer(data.getString("id"), data.getString("name"));
+                                                                customerArrayList.add(customer);
+                                                            }
+                                                        } else
+                                                            Toast.makeText(FullScannerActivity.this, "No more data to load", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(FullScannerActivity.this, "Loaded", Toast.LENGTH_SHORT).show();
+                                                        rvAdapterPersonSearch.notifyDataSetChanged();
+                                                    /*    rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivity.this);
+                                                        recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);*/
                                                         isLoading = false;
                                                     }
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
+                                                    Toast.makeText(FullScannerActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }, new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-
+                                                Toast.makeText(FullScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
                                             }
                                         }, mapForScroll);
                                     }
@@ -949,7 +901,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                                 recyclerViewFilteredPerson.setVisibility(View.VISIBLE);
                                                 recyclerViewPersonSearch.setVisibility(View.GONE);
                                                 JSONObject customerData = customerDataArray.getJSONObject(i);
-                                                customer = new Customer(customerData.getString("name"));
+                                                customer = new Customer(customerData.getString("id"), customerData.getString("name"));
                                                 finalFilteredArray.add(customer);
                                                 RvAdapterPersonSearch adapterPersonSearch = new RvAdapterPersonSearch(finalFilteredArray, FullScannerActivity.this);
                                                 recyclerViewFilteredPerson.setAdapter(adapterPersonSearch);
@@ -985,7 +937,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                     if (!isLoading2) {
                                         if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == customerArrayList.size() - 1) {
                                             //bottom of list!
-                                            finalFilteredArray.add(new Customer(null));
+                                            finalFilteredArray.add(new Customer(null, null));
                                             rvAdapterPersonSearch.notifyItemInserted(customerArrayList.size());
                                             customerFilteredPageNo++;
                                             Toast.makeText(FullScannerActivity.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1025,7 +977,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                                                     JSONArray jsonArray = jsonObject.getJSONArray("data");
                                                                     for (int i = 0; i < jsonArray.length(); i++) {
                                                                         JSONObject data = jsonArray.getJSONObject(i);
-                                                                        Customer customer = new Customer(data.getString("name"));
+                                                                        Customer customer = new Customer(data.getString("id"), data.getString("name"));
                                                                         finalFilteredArray.add(customer);
                                                                     }
                                                                     rvAdapterPersonSearch.notifyDataSetChanged();
@@ -1053,6 +1005,11 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
 
                         } else
                             progressBar.setVisibility(View.GONE);
+
+                       /* if (s.length() == 0)
+                        {
+                            pageNo = 1;
+                        }*/
 
                     }
 
@@ -1172,7 +1129,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 recyclerViewProductSearch.setLayoutManager(new LinearLayoutManager(this));
                 recyclerViewFilteredProduct.setLayoutManager(new LinearLayoutManager(this));
 
-
+                productPageNo = 1;
                 HashMap<String, String> mapGetProducts = new HashMap<>();
                 mapGetProducts.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
                 mapGetProducts.put(LIMIT, String.valueOf(10));
@@ -1190,9 +1147,9 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                 for (int i = 0; i < customerDataArray.length(); i++) {
                                     progressBar2.setVisibility(View.GONE);
                                     JSONObject productData = customerDataArray.getJSONObject(i);
-                                    products = new Products(productData.getString("text"), productData.getString("id"));
+                                    products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
                                     productsArrayList.add(products);
-                                    rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivity.this);
+                                    rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivity.this, productPageNo);
                                     recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);
                                 }
                             }
@@ -1223,7 +1180,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                         if (!isLoading3) {
                             if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == productsArrayList.size() - 1) {
                                 //bottom of list!
-                                productsArrayList.add(new Products(null, null));
+                                productsArrayList.add(new Products(null, null, null, null, null));
                                 rvAdapterProductSearch.notifyItemInserted(productsArrayList.size());
                                 productPageNo++;
                                 Toast.makeText(FullScannerActivity.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1262,13 +1219,13 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                                                         for (int i = 0; i < jsonArray.length(); i++) {
-                                                            JSONObject data = jsonArray.getJSONObject(i);
-                                                            Products products = new Products(data.getString("text"), data.getString("id"));
+                                                            JSONObject productData = jsonArray.getJSONObject(i);
+                                                            products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
                                                             productsArrayList.add(products);
                                                         }
-//                                                        rvAdapterPersonSearch.notifyDataSetChanged();
-                                                        rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivity.this);
-                                                        recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);
+                                                        rvAdapterProductSearch.notifyDataSetChanged();
+                                                      /*  rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivity.this);
+                                                        recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);*/
                                                         isLoading3 = false;
                                                     }
                                                 } catch (JSONException e) {
@@ -1326,9 +1283,9 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                                 recyclerViewFilteredProduct.setVisibility(View.VISIBLE);
                                                 recyclerViewProductSearch.setVisibility(View.GONE);
                                                 JSONObject productData = productDataArray.getJSONObject(i);
-                                                products = new Products(productData.getString("text"), productData.getString("id"));
+                                                products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
                                                 finalFilteredArray.add(products);
-                                                RvAdapterProductSearch adapterProductSearch = new RvAdapterProductSearch(finalFilteredArray, FullScannerActivity.this);
+                                                RvAdapterProductSearch adapterProductSearch = new RvAdapterProductSearch(finalFilteredArray, FullScannerActivity.this, productPageNo);
                                                 recyclerViewFilteredProduct.setAdapter(adapterProductSearch);
 
                                             }
@@ -1362,7 +1319,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                     if (!isLoading4) {
                                         if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == productsArrayList.size() - 1) {
                                             //bottom of list!
-                                            finalFilteredArray.add(new Products(null, null));
+                                            finalFilteredArray.add(new Products(null, null, null, null, null));
                                             rvAdapterProductSearch.notifyItemInserted(finalFilteredArray.size());
                                             productFilteredPageNo++;
                                             Toast.makeText(FullScannerActivity.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1401,8 +1358,8 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                                                 if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                                                     JSONArray jsonArray = jsonObject.getJSONArray("data");
                                                                     for (int i = 0; i < jsonArray.length(); i++) {
-                                                                        JSONObject data = jsonArray.getJSONObject(i);
-                                                                        Products products = new Products(data.getString("text"), data.getString("id"));
+                                                                        JSONObject productData = jsonArray.getJSONObject(i);
+                                                                        products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
                                                                         finalFilteredArray.add(products);
                                                                     }
                                                                     rvAdapterProductSearch.notifyDataSetChanged();
@@ -1469,7 +1426,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 break;
 
             case R.id.btn_invoiceSave:
-                String customerName = textViewCustomerName.getText().toString();
+             /*   String customerName = textViewCustomerName.getText().toString();
                 if (!TextUtils.isEmpty(customerName)) {
                     invoiceModelList = new ArrayList<>();
                     invoiceModel = new InvoiceModel("1", customerName, "27 Jan 2021", "29 Jan 2021", invoiceItemList, discount, deduction, total);
@@ -1488,7 +1445,77 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                     } else
                         Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*/
+
+                String getCustomerName = textViewCustomerName.getText().toString();
+                if (!TextUtils.isEmpty(getCustomerName))
+                {
+                    JSONArray jsonArrayInvoiceItem = new JSONArray();
+                    for (int i = 0; i < invoiceItemList.size(); i++)
+                    {
+                        InvoiceItem current = invoiceItemList.get(i);
+                        JSONObject jsonObjectTemp = new JSONObject();
+                        try {
+                            jsonObjectTemp.put("itemno", current.getItemno());
+                            jsonObjectTemp.put("item_id", current.getItem_id());
+                            jsonObjectTemp.put("expirydate", current.getExpirydate());
+                            jsonObjectTemp.put("unitid", current.getUnitid());
+                            jsonObjectTemp.put("qty", current.getQty());
+                            jsonObjectTemp.put("unitprice", current.getUnitprice());
+                            jsonObjectTemp.put("taxrate", current.getTaxrate());
+                            jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        jsonArrayInvoiceItem.put(jsonObjectTemp);
+
+                    }
+                    JSONObject jsonObjectInvoiceItem = new JSONObject();
+                    try {
+                        jsonObjectInvoiceItem.put("customerno", customer_no);
+                        jsonObjectInvoiceItem.put("sdate", currentDate);
+                        jsonObjectInvoiceItem.put("duedate", currentDate);
+                        jsonObjectInvoiceItem.put("currency", "1");
+                        jsonObjectInvoiceItem.put("discount", "0");
+                        jsonObjectInvoiceItem.put("deduction", "0.00");
+                        jsonObjectInvoiceItem.put("items", jsonArrayInvoiceItem);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    HashMap<String, String > mapTemp = new HashMap<>();
+                    mapTemp.put(API_KEY, apikey);
+                    mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
+                    mapTemp.put("status", "1");
+                    AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+//                        Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_LONG).show();
+                            try {
+                                JSONObject temp = new JSONObject(response);
+
+                                if (temp.getString("error").equalsIgnoreCase("false"))
+                                {
+                                    Toast.makeText(FullScannerActivity.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(FullScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }, mapTemp);
+                } else
+                    Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
+
+
+
                 break;
 
                 /*case R.id.btn_nxtProductList:
@@ -1523,6 +1550,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         }
     }
 
+/*
     private void loadMore(ArrayList<Customer> rowsArrayList, RvAdapterPersonSearch rvAdapterPersonSearch) {
         rowsArrayList.add(null);
         Toast.makeText(FullScannerActivity.this, "in loadMore: " + String.valueOf(rowsArrayList.size()), Toast.LENGTH_SHORT).show();
@@ -1552,6 +1580,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
 
 
     }
+*/
 
     public void onRadioBtnDiscount(View view) {
         boolean checked = ((RadioButton) view).isChecked();
@@ -1640,7 +1669,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
         ArrayList<Products> filteredList = new ArrayList<>();
 //        ArrayList<ExampleItem> filteredList = new ArrayList<>();
         for (Products item : productsArrayList) {
-            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
+            if (item.getItem_name().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
             }
         }
@@ -1649,7 +1678,8 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     }
 
     @Override
-    public void customerClickHandler(String name) {
+    public void customerClickHandler(String id, String name) {
+        customer_no = id;
         linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
         textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
         textViewCustomerName.setText(name);
@@ -1659,8 +1689,24 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     }
 
     @Override
-    public void productClickHandler(String name, String id) {
-        showMessageDialog("message", id, name, "400");
+    public void productClickHandler(String name, String id, int productPageNo) {
+        HashMap<String, String> mapGetProductById = new HashMap<>();
+        mapGetProductById.put(API_KEY, apikey);
+//        mapGetProductById.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
+        AppController.getAppController().getAppNetworkController().makeRequest(url_1, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FullScannerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, mapGetProductById);
+        showMessageDialog("itemNo", "item_id", "product_name", "500", "unitid", "expirydate", "discount_percentage");
+
+
         dialogProductSearch.dismiss();
     }
 }

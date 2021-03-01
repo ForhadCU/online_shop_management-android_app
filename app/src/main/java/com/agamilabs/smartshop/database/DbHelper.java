@@ -151,7 +151,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String productQuantity = cursor.getString(cursor.getColumnIndex(dProductQuantity));
                 String totalBill = cursor.getString(cursor.getColumnIndex(dTotalBill));
 
-                storeProductDetails.add(new InvoiceItem(productName, Double.parseDouble(productQuantity), Double.parseDouble(productPrice), Double.parseDouble(totalBill)));
+//                storeProductDetails.add(new InvoiceItem(productName, Double.parseDouble(productQuantity), Double.parseDouble(productPrice), Double.parseDouble(totalBill)));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -170,7 +170,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 String price = cursor.getString(cursor.getColumnIndex(dProductPrice));
                 String qty = cursor.getString(cursor.getColumnIndex(dProductQuantity));
                 String total = cursor.getString(cursor.getColumnIndex(dTotalBill));
-                storeData.add(new InvoiceItem(name, Double.parseDouble(qty), Double.parseDouble(price), Double.parseDouble(total)));
+//                storeData.add(new InvoiceItem(name, Double.parseDouble(qty), Double.parseDouble(price), Double.parseDouble(total)));
             } while (cursor.moveToNext());
         }
         cursor.close();

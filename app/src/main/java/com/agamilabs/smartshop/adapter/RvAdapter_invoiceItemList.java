@@ -34,8 +34,8 @@ public class RvAdapter_invoiceItemList extends RecyclerView.Adapter<RvAdapter_in
         InvoiceItem current = invoiceItemList.get(position);
         holder.textViewItemSerial.setText(String.valueOf(position+1));
         holder.textView_itemName.setText(current.getItem_name());
-        holder.textView_itemPriceForCal.setText(String.valueOf((int) current.getUnit_price()));
-        holder.textView_rate.setText((String.format("%.2f", current.getUnit_price())));
+        holder.textView_itemPriceForCal.setText(String.valueOf((int) current.getUnitprice()));
+        holder.textView_rate.setText((String.format("%.2f", current.getUnitprice())));
         holder.textView_qty.setText(String.valueOf((int) current.getQty()));
         holder.textView_total.setText((String.format("%.2f", current.getItem_bill())));
     }

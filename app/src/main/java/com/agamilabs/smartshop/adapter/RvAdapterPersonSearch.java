@@ -83,7 +83,7 @@ public class RvAdapterPersonSearch extends RecyclerView.Adapter<RecyclerView.Vie
         @Override
         public void onClick(View v) {
             Customer current = customerArrayList.get(getAdapterPosition());
-            iCallbackCustomerSearchClickHandler.customerClickHandler(current.getName());
+            iCallbackCustomerSearchClickHandler.customerClickHandler(current.getId(), current.getName());
         }
     }
 

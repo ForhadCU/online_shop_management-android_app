@@ -2,13 +2,7 @@ package com.agamilabs.smartshop.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -18,15 +12,18 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.agamilabs.smartshop.FullScannerActivity;
+import com.agamilabs.smartshop.FullScannerActivityPurchase;
 import com.agamilabs.smartshop.Interfaces.AdminDashboardInterface;
 import com.agamilabs.smartshop.InvoiceViewerActivity;
-import com.agamilabs.smartshop.LoginActivity;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.ShopAdminHome;
 import com.agamilabs.smartshop.SplashScreenActivity;
 import com.agamilabs.smartshop.activity.CampaignActivity;
-import com.agamilabs.smartshop.activity.NewCampaignActivity;
 import com.agamilabs.smartshop.activity.OrderReportActivity;
 import com.agamilabs.smartshop.activity.RechargeActivity;
 import com.agamilabs.smartshop.activity.ShopInboxActivity;
@@ -48,8 +45,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class AdminDashboardFragment extends Fragment implements AdminDashboardInterface, View.OnClickListener {
 
@@ -213,8 +208,9 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
             case R.id.linear_layout_new_sale:
                 onIntent(getContext(), FullScannerActivity.class);
                 break;
+
             case R.id.linear_layout_sale_invoices:
-                onIntent(getContext(), InvoiceViewerActivity.class);
+                onIntent(getContext(), FullScannerActivityPurchase.class);     /*** temporary testing*/
                 break;
             case R.id.linear_layout_stock_report:
                 onIntent(getContext(), StockReportActivity.class);

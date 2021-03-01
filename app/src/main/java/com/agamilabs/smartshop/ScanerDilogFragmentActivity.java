@@ -22,8 +22,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.agamilabs.smartshop.model.InvoiceModel;
 import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
+import com.agamilabs.smartshop.model.InvoiceModel;
 
 public class ScanerDilogFragmentActivity extends DialogFragment implements View.OnClickListener {
     private Button button_addProduct, button_discard;
@@ -34,15 +34,14 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
     private EditText editText_singleProdDiscount;
     private CheckBox checkBoxContinueScanning;
 
-    private String massege;
     private String customer;
-    private String date;
     private String product_name;
-    private String product_quantity;
     private String product_price;
-    private String product_discount;
-    private String product_imgUrl;
-    private String productID;
+    private String itemNo;
+    private String item_id;
+    private String unitid;
+    private String expirydate;
+    private String discount_percentage;
     private ProductDetailsInterface productDetailsInterface;
     private double totalPrice1;
     private double totalPrice2;
@@ -59,11 +58,15 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
     public ScanerDilogFragmentActivity() {
     }
 
-    ScanerDilogFragmentActivity(String productID, String product_name, String product_price) {
+    ScanerDilogFragmentActivity(String itemNo, String item_id, String product_name, String productRate, String unitid, String expirydate, String discount_percentage) {
         this.customer = customer;
         this.product_name = product_name;
-        this.product_price = product_price;
-        this.productID = productID;
+        this.product_price = productRate;
+        this.itemNo = itemNo;
+        this.item_id = item_id;
+        this.unitid = unitid;
+        this.expirydate = expirydate;
+        this.discount_percentage = discount_percentage;
         totalPriceCommon = Double.parseDouble(product_price);
     }
 
@@ -111,14 +114,13 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(s.toString().trim()))
-                {
+                if (TextUtils.isEmpty(s.toString().trim())) {
                     discount = 0;
-                    tv_productTotalPrice.setText("\u09F3"+String.valueOf(String.format("%.2f", totalPriceCommon)));
+                    tv_productTotalPrice.setText("\u09F3" + String.valueOf(String.format("%.2f", totalPriceCommon)));
                 } else {
                     discount = Double.parseDouble(s.toString());
                     double temp = totalPriceCommon - discount;
-                    tv_productTotalPrice.setText("\u09F3"+String.valueOf(String.format("%.2f", temp)));
+                    tv_productTotalPrice.setText("\u09F3" + String.valueOf(String.format("%.2f", temp)));
                 }
             }
 
@@ -138,8 +140,8 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
     private void setValueMethod() {
         tv_productName.setText(product_name);
         tv_productQuantity.setText("1");
-        tv_productPrice.setText("\u09F3"+ product_price);
-        tv_productTotalPrice.setText("\u09F3"+totalPriceCommon);
+        tv_productPrice.setText("\u09F3" + product_price);
+        tv_productTotalPrice.setText("\u09F3" + totalPriceCommon);
 
 //        tv_productDiscount.setText(product_discount);
 //        tv_productPrice.setText(product_price);
@@ -179,10 +181,8 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
                 String productDiscount = editText_singleProdDiscount.getText().toString();
                 String totalBill = null;
 
-                if (!TextUtils.isEmpty(productDiscount))
-                {
-                    if (Double.parseDouble(productDiscount) <= totalPriceCommon && Double.parseDouble(productDiscount) >= 0)
-                    {
+                if (!TextUtils.isEmpty(productDiscount)) {
+                    if (Double.parseDouble(productDiscount) <= totalPriceCommon && Double.parseDouble(productDiscount) >= 0) {
                         double temp = totalPriceCommon - Double.parseDouble(productDiscount);
                         totalBill = String.valueOf((int) temp);
 
@@ -191,11 +191,10 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
                         } else
                             continueScanning = false;
 
-                        productDetailsInterface.dataParsingMethod(continueScanning, productID, productName, productQuantity, product_price, totalBill);
+                        productDetailsInterface.dataParsingMethod(continueScanning, itemNo, productName, productQuantity, product_price, totalBill, item_id, unitid, expirydate, discount_percentage);
 
                         dismiss();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getActivity(), "Please, fix your discount", Toast.LENGTH_SHORT).show();
                         productDetailsInterface.dialogDismissHandler();
                     }
@@ -206,7 +205,7 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
                     } else
                         continueScanning = false;
 
-                    productDetailsInterface.dataParsingMethod(continueScanning, productID, productName, productQuantity, product_price, totalBill);
+                    productDetailsInterface.dataParsingMethod(continueScanning, itemNo, productName, productQuantity, product_price, totalBill,  item_id, unitid, expirydate, discount_percentage);
 
                     dismiss();
                 }
@@ -220,18 +219,17 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
                 totalPrice1 = quantityNumber1 * Double.parseDouble(product_price);
                 totalPriceCommon = totalPrice1;
                 tv_productQuantity.setText(String.valueOf(quantityNumber1));
-                tv_productTotalPrice.setText("\u09F3"+ String.format("%.2f", totalPriceCommon));
+                tv_productTotalPrice.setText("\u09F3" + String.format("%.2f", totalPriceCommon));
                 break;
 
             case R.id.btn_quantityDecrease:
                 int quantityNumber2 = Integer.parseInt(tv_productQuantity.getText().toString());
                 quantityNumber2 = quantityNumber2 - 1;
-                if (quantityNumber2 > 0)
-                {
+                if (quantityNumber2 > 0) {
                     totalPrice2 = quantityNumber2 * Double.parseDouble(product_price);
                     totalPriceCommon = totalPrice2;
                     tv_productQuantity.setText(String.valueOf(quantityNumber2));
-                    tv_productTotalPrice.setText("\u09F3"+ String.format("%.2f", totalPriceCommon));
+                    tv_productTotalPrice.setText("\u09F3" + String.format("%.2f", totalPriceCommon));
                 }
 
                 break;

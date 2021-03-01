@@ -1,19 +1,16 @@
 package com.agamilabs.smartshop.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
 import com.agamilabs.smartshop.R;
-import com.agamilabs.smartshop.model.Customer;
 import com.agamilabs.smartshop.model.Products;
 
 import java.util.ArrayList;
@@ -23,10 +20,12 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
     private ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
+    private int productPageNo;
 
-    public RvAdapterProductSearch(ArrayList<Products> productsArrayList, ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler) {
+    public RvAdapterProductSearch(ArrayList<Products> productsArrayList, ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler, int productPageNo) {
         this.productsArrayList = productsArrayList;
         this.iCallbackCustomerSearchClickHandler = iCallbackCustomerSearchClickHandler;
+        this.productPageNo = productPageNo;
     }
 
     @NonNull
@@ -37,7 +36,7 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
         return myViewHolder;*/
 
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_customer_search_list_layout, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_product_search_list_layout, parent, false);
             return new ItemViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
@@ -62,7 +61,7 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        return productsArrayList.get(position).getName() == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return productsArrayList.get(position).getItem_name() == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     public void filterList(ArrayList<Products> filteredList) {
@@ -73,18 +72,20 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
 //    public String getItem()
 
     private class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvItem;
+        TextView tvItem, textViewSku, textViewQty;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvItem = itemView.findViewById(R.id.tv_rvCustomerName);
+            tvItem = itemView.findViewById(R.id.tv_rvProductName);
+            textViewSku = itemView.findViewById(R.id.tv_rvProductSku);
+            textViewQty = itemView.findViewById(R.id.tv_rvProductQty);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Products current = productsArrayList.get(getAdapterPosition());
-            iCallbackCustomerSearchClickHandler.productClickHandler(current.getName(), current.getId());
+            iCallbackCustomerSearchClickHandler.productClickHandler(current.getItem_name(), current.getId(), productPageNo);
         }
     }
 
@@ -100,31 +101,13 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
 
     private void showLoadingView(LoadingViewHolder viewHolder, int position) {
         //ProgressBar would be displayed
-
     }
 
     private void populateItemRows(ItemViewHolder viewHolder, int position) {
         Products current = productsArrayList.get(position);
-        viewHolder.tvItem.setText(current.getName());
 
+        viewHolder.tvItem.setText(current.getItem_name());
+        viewHolder.textViewSku.setText(current.getSku());
+        viewHolder.textViewQty.setText(current.getQty());
     }
-
-/*    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView textViewName;
-        Context mContext;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textViewName = itemView.findViewById(R.id.tv_rvCustomerName);
-            mContext = itemView.getContext();
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Customer current = customerArrayList.get(getAdapterPosition());
-            iCallbackCustomerSearchClickHandler.customerClickHandler(current.getName());
-        }
-    }*/
 }
