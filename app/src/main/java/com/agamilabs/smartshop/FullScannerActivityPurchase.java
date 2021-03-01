@@ -87,10 +87,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private Button buttonSaveInvoice;
     private ImageButton imageButtonFlashOn, imageButtonFlashOff, imageButtonFocusOn, imageButtonFocusOff, imageButtonPersonSearch, imageButtonProductSearch;
     private ImageButton imageButtonDiscountIncrease, imageButtonDiscountDecrease;
-    private Dialog dialog, dialogAddCustomer, dialogProductSearch;
-    private TextView textViewCustomerName, textViewCustomerNameScannerDisplay, textViewDiscountOverAll;
+    private Dialog dialog, dialogAddSupplier, dialogProductSearch;
+    private TextView textViewSupplierName, textViewSupplierNameScannerDisplay, textViewDiscountOverAll;
     private RelativeLayout relativeLayoutBottomSheetComponents;
-    private LinearLayout linearLayoutBottomSheetCustomerName;
+    private LinearLayout linearLayoutBottomSheetSupplierName;
     private TextView textViewCartBadge;
     private RadioGroup radioGroupDiscount;
     private RadioButton discountRadioButton;
@@ -99,7 +99,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private DbHelper dbHelper;
     private List<InvoiceModel> invoiceModelList;
     private ArrayList<InvoiceItem> invoiceItemList;
-    private ArrayList<Customer> customerArrayList;
+    private ArrayList<Customer> personArrayList;
     private ArrayList<Products> productsArrayList;
     //    private ArrayList<String> productArrayList;
     private ArrayList<String> userList;
@@ -136,19 +136,18 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private static final String PRODUCT_SEARCH_KEY = "search_key";
     private static final String PRODUCT_PAGE_NO = "page";
     private static final String LIMIT = "limit";
-    private static final String CUSTOMER_PAGE_NO = "pageno";
-    private static final String CUSTOMER_NAME = "name";
-    private static final String CUSTOMER_MOBILE_NO = "mobileno";
-    private static final String CUSTOMER_TYPE = "type";
-    private static final String CUSTOMER_SEARCH_KEY = "searchkey";
+    private static final String SUPPLIER_PAGE_NO = "pageno";
+    private static final String SUPPLIER_NAME = "name";
+    private static final String SUPPLIER_MOBILE_NO = "mobileno";
+    private static final String TYPE = "type";
+    private static final String type_name = "2";
+    private static final String SUPPLIER_SEARCH_KEY = "searchkey";
 
     private String apikey = "ewfw?f23u#rfg3872r23=jrfg87wefc";
-    private String customer_no;
+    private String supplier_no;
     private String currentDate;
 
-//    private int pageno = 1;
-
-
+//apex
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -187,7 +186,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         textView_subTotal = findViewById(R.id.tv_subTotal);
         textView_total = findViewById(R.id.tv_Total);
         textViewSubtotalScannerDisplay = findViewById(R.id.tv_subTotalScannerDisplay);
-        textViewCustomerNameScannerDisplay = findViewById(R.id.tv_cusNameScannerDisplay);
+        textViewSupplierNameScannerDisplay = findViewById(R.id.tv_cusNameScannerDisplay);
         textViewDiscountOverAll = findViewById(R.id.tv_discountOverAll);
         editText_discount = findViewById(R.id.edtTxt_discount);
         editText_deduction = findViewById(R.id.edtTxt_deduction);
@@ -200,16 +199,13 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         imageButtonProductSearch = findViewById(R.id.imgBtn_prodcutSearch);
         imageButtonDiscountIncrease = findViewById(R.id.btn_discountIncrease);
         imageButtonDiscountDecrease = findViewById(R.id.btn_discountDecrease);
-        textViewCustomerName = findViewById(R.id.tv_bottomSheetCustomerName);
+        textViewSupplierName = findViewById(R.id.tv_bottomSheetCustomerName);
         relativeLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
-        linearLayoutBottomSheetCustomerName = findViewById(R.id.l_bottomSheet_customerName);
+        linearLayoutBottomSheetSupplierName = findViewById(R.id.l_bottomSheet_customerName);
         textViewCartBadge = findViewById(R.id.tv_cartBadge);
         radioGroupDiscount = findViewById(R.id.radioGroupDiscount);
         progressBarSkuRequest = findViewById(R.id.progress_skuRequest);
 
-
-//        userList();
-//        productList();
         recyclerViewHandler();
         setupFormats();
         contentFrame.addView(mScannerView);
@@ -223,7 +219,6 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         imageButtonDiscountIncrease.setOnClickListener(this);
         imageButtonDiscountDecrease.setOnClickListener(this);
         buttonSaveInvoice.setOnClickListener(this);
-//        totalBillHandler();
     }
 
     @Override
@@ -287,9 +282,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                 textView_total.setText("0.00");
                                 textViewDiscountOverAll.setText(String.format("%.2f", discount));
                             }
-
                         }
-
                     }
                 }
 
@@ -325,8 +318,6 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 }
             });
         }
-
-
     }
 
     private void sheetBehaviorHandler() {
@@ -630,12 +621,13 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     @Override
     public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, String item_id, String unitid, String expirydate, String discount_percentage) {
         //product save via Model
-        invoiceItemList.add(new InvoiceItem(productName, productID, item_id, expirydate, unitid, Double.parseDouble(product_price), null, discount_percentage, Double.parseDouble(productQuantity), Double.parseDouble(totalBill)));
+        Toast.makeText(this, productID, Toast.LENGTH_SHORT).show();
+        invoiceItemList.add(new InvoiceItem(productID, productName, item_id, expirydate, unitid, Double.parseDouble(product_price), null, discount_percentage, Double.parseDouble(productQuantity), Double.parseDouble(totalBill), 1));
 
         if (invoiceItemList.size() > 0) {
             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
             relativeLayoutBottomSheetComponents.setVisibility(View.VISIBLE);
-            linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
+            linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
 
             mAdapterHandler();
             totalBillHandler();
@@ -742,9 +734,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                 pageNo = 1;
                 HashMap<String, String> mapGetClients = new HashMap<>();
-                mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(pageNo));
-//                mapGetClients.put(LIMIT, String.valueOf(10));
+                mapGetClients.put(SUPPLIER_PAGE_NO, String.valueOf(pageNo));
+                mapGetClients.put(LIMIT, String.valueOf(10));
                 mapGetClients.put(API_KEY, apikey);
+                mapGetClients.put(TYPE, type_name);
                 AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -753,14 +746,14 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                 JSONArray customerDataArray = jsonObject.getJSONArray("data");
-                                customerArrayList = new ArrayList<>();
+                                personArrayList = new ArrayList<>();
 
                                 for (int i = 0; i < customerDataArray.length(); i++) {
                                     progressBar.setVisibility(View.GONE);
                                     JSONObject customerData = customerDataArray.getJSONObject(i);
                                     customer = new Customer(customerData.getString("id"), customerData.getString("name"));
-                                    customerArrayList.add(customer);
-                                    rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivityPurchase.this);
+                                    personArrayList.add(customer);
+                                    rvAdapterPersonSearch = new RvAdapterPersonSearch(personArrayList, FullScannerActivityPurchase.this);
                                     recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);
                                 }
                             }
@@ -789,10 +782,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                         if (!isLoading) {
-                            if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == customerArrayList.size() - 1) {
+                            if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == personArrayList.size() - 1) {
                                 //bottom of list!
-                                customerArrayList.add(new Customer(null,null));
-                                rvAdapterPersonSearch.notifyItemInserted(customerArrayList.size());
+                                personArrayList.add(new Customer(null,null));
+                                rvAdapterPersonSearch.notifyItemInserted(personArrayList.size());
                                 pageNo++;
                                 Toast.makeText(FullScannerActivityPurchase.this, "Please wait...", Toast.LENGTH_SHORT).show();
 
@@ -800,8 +793,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        customerArrayList.remove(customerArrayList.size() - 1);
-                                        int scrollPosition = customerArrayList.size();
+                                        personArrayList.remove(personArrayList.size() - 1);
+                                        int scrollPosition = personArrayList.size();
                                         rvAdapterPersonSearch.notifyItemRemoved(scrollPosition);
 /*                                        int currentSize = scrollPosition + 1;
                                         int nextLimit = currentSize + 10;
@@ -816,7 +809,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                                         HashMap<String, String> mapForScroll = new HashMap<>();
                                         mapForScroll.put(API_KEY, apikey);
-                                        mapForScroll.put(CUSTOMER_PAGE_NO, String.valueOf(pageNo));
+                                        mapForScroll.put(SUPPLIER_PAGE_NO, String.valueOf(pageNo));
                                         mapForScroll.put(LIMIT, String.valueOf(10));
 
 
@@ -833,7 +826,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                                 JSONObject data = jsonArray.getJSONObject(i);
                                                                 Customer customer = new Customer(data.getString("id"), data.getString("name"));
-                                                                customerArrayList.add(customer);
+                                                                personArrayList.add(customer);
                                                             }
                                                         } else
                                                             Toast.makeText(FullScannerActivityPurchase.this, "No more data to load", Toast.LENGTH_SHORT).show();
@@ -883,9 +876,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                             progressBar.setVisibility(View.VISIBLE);
                             ArrayList<Customer> finalFilteredArray = new ArrayList<>();
                             HashMap<String, String> mapGetClients = new HashMap<>();
-                            mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(customerFilteredPageNo));
+                            mapGetClients.put(SUPPLIER_PAGE_NO, String.valueOf(customerFilteredPageNo));
                             mapGetClients.put(LIMIT, String.valueOf(10));
-                            mapGetClients.put(CUSTOMER_SEARCH_KEY, s.toString());
+                            mapGetClients.put(SUPPLIER_SEARCH_KEY, s.toString());
                             mapGetClients.put(API_KEY, apikey);
                             AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
                                 @Override
@@ -935,10 +928,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                                     if (!isLoading2) {
-                                        if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == customerArrayList.size() - 1) {
+                                        if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == personArrayList.size() - 1) {
                                             //bottom of list!
                                             finalFilteredArray.add(new Customer(null, null));
-                                            rvAdapterPersonSearch.notifyItemInserted(customerArrayList.size());
+                                            rvAdapterPersonSearch.notifyItemInserted(personArrayList.size());
                                             customerFilteredPageNo++;
                                             Toast.makeText(FullScannerActivityPurchase.this, "Please wait...", Toast.LENGTH_SHORT).show();
 
@@ -962,9 +955,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                                                     HashMap<String, String> mapForScroll = new HashMap<>();
                                                     mapForScroll.put(API_KEY, apikey);
-                                                    mapForScroll.put(CUSTOMER_PAGE_NO, String.valueOf(customerFilteredPageNo));
+                                                    mapForScroll.put(SUPPLIER_PAGE_NO, String.valueOf(customerFilteredPageNo));
                                                     mapForScroll.put(LIMIT, String.valueOf(10));
-                                                    mapForScroll.put(CUSTOMER_SEARCH_KEY, s.toString());
+                                                    mapForScroll.put(SUPPLIER_SEARCH_KEY, s.toString());
 
 
                                                     AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
@@ -1034,56 +1027,57 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        dialogAddCustomer = new Dialog(FullScannerActivityPurchase.this);
-                        dialogAddCustomer.setContentView(R.layout.dialog_add_customer_layout);
+                        dialogAddSupplier = new Dialog(FullScannerActivityPurchase.this);
+                        dialogAddSupplier.setContentView(R.layout.dialog_add_supplier_layout);
 
-                        WindowManager.LayoutParams wmlp = dialogAddCustomer.getWindow().getAttributes();
+                        WindowManager.LayoutParams wmlp = dialogAddSupplier.getWindow().getAttributes();
                         wmlp.gravity = Gravity.TOP | Gravity.LEFT;
                         wmlp.x = 30;
                         wmlp.y = 100;
 
-                        dialogAddCustomer.getWindow().setLayout(650, 700);
-                        dialogAddCustomer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialogAddCustomer.show();
-//                        dialogAddCustomer.setCancelable(false);
+                        dialogAddSupplier.getWindow().setLayout(650, 700);
+                        dialogAddSupplier.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialogAddSupplier.show();
+                        dialogAddSupplier.setCancelable(true);
 
-                        EditText editTextCustomerName = dialogAddCustomer.findViewById(R.id.edtTxt_customerName);
-                        EditText editTextCustomerPhone = dialogAddCustomer.findViewById(R.id.edtTxt_customerPhoneNum);
-                        Button buttonSaveCustomer = dialogAddCustomer.findViewById(R.id.btn_addCustomer);
-                        ProgressBar progressBar1 = dialogAddCustomer.findViewById(R.id.progressbarAddCustomer);
+                        EditText editTextCustomerName = dialogAddSupplier.findViewById(R.id.edtTxt_customerName);
+                        EditText editTextCustomerPhone = dialogAddSupplier.findViewById(R.id.edtTxt_customerPhoneNum);
+                        Button buttonSaveCustomer = dialogAddSupplier.findViewById(R.id.btn_addCustomer);
+                        ProgressBar progressBar1 = dialogAddSupplier.findViewById(R.id.progressbarAddCustomer);
 
                         buttonSaveCustomer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 buttonSaveCustomer.setVisibility(View.GONE);
                                 progressBar1.setVisibility(View.VISIBLE);
-                                String customerName = editTextCustomerName.getText().toString();
-                                String customerPhone = editTextCustomerPhone.getText().toString();
-                                if (!TextUtils.isEmpty(customerName) && !TextUtils.isEmpty(customerPhone)) {
+                                String supplierName = editTextCustomerName.getText().toString();
+                                String supplierPhone = editTextCustomerPhone.getText().toString();
+                                if (!TextUtils.isEmpty(supplierName) && !TextUtils.isEmpty(supplierPhone)) {
 
                                     HashMap<String, String> mapInsertCustomer = new HashMap<>();
                                     mapInsertCustomer.put(API_KEY, apikey);
-                                    mapInsertCustomer.put(CUSTOMER_NAME, customerName);
-                                    mapInsertCustomer.put(CUSTOMER_MOBILE_NO, customerPhone);
+                                    mapInsertCustomer.put(SUPPLIER_NAME, supplierName);
+                                    mapInsertCustomer.put(SUPPLIER_MOBILE_NO, supplierPhone);
+                                    mapInsertCustomer.put(TYPE, type_name);
 
                                     AppController.getAppController().getAppNetworkController().makeRequest(url_4, new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
                                             try {
-                                                textViewCustomerName.setText(customerName);
-                                                linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
+                                                textViewSupplierName.setText(supplierName);
+                                                linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
                                                 if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
                                                     sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
                                                 JSONObject jsonObject = new JSONObject(response);
 
                                                 if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                                                    textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
-                                                    textViewCustomerNameScannerDisplay.setText(customerName);
+                                                    textViewSupplierNameScannerDisplay.setVisibility(View.VISIBLE);
+                                                    textViewSupplierNameScannerDisplay.setText(supplierName);
                                                     Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                     progressBar1.setVisibility(View.GONE);
                                                     buttonSaveCustomer.setVisibility(View.VISIBLE);
-                                                    dialogAddCustomer.dismiss();
+                                                    dialogAddSupplier.dismiss();
                                                 }
 
                                             } catch (JSONException e) {
@@ -1447,7 +1441,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 } else
                     Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*/
 
-                String getCustomerName = textViewCustomerName.getText().toString();
+                InvoiceItem cur = invoiceItemList.get(0);
+                Toast.makeText(this, cur.getItemno(), Toast.LENGTH_SHORT).show();
+
+                String getCustomerName = textViewSupplierName.getText().toString();
                 if (!TextUtils.isEmpty(getCustomerName))
                 {
                     JSONArray jsonArrayInvoiceItem = new JSONArray();
@@ -1464,6 +1461,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                             jsonObjectTemp.put("unitprice", current.getUnitprice());
                             jsonObjectTemp.put("taxrate", current.getTaxrate());
                             jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
+                            jsonObjectTemp.put("salerate", current.getSalerate());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1473,8 +1471,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     }
                     JSONObject jsonObjectInvoiceItem = new JSONObject();
                     try {
-                        jsonObjectInvoiceItem.put("customerno", customer_no);
-                        jsonObjectInvoiceItem.put("sdate", currentDate);
+                        jsonObjectInvoiceItem.put("supplieno", supplier_no);
+                        jsonObjectInvoiceItem.put("pdate", currentDate);
                         jsonObjectInvoiceItem.put("duedate", currentDate);
                         jsonObjectInvoiceItem.put("currency", "1");
                         jsonObjectInvoiceItem.put("discount", "0");
@@ -1492,7 +1490,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-//                        Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_LONG).show();
+                        Toast.makeText(FullScannerActivityPurchase.this, response, Toast.LENGTH_LONG).show();
                             try {
                                 JSONObject temp = new JSONObject(response);
 
@@ -1656,7 +1654,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private ArrayList<Customer> filterCustomers(String text) {
         ArrayList<Customer> filteredList = new ArrayList<>();
 //        ArrayList<ExampleItem> filteredList = new ArrayList<>();
-        for (Customer item : customerArrayList) {
+        for (Customer item : personArrayList) {
             if (item.getName().toLowerCase().contains(text.toLowerCase())) {
                 filteredList.add(item);
             }
@@ -1679,11 +1677,11 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     @Override
     public void customerClickHandler(String id, String name) {
-        customer_no = id;
-        linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
-        textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
-        textViewCustomerName.setText(name);
-        textViewCustomerNameScannerDisplay.setText(name);
+        supplier_no = id;
+        linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
+        textViewSupplierNameScannerDisplay.setVisibility(View.VISIBLE);
+        textViewSupplierName.setText(name);
+        textViewSupplierNameScannerDisplay.setText(name);
 //       Toast.makeText(FullScannerActivity.this, adapter.getItem(position), Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }

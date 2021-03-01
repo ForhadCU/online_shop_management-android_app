@@ -139,16 +139,16 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
     private static final String CUSTOMER_PAGE_NO = "pageno";
     private static final String CUSTOMER_NAME = "name";
     private static final String CUSTOMER_MOBILE_NO = "mobileno";
-    private static final String CUSTOMER_TYPE = "type";
+    private static final String TYPE = "type";
+    private static final String type_name = "1";
     private static final String CUSTOMER_SEARCH_KEY = "searchkey";
 
     private String apikey = "ewfw?f23u#rfg3872r23=jrfg87wefc";
     private String customer_no;
     private String currentDate;
 
-//    private int pageno = 1;
 
-
+//apex
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -525,6 +525,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                         String discount_percentage = data.getString("discount_rate");
                         String unitid = data.getString("unitid");
 
+
 /* showMessageDialog("Contents = " + rawResult.getText() + ", Format = " + rawResult.getBarcodeFormat().toString(),
                                 itemNo, product_name, productRate, item_id, unitid, expirydate, discount_percentage);*/
 
@@ -743,8 +744,10 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                 pageNo = 1;
                 HashMap<String, String> mapGetClients = new HashMap<>();
                 mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(pageNo));
-//                mapGetClients.put(LIMIT, String.valueOf(10));
+                mapGetClients.put(LIMIT, String.valueOf(10));
                 mapGetClients.put(API_KEY, apikey);
+                mapGetClients.put(TYPE, type_name);
+
                 AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -1045,7 +1048,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                         dialogAddCustomer.getWindow().setLayout(650, 700);
                         dialogAddCustomer.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         dialogAddCustomer.show();
-//                        dialogAddCustomer.setCancelable(false);
+                        dialogAddCustomer.setCancelable(true);
 
                         EditText editTextCustomerName = dialogAddCustomer.findViewById(R.id.edtTxt_customerName);
                         EditText editTextCustomerPhone = dialogAddCustomer.findViewById(R.id.edtTxt_customerPhoneNum);
@@ -1065,6 +1068,7 @@ public class FullScannerActivity extends BaseScannerActivity implements MessageD
                                     mapInsertCustomer.put(API_KEY, apikey);
                                     mapInsertCustomer.put(CUSTOMER_NAME, customerName);
                                     mapInsertCustomer.put(CUSTOMER_MOBILE_NO, customerPhone);
+                                    mapInsertCustomer.put(TYPE, type_name);
 
                                     AppController.getAppController().getAppNetworkController().makeRequest(url_4, new Response.Listener<String>() {
                                         @Override

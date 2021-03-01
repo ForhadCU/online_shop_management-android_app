@@ -117,6 +117,7 @@ public class InvoiceItem implements Serializable {
     private String discount_percentage;
     private double qty;
     private double item_bill;
+    private double salerate;
 
 /*    private String item_name;
     private double qty;
@@ -139,6 +140,24 @@ public class InvoiceItem implements Serializable {
         this.discount_percentage = discount_percentage;
         this.qty = qty;
         this.item_bill = item_bill;
+    }
+
+    public InvoiceItem(String itemno, String item_name, String item_id, String expirydate, String unitid, double unitprice, String taxrate, String discount_percentage, double qty, double item_bill, double salerate) {
+        this.itemno = itemno;
+        this.item_name = item_name;
+        this.item_id = item_id;
+        this.expirydate = expirydate;
+        this.unitid = unitid;
+        this.unitprice = unitprice;
+        this.taxrate = taxrate;
+        this.discount_percentage = discount_percentage;
+        this.qty = qty;
+        this.item_bill = item_bill;
+        this.salerate = salerate;
+    }
+
+    public double getSalerate() {
+        return salerate;
     }
 
     public String getItem_name() {
