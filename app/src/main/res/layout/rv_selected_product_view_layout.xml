@@ -20,7 +20,7 @@
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/shoe" />
+        app:srcCompat="@drawable/product_img" />
 
     <TextView
         android:id="@+id/tv_rvProductView_productName"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imgV_rvProductView_productImage"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="serif"
         android:text="3000.00"
         android:textAppearance="@style/TextAppearance.AppCompat"

@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="5dp"
-    android:layout_margin="5dp"
-    >
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="10dp"
+    app:cardElevation="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,8 +24,8 @@
                 android:id="@+id/imgV_customerImgInvoiceCard"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile_image"
+                android:scaleType="fitCenter"
+                android:src="@drawable/person_img"
                 app:civ_border_color="@color/lightgray"
                 app:civ_border_width="4dp"
                 app:civ_shadow="true"
@@ -51,7 +53,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="4dp"
                 android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
-                android:text="Date : "
+                android:text="Sale Date : "
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
             <TextView
@@ -65,6 +67,18 @@
                 android:layout_toRightOf="@+id/tv4"
                 android:text="27 Jan 2021"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
+            <!--
+                        <TextView
+                            android:id="@+id/tv8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv4"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
+                            android:text="Paid : "
+                            android:textAppearance="@style/TextAppearance.AppCompat" />
+            -->
             <TextView
                 android:id="@+id/tv8"
                 android:layout_width="wrap_content"
@@ -73,11 +87,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="4dp"
                 android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
-                android:text="Paid : "
+                android:text="Invoice no : "
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
             <TextView
-                android:id="@+id/tv_paidStatusInvoiceCard"
+                android:id="@+id/tv_invoiceNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv4"
@@ -85,7 +99,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="4dp"
                 android:layout_toRightOf="@+id/tv8"
-                android:text="No"
                 android:textAppearance="@style/TextAppearance.AppCompat" />
 
 
@@ -127,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/l1"
-            android:background="#9A9A9A" />
+            android:background="#CCCBCB" />
 
         <RelativeLayout
             android:id="@+id/l3"
@@ -151,7 +164,7 @@
                 android:layout_alignBaseline="@+id/tv2"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv2"
-                android:text="50000.00"
+                android:text="5000.00"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -168,155 +181,199 @@
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
-<!--
-            <TextView
-                android:id="@+id/tv5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Items : "
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:layout_toLeftOf="@+id/tv_itemNumInvoiceCard"
-                android:textColor="@color/black" />
-            <TextView
-                android:id="@+id/tv_itemNumInvoiceCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/black" />
--->
+            <!--
+                        <TextView
+                            android:id="@+id/tv5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Items : "
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:layout_toLeftOf="@+id/tv_itemNumInvoiceCard"
+                            android:textColor="@color/black" />
+                        <TextView
+                            android:id="@+id/tv_itemNumInvoiceCard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="90"
+                            android:textAppearance="@style/TextAppearance.AppCompat"
+                            android:layout_alignParentRight="true"
+                            android:textColor="@color/black" />
+            -->
 
+            <RelativeLayout
+                android:id="@+id/l6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_discountInvoiceCard"
+                android:layout_marginTop="16sp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:text="Items list"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
+
+                <ImageView
+                    android:id="@+id/imgV_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_down" />
+
+                <ImageView
+                    android:id="@+id/imgV_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_up"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/l5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_discountInvoiceCard"
-                android:layout_marginTop="16sp"
+                android:layout_below="@+id/l6"
+                android:layout_marginLeft="0dp"
                 android:background="#9A9A9A"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="0.2dp"
+                    android:layout_marginLeft="0.2dp"
+                    android:layout_marginRight="0.2dp"
+                    android:layout_marginBottom="0.2dp"
                     android:layout_weight="0.5"
+                    android:background="#ffff"
                     android:paddingLeft="5dp"
-                    android:paddingRight="2dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="2dp"
                     android:paddingBottom="2dp"
                     android:text="No"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
-                    android:background="#ffff"
-                    android:textStyle="bold"
-                    android:layout_margin="0.2dp"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="0.2dp"
+                    android:layout_marginLeft="0.2dp"
+                    android:layout_marginRight="0.2dp"
+                    android:layout_marginBottom="0.2dp"
                     android:layout_weight="2"
+                    android:background="#ffff"
                     android:paddingLeft="5dp"
-                    android:paddingRight="2dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="2dp"
                     android:paddingBottom="2dp"
                     android:text="Item"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
-                    android:background="#ffff"
-                    android:layout_margin="0.2dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
+                    android:layout_marginTop="0.2dp"
+                    android:layout_marginLeft="0.2dp"
+                    android:layout_marginRight="0.2dp"
+                    android:layout_marginBottom="0.2dp"
                     android:layout_weight="1"
+                    android:background="#ffff"
                     android:paddingLeft="5dp"
-                    android:paddingRight="2dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="2dp"
                     android:paddingBottom="2dp"
                     android:text="Rate"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
-                    android:background="#ffff"
-                    android:layout_margin="0.2dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
-<!--                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
-                    android:layout_weight="0.7"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:padding="2dp"
-                    android:text="Qty"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textColor="@color/black"
-                    android:background="#ffff"
-                    android:layout_margin="0.2dp"
-                    android:textStyle="bold"
+                <!--                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="1dp"
+                                    android:layout_weight="0.7"
+                                    android:gravity="center_horizontal|center_vertical"
+                                    android:padding="2dp"
+                                    android:text="Qty"
+                                    android:textAppearance="@style/TextAppearance.AppCompat"
+                                    android:textColor="@color/black"
+                                    android:background="#ffff"
+                                    android:layout_margin="0.2dp"
+                                    android:textStyle="bold"
 
-                    />-->
+                                    />-->
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="1dp"
+                    android:layout_marginTop="0.2dp"
+                    android:layout_marginLeft="0.2dp"
+                    android:layout_marginRight="0.2dp"
+                    android:layout_marginBottom="0.2dp"
                     android:layout_weight="1.5"
+                    android:background="#ffff"
                     android:paddingLeft="5dp"
-                    android:paddingRight="2dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="2dp"
                     android:paddingBottom="2dp"
                     android:text="Total Tk"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
-                    android:background="#ffff"
-                    android:layout_margin="0.2dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#9A9A9A"
                 android:id="@+id/v2"
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
                 android:layout_below="@+id/l5"
-                />
+                android:layout_marginLeft="0dp"
+                android:background="#C8C7C7" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_selectedProductListInvoiceCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/v2"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </RelativeLayout>
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l3"
-            android:layout_marginTop="25dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="5dp"
-            android:layout_marginBottom="10dp"
-            >
+            android:layout_marginBottom="10dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="@color/lightgray"
-                >
+                android:background="#EDEDED"
+                android:padding="10dp">
+
                 <TextView
                     android:id="@+id/tv6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
                     android:text="Due date : "
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:layout_alignParentLeft="true"
                     android:textColor="@color/black" />
 
                 <TextView
@@ -328,15 +385,14 @@
                     android:layout_toRightOf="@+id/tv6"
                     android:text="29 Jan 2021"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textColor="@color/black"
-                    />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/tv7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Items : "
                     android:layout_toLeftOf="@+id/tv_itemNumInvoiceCard"
+                    android:text="Items : "
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black" />
 
@@ -345,14 +401,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/tv7"
+                    android:layout_alignParentRight="true"
                     android:layout_marginLeft="10dp"
                     android:text="50"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:layout_alignParentRight="true"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
-                    />
-
+                    android:textStyle="bold" />
 
 
             </RelativeLayout>

@@ -2,6 +2,7 @@ package com.agamilabs.smartshop;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -42,7 +43,7 @@ import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
 import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
-import com.agamilabs.smartshop.adapter.RvAdapter_selectedProductView;
+import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductView;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.database.DbHelper;
 import com.agamilabs.smartshop.model.Customer;
@@ -77,7 +78,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 7;
     private RecyclerView rv_selectedProduct;
-    private RvAdapter_selectedProductView rvAdapter_selectedProductView;
+    private RvAdapterSelectedProductView rvAdapter_selectedProductView;
     private Dialog dialog_cross;
     private BottomSheetBehavior sheetBehavior;
     private RelativeLayout bottomsSheetLayout;
@@ -622,7 +623,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, String item_id, String unitid, String expirydate, String discount_percentage) {
         //product save via Model
         Toast.makeText(this, productID, Toast.LENGTH_SHORT).show();
-        invoiceItemList.add(new InvoiceItem(productID, productName, item_id, expirydate, unitid, Double.parseDouble(product_price), null, discount_percentage, Double.parseDouble(productQuantity), Double.parseDouble(totalBill), 1));
+        invoiceItemList.add(new InvoiceItem(Integer.parseInt(productID), item_id,  Integer.parseInt(productQuantity),  Double.parseDouble(product_price),  discount_percentage,  expirydate,  productName, Double.parseDouble(totalBill), 1));
 
         if (invoiceItemList.size() > 0) {
             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -671,7 +672,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private void mAdapterHandler() {
 //        recyclerViewHandler();
         if (invoiceItemList.size() > 0) {
-            rvAdapter_selectedProductView = new RvAdapter_selectedProductView(invoiceItemList, this, this);
+            rvAdapter_selectedProductView = new RvAdapterSelectedProductView(invoiceItemList, this, this);
             rv_selectedProduct.setAdapter(rvAdapter_selectedProductView);
             rvAdapter_selectedProductView.notifyDataSetChanged();
 
@@ -1456,12 +1457,12 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                             jsonObjectTemp.put("itemno", current.getItemno());
                             jsonObjectTemp.put("item_id", current.getItem_id());
                             jsonObjectTemp.put("expirydate", current.getExpirydate());
-                            jsonObjectTemp.put("unitid", current.getUnitid());
+                            jsonObjectTemp.put("unitid", current.getSelling_unitid());
                             jsonObjectTemp.put("qty", current.getQty());
-                            jsonObjectTemp.put("unitprice", current.getUnitprice());
+                            jsonObjectTemp.put("unitprice", current.getRate());
                             jsonObjectTemp.put("taxrate", current.getTaxrate());
                             jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
-                            jsonObjectTemp.put("salerate", current.getSalerate());
+                            jsonObjectTemp.put("salerate", current.getSale_rate());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1497,6 +1498,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                 if (temp.getString("error").equalsIgnoreCase("false"))
                                 {
                                     Toast.makeText(FullScannerActivityPurchase.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(FullScannerActivityPurchase.this, PurchaseInvoiceViewerActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

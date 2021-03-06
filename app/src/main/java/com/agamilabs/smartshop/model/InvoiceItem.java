@@ -107,133 +107,184 @@ import java.io.Serializable;
 
 public class InvoiceItem implements Serializable {
 
-    private String itemno;
-    private String item_name;
+    private int orgno;
+    private int invoiceno;
+    private int itemno;
     private String item_id;
-    private String expirydate;
-    private String unitid;
-    private double unitprice;
-    private String taxrate;
+    private int qty;
+    private double rate;
+    private String selling_unitid;
+    private String prate;
     private String discount_percentage;
-    private double qty;
+    private double taxrate;
+    private String expirydate;
+    private String itemname;
+    private String unit;
+    private String hasexpiry;
     private double item_bill;
-    private double salerate;
+    private double sale_rate;
 
-/*    private String item_name;
-    private double qty;
-    private double unit_price;
-    private double tax;
-    private double item_discount;
-    private double item_bill;*/
+
 
     public InvoiceItem() {
     }
 
-    public InvoiceItem(String item_name, String itemno, String item_id, String expirydate, String unitid, double unitprice, String taxrate, String discount_percentage, double qty, double item_bill) {
+    public InvoiceItem(int itemno, int qty, double rate, String itemname, double item_bill) {
         this.itemno = itemno;
-        this.item_name = item_name;
-        this.item_id = item_id;
-        this.expirydate = expirydate;
-        this.unitid = unitid;
-        this.unitprice = unitprice;
-        this.taxrate = taxrate;
-        this.discount_percentage = discount_percentage;
         this.qty = qty;
+        this.rate = rate;
+        this.itemname = itemname;
         this.item_bill = item_bill;
     }
 
-    public InvoiceItem(String itemno, String item_name, String item_id, String expirydate, String unitid, double unitprice, String taxrate, String discount_percentage, double qty, double item_bill, double salerate) {
+    public InvoiceItem(int itemno, String item_id, int qty, double rate, String discount_percentage, String expirydate, String itemname, double item_bill) {
         this.itemno = itemno;
-        this.item_name = item_name;
         this.item_id = item_id;
-        this.expirydate = expirydate;
-        this.unitid = unitid;
-        this.unitprice = unitprice;
-        this.taxrate = taxrate;
-        this.discount_percentage = discount_percentage;
         this.qty = qty;
+        this.rate = rate;
+        this.discount_percentage = discount_percentage;
+        this.expirydate = expirydate;
+        this.itemname = itemname;
         this.item_bill = item_bill;
-        this.salerate = salerate;
+    }
+    public InvoiceItem(int itemno, String item_id, int qty, double rate, String discount_percentage, String expirydate, String itemname, double item_bill, double sale_rate) {
+        this.itemno = itemno;
+        this.item_id = item_id;
+        this.qty = qty;
+        this.rate = rate;
+        this.discount_percentage = discount_percentage;
+        this.expirydate = expirydate;
+        this.itemname = itemname;
+        this.item_bill = item_bill;
+        this.sale_rate = sale_rate;
+    }
+    /*
+    productName, productID, item_id, expirydate, unitid, Double.parseDouble(product_price),
+    null, discount_percentage, Double.parseDouble(productQuantity), Double.parseDouble(totalBill)
+     */
+
+    public double getSale_rate() {
+        return sale_rate;
     }
 
-    public double getSalerate() {
-        return salerate;
+    public void setSale_rate(double sale_rate) {
+        this.sale_rate = sale_rate;
     }
 
-    public String getItem_name() {
-        return item_name;
-    }
-
-    public String getItemno() {
+    public int getItemno() {
         return itemno;
     }
 
-    public String getItem_id() {
-        return item_id;
-    }
-
-    public String getExpirydate() {
-        return expirydate;
-    }
-
-    public String getUnitid() {
-        return unitid;
-    }
-
-    public double getUnitprice() {
-        return unitprice;
-    }
-
-    public String getTaxrate() {
-        return taxrate;
-    }
-
-    public String getDiscount_percentage() {
-        return discount_percentage;
-    }
-
-    public double getQty() {
+    public int getQty() {
         return qty;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public String getItemname() {
+        return itemname;
     }
 
     public double getItem_bill() {
         return item_bill;
     }
 
-    public void setItemno(String itemno) {
-        this.itemno = itemno;
+    public int getOrgno() {
+        return orgno;
     }
 
-    public void setItem_name(String item_name) {
-        this.item_name = item_name;
+    public int getInvoiceno() {
+        return invoiceno;
+    }
+
+    public String getItem_id() {
+        return item_id;
+    }
+
+    public String getSelling_unitid() {
+        return selling_unitid;
+    }
+
+    public String getPrate() {
+        return prate;
+    }
+
+    public String getDiscount_percentage() {
+        return discount_percentage;
+    }
+
+    public double getTaxrate() {
+        return taxrate;
+    }
+
+    public String getExpirydate() {
+        return expirydate;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public String getHasexpiry() {
+        return hasexpiry;
+    }
+
+    public void setOrgno(int orgno) {
+        this.orgno = orgno;
+    }
+
+    public void setInvoiceno(int invoiceno) {
+        this.invoiceno = invoiceno;
+    }
+
+    public void setItemno(int itemno) {
+        this.itemno = itemno;
     }
 
     public void setItem_id(String item_id) {
         this.item_id = item_id;
     }
 
-    public void setExpirydate(String expirydate) {
-        this.expirydate = expirydate;
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 
-    public void setUnitid(String unitid) {
-        this.unitid = unitid;
+    public void setRate(double rate) {
+        this.rate = rate;
     }
 
-    public void setUnitprice(double unitprice) {
-        this.unitprice = unitprice;
+    public void setSelling_unitid(String selling_unitid) {
+        this.selling_unitid = selling_unitid;
     }
 
-    public void setTaxrate(String taxrate) {
-        this.taxrate = taxrate;
+    public void setPrate(String prate) {
+        this.prate = prate;
     }
 
     public void setDiscount_percentage(String discount_percentage) {
         this.discount_percentage = discount_percentage;
     }
 
-    public void setQty(double qty) {
-        this.qty = qty;
+    public void setTaxrate(double taxrate) {
+        this.taxrate = taxrate;
+    }
+
+    public void setExpirydate(String expirydate) {
+        this.expirydate = expirydate;
+    }
+
+    public void setItemname(String itemname) {
+        this.itemname = itemname;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setHasexpiry(String hasexpiry) {
+        this.hasexpiry = hasexpiry;
     }
 
     public void setItem_bill(double item_bill) {

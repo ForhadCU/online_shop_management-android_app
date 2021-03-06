@@ -7,7 +7,7 @@
     android:background="#ffff"
     android:clipChildren="false"
     android:padding="10dp"
-    tools:context=".InvoiceActivity">
+    >
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"

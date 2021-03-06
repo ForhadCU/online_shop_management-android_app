@@ -32,7 +32,6 @@
     <string name="customer_list">Select Customer</string>
 
 
-
     <string-array name="reorder_point_array">
         <item>All</item>
         <item>Reorder Level Red</item>

@@ -16,11 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.FullScannerActivity;
+import com.agamilabs.smartshop.FullScannerActivitySale;
 import com.agamilabs.smartshop.FullScannerActivityPurchase;
 import com.agamilabs.smartshop.Interfaces.AdminDashboardInterface;
-import com.agamilabs.smartshop.InvoiceViewerActivity;
+import com.agamilabs.smartshop.PurchaseInvoiceViewerActivity;
 import com.agamilabs.smartshop.R;
+import com.agamilabs.smartshop.SaleInvoiceViewerActivity;
 import com.agamilabs.smartshop.ShopAdminHome;
 import com.agamilabs.smartshop.SplashScreenActivity;
 import com.agamilabs.smartshop.activity.CampaignActivity;
@@ -206,11 +207,11 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
                 onIntent(getContext(), ShopAdminHome.class);
                 break;
             case R.id.linear_layout_new_sale:
-                onIntent(getContext(), FullScannerActivity.class);
+                onIntent(getContext(), FullScannerActivityPurchase.class);
                 break;
 
             case R.id.linear_layout_sale_invoices:
-                onIntent(getContext(), FullScannerActivityPurchase.class);     /*** temporary testing*/
+                onIntent(getContext(), PurchaseInvoiceViewerActivity.class);     /*** temporary testing*/
                 break;
             case R.id.linear_layout_stock_report:
                 onIntent(getContext(), StockReportActivity.class);

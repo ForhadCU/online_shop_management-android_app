@@ -1,19 +1,29 @@
 package com.agamilabs.smartshop.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class InvoiceModel implements Serializable {
-    String invoiceNo;
-    String customerName;
-    String currentDate, dueDate;
-    String currency = "BDT";
-
-    ArrayList<InvoiceItem> invoiceItemArrayList = new ArrayList<>();
-
+    int customerNo;
+    String sDate;
+    String dueDate;
+    int currency;
+    int statusId;
+    int orgNo;
+    int invoiceNo;
     double discount;
+    double paid;
+    int addedBy;
     double deduction;
     double amount;
+    String cShortText;
+    String cText;
+    String customerName;
+    double totalAmountToPay;
+    double unPaidAmount;
+
+//    ArrayList<InvoiceItem> invoiceItemArrayList = new ArrayList<>();
+
+
 
 
     /*    public InvoiceModel(String invoiceNo, String customer, String currentDate, String dueDate, double discount, double deduction, double amount) {
@@ -28,86 +38,95 @@ public class InvoiceModel implements Serializable {
     public InvoiceModel() {
     }
 
-    public InvoiceModel(String invoiceNo, String customerName, String currentDate, String dueDate, ArrayList<InvoiceItem> invoiceItemArrayList, double discount, double deduction, double amount) {
-        this.invoiceNo = invoiceNo;
+    public InvoiceModel(String customerName) {
         this.customerName = customerName;
-        this.currentDate = currentDate;
+    }
+
+    public InvoiceModel(int customerNo, String sDate, String dueDate, int currency, int statusId, int orgNo, int invoiceNo, double discount, double paid, int addedBy, double deduction, double amount, String cShortText, String cText, String customerName, double totalAmountToPay, double unPaidAmount) {
+        this.customerNo = customerNo;
+        this.sDate = sDate;
         this.dueDate = dueDate;
-        this.invoiceItemArrayList = invoiceItemArrayList;
+        this.currency = currency;
+        this.statusId = statusId;
+        this.orgNo = orgNo;
+        this.invoiceNo = invoiceNo;
         this.discount = discount;
+        this.paid = paid;
+        this.addedBy = addedBy;
         this.deduction = deduction;
         this.amount = amount;
-    }
-
-    public String getInvoiceNo() {
-        return invoiceNo;
-    }
-
-    public void setInvoiceNo(String invoiceNo) {
-        this.invoiceNo = invoiceNo;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
+        this.cShortText = cShortText;
+        this.cText = cText;
         this.customerName = customerName;
+        this.totalAmountToPay = totalAmountToPay;
+        this.unPaidAmount = unPaidAmount;
     }
 
-    public String getCurrentDate() {
-        return currentDate;
+    public int getCustomerNo() {
+        return customerNo;
     }
 
-    public void setCurrentDate(String currentDate) {
-        this.currentDate = currentDate;
+    public String getsDate() {
+        return sDate;
     }
 
     public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public String getCurrency() {
+    public int getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public int getStatusId() {
+        return statusId;
     }
 
-    public ArrayList<InvoiceItem> getInvoiceItemArrayList() {
-        return invoiceItemArrayList;
+    public int getOrgNo() {
+        return orgNo;
     }
 
-    public void setInvoiceItemArrayList(ArrayList<InvoiceItem> invoiceItemArrayList) {
-        this.invoiceItemArrayList = invoiceItemArrayList;
+    public int getInvoiceNo() {
+        return invoiceNo;
     }
 
     public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
-        this.discount = discount;
+    public double getPaid() {
+        return paid;
+    }
+
+    public int getAddedBy() {
+        return addedBy;
     }
 
     public double getDeduction() {
         return deduction;
     }
 
-    public void setDeduction(double deduction) {
-        this.deduction = deduction;
-    }
-
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public String getcShortText() {
+        return cShortText;
+    }
+
+    public String getcText() {
+        return cText;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public double getTotalAmountToPay() {
+        return totalAmountToPay;
+    }
+
+    public double getUnPaidAmount() {
+        return unPaidAmount;
     }
 }
