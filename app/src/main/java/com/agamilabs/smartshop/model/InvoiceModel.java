@@ -4,12 +4,15 @@ import java.io.Serializable;
 
 public class InvoiceModel implements Serializable {
     int customerNo;
+    int supplierNo;
     String sDate;
+    String pDate;
     String dueDate;
     int currency;
     int statusId;
     int orgNo;
     int invoiceNo;
+    int billNo;
     double discount;
     double paid;
     int addedBy;
@@ -18,6 +21,7 @@ public class InvoiceModel implements Serializable {
     String cShortText;
     String cText;
     String customerName;
+    String supplierName;
     double totalAmountToPay;
     double unPaidAmount;
 
@@ -41,6 +45,28 @@ public class InvoiceModel implements Serializable {
     public InvoiceModel(String customerName) {
         this.customerName = customerName;
     }
+    public InvoiceModel(int supplierNo)
+    {
+        this.supplierNo = supplierNo;
+    }
+
+    public InvoiceModel(int supplierNo, String pDate, String dueDate, int currency, int statusId, int orgNo, int billNo, double discount, double paid, int addedBy, double deduction, double amount, String supplierName, double totalAmountToPay, double unPaidAmount) {
+        this.supplierNo = supplierNo;
+        this.pDate = pDate;
+        this.dueDate = dueDate;
+        this.currency = currency;
+        this.statusId = statusId;
+        this.orgNo = orgNo;
+        this.billNo = billNo;
+        this.discount = discount;
+        this.paid = paid;
+        this.addedBy = addedBy;
+        this.deduction = deduction;
+        this.amount = amount;
+        this.supplierName = supplierName;
+        this.totalAmountToPay = totalAmountToPay;
+        this.unPaidAmount = unPaidAmount;
+    }
 
     public InvoiceModel(int customerNo, String sDate, String dueDate, int currency, int statusId, int orgNo, int invoiceNo, double discount, double paid, int addedBy, double deduction, double amount, String cShortText, String cText, String customerName, double totalAmountToPay, double unPaidAmount) {
         this.customerNo = customerNo;
@@ -60,6 +86,23 @@ public class InvoiceModel implements Serializable {
         this.customerName = customerName;
         this.totalAmountToPay = totalAmountToPay;
         this.unPaidAmount = unPaidAmount;
+    }
+
+
+    public int getSupplierNo() {
+        return supplierNo;
+    }
+
+    public String getpDate() {
+        return pDate;
+    }
+
+    public int getBillNo() {
+        return billNo;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
     }
 
     public int getCustomerNo() {

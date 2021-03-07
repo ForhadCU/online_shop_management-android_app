@@ -1442,11 +1442,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 } else
                     Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*/
 
-                InvoiceItem cur = invoiceItemList.get(0);
-                Toast.makeText(this, cur.getItemno(), Toast.LENGTH_SHORT).show();
-
-                String getCustomerName = textViewSupplierName.getText().toString();
-                if (!TextUtils.isEmpty(getCustomerName))
+                String getSupplierName = textViewSupplierName.getText().toString();
+                if (!TextUtils.isEmpty(getSupplierName))
                 {
                     JSONArray jsonArrayInvoiceItem = new JSONArray();
                     for (int i = 0; i < invoiceItemList.size(); i++)
@@ -1476,8 +1473,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                         jsonObjectInvoiceItem.put("pdate", currentDate);
                         jsonObjectInvoiceItem.put("duedate", currentDate);
                         jsonObjectInvoiceItem.put("currency", "1");
-                        jsonObjectInvoiceItem.put("discount", "0");
-                        jsonObjectInvoiceItem.put("deduction", "0.00");
+                        jsonObjectInvoiceItem.put("discount", discount);
+                        jsonObjectInvoiceItem.put("deduction", deduction);
                         jsonObjectInvoiceItem.put("items", jsonArrayInvoiceItem);
 
                     } catch (JSONException e) {

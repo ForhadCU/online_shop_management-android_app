@@ -166,7 +166,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
             mCameraId = -1;
         }
 
-        setContentView(R.layout.activity_simple_scanner);
+        setContentView(R.layout.activity_simple_scanner_sale);
 //        setupToolbar();
 //        Objects.requireNonNull(getSupportActionBar()).hide();
 

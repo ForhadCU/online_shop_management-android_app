@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductDetailsView;
+import com.agamilabs.smartshop.adapter.SaleInvoiceCardViewAdapter;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.model.InvoiceModel;
 import com.android.volley.Response;
@@ -53,7 +53,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ArrayList<InvoiceModel> saleInvoiceModelList;
 
-    private RvAdapterSelectedProductDetailsView rvAdapter_selectedProductDetailsView;
+    private SaleInvoiceCardViewAdapter rvAdapter_selectedProductDetailsView;
 //apex
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +226,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
         recyclerViewInvoiceCardView.setHasFixedSize(true);
         recyclerViewInvoiceCardView.setLayoutManager(new LinearLayoutManager(this));
         saleInvoiceModelList = new ArrayList<>();
-        rvAdapter_selectedProductDetailsView = new RvAdapterSelectedProductDetailsView(saleInvoiceModelList, this);
+        rvAdapter_selectedProductDetailsView = new SaleInvoiceCardViewAdapter(saleInvoiceModelList, this);
         recyclerViewInvoiceCardView.setAdapter(rvAdapter_selectedProductDetailsView);
         rvAdapter_selectedProductDetailsView.notifyDataSetChanged();
 
