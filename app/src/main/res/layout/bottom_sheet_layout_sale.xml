@@ -354,6 +354,7 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="10dp">
 
+<!--
                     <Button
                         android:id="@+id/btn_invoiceCancel"
                         android:layout_width="100dp"
@@ -376,8 +377,67 @@
                         android:textAllCaps="false"
                         android:textColor="#ffff"
                         android:textStyle="bold" />
-
+-->
+                    <Button
+                        android:id="@+id/btn_cashPaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:backgroundTint="#9C27B0"
+                        android:text="Cash Paid"
+                        android:textAllCaps="false"
+                        android:textColor="#ffff"
+                        android:textStyle="bold"
+                        />
+                    <Button
+                        android:id="@+id/btn_bkashPaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="10dp"
+                        android:backgroundTint="#E91E63"
+                        android:text="bKash Paid"
+                        android:textAllCaps="false"
+                        android:textColor="#ffff"
+                        android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/btn_bankPaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:backgroundTint="#009688"
+                        android:text="Bank Paid"
+                        android:textAllCaps="false"
+                        android:textColor="#ffff"
+                        android:textStyle="bold" />
                 </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/l2"
+                    android:layout_marginTop="10dp"
+                    >
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:id="@+id/btn_invoiceCancel"
+                        android:src="@drawable/cross_2"
+                        android:background="@drawable/cross_shape"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="5dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel"
+                        android:layout_gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textColor="#FA0000"
+
+                        />
+                </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

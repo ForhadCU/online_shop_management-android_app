@@ -192,7 +192,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         textViewDiscountOverAll = findViewById(R.id.tv_discountOverAll);
         editText_discount = findViewById(R.id.edtTxt_discount);
         editText_deduction = findViewById(R.id.edtTxt_deduction);
-        buttonSaveInvoice = findViewById(R.id.btn_invoiceSave);
+//        buttonSaveInvoice = findViewById(R.id.btn_invoiceSave);
         imageButtonFlashOn = findViewById(R.id.imgBtn_flash_on);
         imageButtonFlashOff = findViewById(R.id.imgBtn_flash_off);
         imageButtonFocusOn = findViewById(R.id.imgBtn_focus_on);
@@ -223,7 +223,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         imageButtonProductSearch.setOnClickListener(this);
         imageButtonDiscountIncrease.setOnClickListener(this);
         imageButtonDiscountDecrease.setOnClickListener(this);
-        buttonSaveInvoice.setOnClickListener(this);
+//        buttonSaveInvoice.setOnClickListener(this);
 //        totalBillHandler();
     }
 
@@ -1430,8 +1430,10 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 }
                 break;
 
+/*
             case R.id.btn_invoiceSave:
-             /*   String customerName = textViewCustomerName.getText().toString();
+             */
+/*   String customerName = textViewCustomerName.getText().toString();
                 if (!TextUtils.isEmpty(customerName)) {
                     invoiceModelList = new ArrayList<>();
                     invoiceModel = new InvoiceModel("1", customerName, "27 Jan 2021", "29 Jan 2021", invoiceItemList, discount, deduction, total);
@@ -1450,7 +1452,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                     } else
                         Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*/
+                    Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*//*
+
 
                 String getCustomerName = textViewCustomerName.getText().toString();
                 if (!TextUtils.isEmpty(getCustomerName))
@@ -1533,9 +1536,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 } else
                     Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
 
-
-
                 break;
+                */
 
                 /*case R.id.btn_nxtProductList:
                 invoiceItemList = new ArrayList<>();
