@@ -116,13 +116,13 @@
                     android:id="@+id/tv1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Amount"
+                    android:text="Paid Amount"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_totalInvoiceCard"
+                    android:id="@+id/tv_paidInvoiceCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -153,18 +153,18 @@
                 android:id="@+id/tv2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Discount : "
+                android:text="Total: "
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/tv_discountInvoiceCard"
+                android:id="@+id/tv_totalInvoiceCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/tv2"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/tv2"
-                android:text="5000.00"
+                android:text="50000.00"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -173,32 +173,48 @@
                 android:id="@+id/tv3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/tv_discountInvoiceCard"
+                android:layout_alignBaseline="@+id/tv_totalInvoiceCard"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/tv_discountInvoiceCard"
+                android:layout_toRightOf="@+id/tv_totalInvoiceCard"
                 android:text="Tk"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
-            <!--
-                        <TextView
-                            android:id="@+id/tv5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Items : "
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:layout_toLeftOf="@+id/tv_itemNumInvoiceCard"
-                            android:textColor="@color/black" />
-                        <TextView
-                            android:id="@+id/tv_itemNumInvoiceCard"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="90"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:layout_alignParentRight="true"
-                            android:textColor="@color/black" />
-            -->
+            <TextView
+                android:id="@+id/tv5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/tv_discountInvoiceCard"
+                android:layout_alignBaseline="@+id/tv10"
+                android:text="Discount : "
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_discountInvoiceCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="500.00"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:layout_alignBaseline="@+id/tv10"
+                android:layout_toLeftOf="@+id/tv10"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Tk"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/black"
+                android:layout_alignParentRight="true"
+                android:textSize="12sp" />
+
+
+
 
             <RelativeLayout
                 android:id="@+id/l6"
@@ -403,7 +419,7 @@
                     android:layout_alignBaseline="@+id/tv7"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="10dp"
-                    android:text="50"
+                    android:text="5"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
                     android:textStyle="bold" />

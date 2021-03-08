@@ -1505,8 +1505,19 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                 {
                                     Toast.makeText(FullScannerActivitySale.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(FullScannerActivitySale.this, SaleInvoiceViewerActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
+
+
+                                    textViewSubtotalScannerDisplay.setText("0.00");
+                                    textViewCustomerNameScannerDisplay.setText("");
+                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    }
+                                    textViewCustomerName.setText("");
+                                    linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
+                                    relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                                    invoiceItemList.clear();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

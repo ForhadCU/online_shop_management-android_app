@@ -1,8 +1,11 @@
 package com.agamilabs.smartshop;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -53,6 +56,7 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
     private RecyclerView recyclerViewInvoiceCardView;
     private Toolbar toolbar;
     private ArrayList<InvoiceModel> purchaseInvoiceModelList;
+    private LinearLayout llProgressLoading;
 
     private PurchaseInvoiceCardViewAdapter purchaseInvoiceCardViewAdapter;
     //apex
@@ -62,6 +66,7 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_purchase_invoice_viewer);
 
         recyclerViewInvoiceCardView = findViewById(R.id.rv_invoiceCardView);
+        llProgressLoading = findViewById(R.id.l2);
         toolbar = findViewById(R.id.main_app_bar);
 
         handleAppbar();
@@ -89,6 +94,7 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        llProgressLoading.setVisibility(View.GONE);
                         JSONArray data_sale_invoice_list = jsonObject.getJSONArray("data");
                         for (int i = 0; i < data_sale_invoice_list.length(); i++) {
                             JSONObject dataObject = data_sale_invoice_list.getJSONObject(i);
@@ -233,8 +239,21 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
+                Intent intentSaleScanner = new Intent(getApplicationContext(), FullScannerActivityPurchase.class);
+                intentSaleScanner.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intentSaleScanner);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        /*Intent intentSaleScanner = new Intent(getApplicationContext(), FullScannerActivityPurchase.class);
+        intentSaleScanner.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intentSaleScanner);*/
+        this.finish();
+    }
+
 }

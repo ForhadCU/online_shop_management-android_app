@@ -84,6 +84,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.tv_invoiceNo.setText(String.valueOf(current.getInvoiceNo()));
         holder.tv_discount.setText(String.format("%.2f", current.getDiscount()));
         holder.tv_amount.setText(String.format("%.2f", current.getAmount()));
+        holder.tv_paidAmount.setText(String.format("%.2f", current.getPaid()));
         holder.tv_dueDate.setText(current.getDueDate());
         productItemsCount(holder, position);
 
@@ -212,7 +213,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_items, tv_customer, tv_date, tv_dueDate, tv_amount, tv_discount, tv_invoiceNo;
+        TextView tv_items, tv_customer, tv_date, tv_dueDate, tv_amount, tv_discount, tv_invoiceNo, tv_paidAmount;
         RecyclerView recyclerViewSelectedProductListInvoiceCard;
         LinearLayout linearLayoutClickToRv;
         RelativeLayout relativeLayoutExpandInvoiceItemList;
@@ -231,6 +232,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
             tv_items = itemView.findViewById(R.id.tv_itemNumInvoiceCard);
             tv_discount = itemView.findViewById(R.id.tv_discountInvoiceCard);
             tv_invoiceNo = itemView.findViewById(R.id.tv_invoiceNo);
+            tv_paidAmount = itemView.findViewById(R.id.tv_paidInvoiceCard);
             relativeLayoutExpandInvoiceItemList = itemView.findViewById(R.id.l6);
             imageView_up = itemView.findViewById(R.id.imgV_up);
             imageView_down = itemView.findViewById(R.id.imgV_down);

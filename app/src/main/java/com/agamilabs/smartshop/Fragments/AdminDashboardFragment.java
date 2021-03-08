@@ -16,8 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.FullScannerActivitySale;
 import com.agamilabs.smartshop.FullScannerActivityPurchase;
+import com.agamilabs.smartshop.FullScannerActivitySale;
 import com.agamilabs.smartshop.Interfaces.AdminDashboardInterface;
 import com.agamilabs.smartshop.PurchaseInvoiceViewerActivity;
 import com.agamilabs.smartshop.R;
@@ -58,7 +58,7 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
 
     private ImageButton mAddBtn;
     private TextView mTextName, mTextDomain, logout;
-    private LinearLayout mLinearDashboardPOS, mLinearNewSale, mLinearInvoices, mLinearStockReport, mLinearDashboardcommerce,
+    private LinearLayout mLinearDashboardPOS, mLinearNewSale, mLinearNewPurchase, mLinearSaleInvoices, mLinearPurchaseInvoices, mLinearStockReport, mLinearDashboardcommerce,
             mLinearOrderReport, mLinearInbox, mLinearCampaign, mLinearRecharge;
 
     private List<AdminDashboardModel> mSettingList = new ArrayList<>();
@@ -85,7 +85,9 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
 
         mLinearDashboardPOS.setOnClickListener(this);
         mLinearNewSale.setOnClickListener(this);
-        mLinearInvoices.setOnClickListener(this);
+        mLinearNewPurchase.setOnClickListener(this);
+        mLinearSaleInvoices.setOnClickListener(this);
+        mLinearPurchaseInvoices.setOnClickListener(this);
         mLinearStockReport.setOnClickListener(this);
         mLinearDashboardcommerce.setOnClickListener(this);
         mLinearOrderReport.setOnClickListener(this);
@@ -167,7 +169,9 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
 
         mLinearDashboardPOS = view.findViewById(R.id.linear_layout_dashboard);
         mLinearNewSale = view.findViewById(R.id.linear_layout_new_sale);
-        mLinearInvoices = view.findViewById(R.id.linear_layout_sale_invoices);
+        mLinearNewPurchase = view.findViewById(R.id.linear_layout_new_purchase);
+        mLinearSaleInvoices = view.findViewById(R.id.linear_layout_sale_invoices);
+        mLinearPurchaseInvoices = view.findViewById(R.id.linear_layout_purchase_invoices);
         mLinearStockReport = view.findViewById(R.id.linear_layout_stock_report);
         mLinearDashboardcommerce = view.findViewById(R.id.linear_layout_dashboard_ecommerce);
         mLinearOrderReport = view.findViewById(R.id.linear_layout_order_reports);
@@ -207,11 +211,16 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
                 onIntent(getContext(), ShopAdminHome.class);
                 break;
             case R.id.linear_layout_new_sale:
+                onIntent(getContext(), FullScannerActivitySale.class);
+                break;
+            case R.id.linear_layout_new_purchase:
                 onIntent(getContext(), FullScannerActivityPurchase.class);
                 break;
-
             case R.id.linear_layout_sale_invoices:
-                onIntent(getContext(), PurchaseInvoiceViewerActivity.class);     /*** temporary testing*/
+                onIntent(getContext(), SaleInvoiceViewerActivity.class);
+                break;
+            case R.id.linear_layout_purchase_invoices:
+                onIntent(getContext(), PurchaseInvoiceViewerActivity.class);
                 break;
             case R.id.linear_layout_stock_report:
                 onIntent(getContext(), StockReportActivity.class);

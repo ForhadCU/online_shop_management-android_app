@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
 import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
 import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
+import com.agamilabs.smartshop.adapter.PurchaseInvoiceCardViewAdapter;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductView;
@@ -1488,16 +1489,26 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                        Toast.makeText(FullScannerActivityPurchase.this, response, Toast.LENGTH_LONG).show();
                             try {
                                 JSONObject temp = new JSONObject(response);
 
                                 if (temp.getString("error").equalsIgnoreCase("false"))
                                 {
                                     Toast.makeText(FullScannerActivityPurchase.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+
                                     Intent intent = new Intent(FullScannerActivityPurchase.this, PurchaseInvoiceViewerActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
+
+                                    textViewSubtotalScannerDisplay.setText("0.00");
+                                    textViewSupplierNameScannerDisplay.setText("");
+                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    }
+                                    textViewSupplierName.setText("");
+                                    linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
+                                    relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                                    invoiceItemList.clear();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
