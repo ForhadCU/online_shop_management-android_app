@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -116,13 +117,12 @@
             android:id="@+id/l_bottomSheet_components"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_productView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -150,11 +150,10 @@
                     android:layout_marginTop="35dp"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="0.00"
-                    android:textStyle="bold"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/primary_text"
                     android:textSize="16sp"
-                    />
+                    android:textStyle="bold" />
 
 
                 <TextView
@@ -265,12 +264,12 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="14dp"
-                    android:textSize="16sp"
                     android:gravity="center_horizontal|center_vertical"
                     android:text="0.00"
                     android:textAppearance="@style/TextAppearance.AppCompat"
-                    android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
                 <TextView
@@ -292,27 +291,26 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/radioGroupDiscount"
                     android:layout_marginTop="14dp"
+                    android:layout_toRightOf="@+id/tv5"
                     android:background="@drawable/discount_edttext_shape"
                     android:gravity="center_vertical|center_horizontal"
-                    android:layout_toRightOf="@+id/tv5"
                     android:hint="0.00"
-                    android:textSize="14sp"
                     android:inputType="numberDecimal"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="10dp"
                     android:paddingBottom="3dp"
                     android:textColor="@color/primary_text"
-                    android:textColorHint="#C6C6C6" />
+                    android:textColorHint="#C6C6C6"
+                    android:textSize="14sp" />
 
                 <View
+                    android:id="@+id/view1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:id="@+id/view1"
-                    android:background="@color/lightgray"
                     android:layout_below="@+id/edtTxt_deduction"
                     android:layout_marginTop="10dp"
-                    />
+                    android:background="@color/lightgray" />
 
 
                 <TextView
@@ -346,7 +344,105 @@
 
                     />
 
-                <RelativeLayout
+                <!--
+                                    UI-1
+                -->
+                                <RelativeLayout
+                                    android:id="@+id/l2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_below="@id/tv7"
+                                    android:layout_marginTop="40dp"
+                                    android:layout_marginBottom="10dp">
+
+                <!--
+                                    <Button
+                                        android:id="@+id/btn_invoiceCancel"
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:backgroundTint="#F44336"
+                                        android:text="Cancel"
+                                        android:textAllCaps="false"
+                                        android:textColor="#ffff"
+                                        android:textStyle="bold" />
+
+                                    <Button
+                                        android:id="@+id/btn_invoiceSave"
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginLeft="10dp"
+                                        android:backgroundTint="#2196F3"
+                                        android:text="Save"
+                                        android:textAllCaps="false"
+                                        android:textColor="#ffff"
+                                        android:textStyle="bold" />
+                -->
+                                    <Button
+                                        android:id="@+id/btn_cashPaid"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentLeft="true"
+                                        android:backgroundTint="#00d988"
+                                        android:text="Cash Paid"
+                                        android:textAllCaps="false"
+                                        android:textColor="#ffff"
+                                        android:textStyle="bold"
+                                        />
+                                    <Button
+                                        android:id="@+id/btn_bankPaid"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_marginLeft="10dp"
+                                        android:backgroundTint="#655be0"
+                                        android:text="Bank Paid"
+                                        android:textAllCaps="false"
+                                        android:textColor="#ffff"
+                                        android:textStyle="bold" />
+                                    <Button
+                                        android:id="@+id/btn_bkashPaid"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_marginLeft="10dp"
+                                        android:backgroundTint="#f7c919"
+                                        android:text="bKash Paid"
+                                        android:textAllCaps="false"
+                                        android:textColor="#ffff"
+                                        android:textStyle="bold" />
+                                </RelativeLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_below="@+id/l2"
+                                    android:layout_marginTop="10dp"
+                                    >
+                                    <ImageView
+                                        android:layout_width="28dp"
+                                        android:layout_height="28dp"
+                                        android:id="@+id/btn_invoiceCancel"
+                                        android:src="@drawable/cross_2"
+                                        android:background="@drawable/cross_shape"
+                                        android:layout_gravity="center_horizontal"
+                                        android:padding="5dp"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Discard"
+                                        android:layout_gravity="center_horizontal"
+                                        android:textAppearance="@style/TextAppearance.AppCompat"
+                                        android:textColor="#F44336"
+                                        />
+                                </LinearLayout>
+
+                <!--
+                                UI-2
+                -->
+<!--                <RelativeLayout
                     android:id="@+id/l2"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -354,7 +450,6 @@
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="10dp">
 
-<!--
                     <Button
                         android:id="@+id/btn_invoiceCancel"
                         android:layout_width="100dp"
@@ -377,7 +472,7 @@
                         android:textAllCaps="false"
                         android:textColor="#ffff"
                         android:textStyle="bold" />
--->
+
                     <Button
                         android:id="@+id/btn_cashPaid"
                         android:layout_width="wrap_content"
@@ -387,8 +482,8 @@
                         android:text="Cash Paid"
                         android:textAllCaps="false"
                         android:textColor="#ffff"
-                        android:textStyle="bold"
-                        />
+                        android:textStyle="bold" />
+
                     <Button
                         android:id="@+id/btn_bkashPaid"
                         android:layout_width="wrap_content"
@@ -400,6 +495,7 @@
                         android:textAllCaps="false"
                         android:textColor="#ffff"
                         android:textStyle="bold" />
+
                     <Button
                         android:id="@+id/btn_bankPaid"
                         android:layout_width="wrap_content"
@@ -412,32 +508,35 @@
                         android:textColor="#ffff"
                         android:textStyle="bold" />
                 </RelativeLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_below="@+id/l2"
                     android:layout_marginTop="10dp"
-                    >
+                    android:orientation="vertical">
+
                     <ImageView
+                        android:id="@+id/btn_invoiceCancel"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:id="@+id/btn_invoiceCancel"
-                        android:src="@drawable/cross_2"
-                        android:background="@drawable/cross_shape"
                         android:layout_gravity="center_horizontal"
+                        android:background="@drawable/cross_shape"
                         android:padding="5dp"
-                        />
+                        android:src="@drawable/cross_2"
+                        tools:ignore="DuplicateIds" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cancel"
                         android:layout_gravity="center_horizontal"
+                        android:text="Cancel"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textColor="#FA0000"
 
                         />
-                </LinearLayout>
+                </LinearLayout>-->
+
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

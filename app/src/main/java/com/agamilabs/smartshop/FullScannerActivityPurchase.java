@@ -41,7 +41,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
 import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
 import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
-import com.agamilabs.smartshop.adapter.PurchaseInvoiceCardViewAdapter;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductView;
@@ -1421,143 +1420,145 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 }
                 break;
 
-            case R.id.btn_invoiceSave:
-             /*   String customerName = textViewCustomerName.getText().toString();
-                if (!TextUtils.isEmpty(customerName)) {
-                    invoiceModelList = new ArrayList<>();
-                    invoiceModel = new InvoiceModel("1", customerName, "27 Jan 2021", "29 Jan 2021", invoiceItemList, discount, deduction, total);
-                    invoiceModelList.add(invoiceModel);
-                    InvoiceModel current = invoiceModelList.get(0);
-                    Toast.makeText(this, current.getCustomerName(), Toast.LENGTH_SHORT).show();
+            /**
+             * with payment option
+             */
+            case R.id.btn_cashPaid:
+                JSONArray jsonArrayCashPaid = new JSONArray();
+                JSONObject jsonObjectCashPaid = new JSONObject();
 
-                    if (invoiceModelList.size() > 0) {
-                        Intent invoiceActivity = new Intent(this, InvoiceViewerActivity.class);
-                        Bundle args = new Bundle();
-                        args.putSerializable("selectedProductList", (Serializable) invoiceModelList);
-                        invoiceActivity.putExtra("BUNDLE", args);
-//                    invoiceActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(invoiceActivity);
-//                    Toast.makeText(this, "array.length", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*/
+                try {
+                    jsonObjectCashPaid.put("accno", 1120);
+                    jsonObjectCashPaid.put("amount", total);
 
-                String getSupplierName = textViewSupplierName.getText().toString();
-                if (!TextUtils.isEmpty(getSupplierName))
-                {
-                    JSONArray jsonArrayInvoiceItem = new JSONArray();
-                    for (int i = 0; i < invoiceItemList.size(); i++)
-                    {
-                        InvoiceItem current = invoiceItemList.get(i);
-                        JSONObject jsonObjectTemp = new JSONObject();
-                        try {
-                            jsonObjectTemp.put("itemno", current.getItemno());
-                            jsonObjectTemp.put("item_id", current.getItem_id());
-                            jsonObjectTemp.put("expirydate", current.getExpirydate());
-                            jsonObjectTemp.put("unitid", current.getSelling_unitid());
-                            jsonObjectTemp.put("qty", current.getQty());
-                            jsonObjectTemp.put("unitprice", current.getRate());
-                            jsonObjectTemp.put("taxrate", current.getTaxrate());
-                            jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
-                            jsonObjectTemp.put("salerate", current.getSale_rate());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    jsonArrayCashPaid.put(jsonObjectCashPaid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                        jsonArrayInvoiceItem.put(jsonObjectTemp);
-
-                    }
-                    JSONObject jsonObjectInvoiceItem = new JSONObject();
-                    try {
-                        jsonObjectInvoiceItem.put("supplieno", supplier_no);
-                        jsonObjectInvoiceItem.put("pdate", currentDate);
-                        jsonObjectInvoiceItem.put("duedate", currentDate);
-                        jsonObjectInvoiceItem.put("currency", "1");
-                        jsonObjectInvoiceItem.put("discount", discount);
-                        jsonObjectInvoiceItem.put("deduction", deduction);
-                        jsonObjectInvoiceItem.put("items", jsonArrayInvoiceItem);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    HashMap<String, String > mapTemp = new HashMap<>();
-                    mapTemp.put(API_KEY, apikey);
-                    mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
-                    mapTemp.put("status", "1");
-                    AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject temp = new JSONObject(response);
-
-                                if (temp.getString("error").equalsIgnoreCase("false"))
-                                {
-                                    Toast.makeText(FullScannerActivityPurchase.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
-
-                                    Intent intent = new Intent(FullScannerActivityPurchase.this, PurchaseInvoiceViewerActivity.class);
-//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-
-                                    textViewSubtotalScannerDisplay.setText("0.00");
-                                    textViewSupplierNameScannerDisplay.setText("");
-                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
-                                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                    }
-                                    textViewSupplierName.setText("");
-                                    linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
-                                    relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
-                                    invoiceItemList.clear();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    }, mapTemp);
-                } else
-                    Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
-
-
+                invoiceSave(jsonArrayCashPaid);
 
                 break;
 
-                /*case R.id.btn_nxtProductList:
-                invoiceItemList = new ArrayList<>();
-                invoiceItemList = dbHelper.invoiceItemTable();
-                if (invoiceItemList.size() > 0) {
-                    Intent invoiceActivity = new Intent(this, InvoiceActivity.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable("selectedProductList", (Serializable) invoiceItemList);
-                    invoiceActivity.putExtra("BUNDLE", args);
-                    startActivity(invoiceActivity);
-                } else
-                    Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
-                break;*/
 
+            case R.id.btn_bankPaid:
+                JSONArray jsonArrayBankPaid = new JSONArray();
+                JSONObject jsonObjectBankPaid = new JSONObject();
 
-            //For InvoiceViewActivity
-           /*     searchListItemList = new ArrayList<>();
-                searchListItemList = dbHelper.showAllSelectedProductsInInvoiceActivity();
-                if (searchListItemList.size() > 0) {
-                    Intent invoiceActivity = new Intent(this, InvoiceViewerActivity.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable("selectedProductList", (Serializable) searchListItemList);
-                    invoiceActivity.putExtra("BUNDLE", args);
-//                    invoiceActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    dbHelper.mDeleteProductList();
-                    startActivity(invoiceActivity);
-//                    Toast.makeText(this, "array.length", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
-*/
+                try {
+                    jsonObjectBankPaid.put("accno", 1110);
+                    jsonObjectBankPaid.put("amount", total);
+
+                    jsonArrayBankPaid.put(jsonObjectBankPaid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                invoiceSave(jsonArrayBankPaid);
+                break;
+
+            case R.id.btn_bkashPaid:
+                JSONArray jsonArrayBKashPaid = new JSONArray();
+                JSONObject jsonObjectBKashPaid = new JSONObject();
+                try {
+                    jsonObjectBKashPaid.put("accno", 1160);
+                    jsonObjectBKashPaid.put("amount", total);
+
+                    jsonArrayBKashPaid.put(jsonObjectBKashPaid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                invoiceSave(jsonArrayBKashPaid);
+                break;
+
         }
+    }
+
+    private void invoiceSave(JSONArray jsonArrayPayment) {
+
+        String getSupplierName = textViewSupplierName.getText().toString();
+        if (!TextUtils.isEmpty(getSupplierName))
+        {
+            JSONArray jsonArrayInvoiceItem = new JSONArray();
+            for (int i = 0; i < invoiceItemList.size(); i++)
+            {
+                InvoiceItem current = invoiceItemList.get(i);
+                JSONObject jsonObjectTemp = new JSONObject();
+                try {
+                    jsonObjectTemp.put("itemno", current.getItemno());
+                    jsonObjectTemp.put("item_id", current.getItem_id());
+                    jsonObjectTemp.put("expirydate", current.getExpirydate());
+                    jsonObjectTemp.put("unitid", current.getSelling_unitid());
+                    jsonObjectTemp.put("qty", current.getQty());
+                    jsonObjectTemp.put("unitprice", current.getRate());
+                    jsonObjectTemp.put("taxrate", current.getTaxrate());
+                    jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
+                    jsonObjectTemp.put("salerate", current.getSale_rate());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                jsonArrayInvoiceItem.put(jsonObjectTemp);
+
+            }
+            JSONObject jsonObjectInvoiceItem = new JSONObject();
+            try {
+                jsonObjectInvoiceItem.put("supplieno", supplier_no);
+                jsonObjectInvoiceItem.put("pdate", currentDate);
+                jsonObjectInvoiceItem.put("duedate", currentDate);
+                jsonObjectInvoiceItem.put("currency", "1");
+                jsonObjectInvoiceItem.put("discount", discount);
+                jsonObjectInvoiceItem.put("deduction", deduction);
+                jsonObjectInvoiceItem.put("items", jsonArrayInvoiceItem);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            HashMap<String, String > mapTemp = new HashMap<>();
+            mapTemp.put(API_KEY, apikey);
+            mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
+            mapTemp.put("status", "1");
+            mapTemp.put("payments", jsonArrayPayment.toString());
+
+            AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject temp = new JSONObject(response);
+
+                        if (temp.getString("error").equalsIgnoreCase("false"))
+                        {
+                            Toast.makeText(FullScannerActivityPurchase.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(FullScannerActivityPurchase.this, PurchaseInvoiceViewerActivity.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+
+                            textViewSubtotalScannerDisplay.setText("0.00");
+                            textViewSupplierNameScannerDisplay.setText("");
+                            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            }
+                            textViewSupplierName.setText("");
+                            linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
+                            relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                            textViewCartBadge.setText("0");
+                            invoiceItemList.clear();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }, mapTemp);
+        } else
+            Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
+
     }
 
 /*

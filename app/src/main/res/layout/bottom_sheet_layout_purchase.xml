@@ -116,7 +116,7 @@
             android:id="@+id/l_bottomSheet_components"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_productView"
@@ -349,35 +349,95 @@
                 <RelativeLayout
                     android:id="@+id/l2"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/tv7"
                     android:layout_marginTop="40dp"
                     android:layout_marginBottom="10dp">
 
+                    <!--
+                                        <Button
+                                            android:id="@+id/btn_invoiceCancel"
+                                            android:layout_width="100dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentLeft="true"
+                                            android:backgroundTint="#F44336"
+                                            android:text="Cancel"
+                                            android:textAllCaps="false"
+                                            android:textColor="#ffff"
+                                            android:textStyle="bold" />
+
+                                        <Button
+                                            android:id="@+id/btn_invoiceSave"
+                                            android:layout_width="100dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentRight="true"
+                                            android:layout_marginLeft="10dp"
+                                            android:backgroundTint="#2196F3"
+                                            android:text="Save"
+                                            android:textAllCaps="false"
+                                            android:textColor="#ffff"
+                                            android:textStyle="bold" />
+                    -->
                     <Button
-                        android:id="@+id/btn_invoiceCancel"
-                        android:layout_width="100dp"
+                        android:id="@+id/btn_cashPaid"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:backgroundTint="#F44336"
-                        android:text="Cancel"
+                        android:backgroundTint="#00d988"
+                        android:text="Cash Paid"
+                        android:textAllCaps="false"
+                        android:textColor="#ffff"
+                        android:textStyle="bold"
+                        />
+                    <Button
+                        android:id="@+id/btn_bankPaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="10dp"
+                        android:backgroundTint="#655be0"
+                        android:text="Bank Paid"
                         android:textAllCaps="false"
                         android:textColor="#ffff"
                         android:textStyle="bold" />
-
                     <Button
-                        android:id="@+id/btn_invoiceSave"
-                        android:layout_width="100dp"
+                        android:id="@+id/btn_bkashPaid"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginLeft="10dp"
-                        android:backgroundTint="#2196F3"
-                        android:text="Save"
+                        android:backgroundTint="#f7c919"
+                        android:text="bKash Paid"
                         android:textAllCaps="false"
                         android:textColor="#ffff"
                         android:textStyle="bold" />
-
                 </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/l2"
+                    android:layout_marginTop="10dp"
+                    >
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:id="@+id/btn_invoiceCancel"
+                        android:src="@drawable/cross_2"
+                        android:background="@drawable/cross_shape"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="5dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Discard"
+                        android:layout_gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textColor="#F44336"
+                        />
+                </LinearLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>

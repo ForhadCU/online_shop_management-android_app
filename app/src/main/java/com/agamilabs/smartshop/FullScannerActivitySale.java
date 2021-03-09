@@ -96,6 +96,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private RadioGroup radioGroupDiscount;
     private RadioButton discountRadioButton;
     private ProgressBar progressBarSkuRequest;
+    private Button buttonCashPaid, buttonBKashPaid, buttonBankPaid;
 
     private DbHelper dbHelper;
     private List<InvoiceModel> invoiceModelList;
@@ -149,7 +150,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private String currentDate;
 
 
-//apex
+    //apex
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -201,6 +202,9 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         imageButtonProductSearch = findViewById(R.id.imgBtn_prodcutSearch);
         imageButtonDiscountIncrease = findViewById(R.id.btn_discountIncrease);
         imageButtonDiscountDecrease = findViewById(R.id.btn_discountDecrease);
+        buttonCashPaid = findViewById(R.id.btn_cashPaid);
+        buttonBKashPaid = findViewById(R.id.btn_bkashPaid);
+        buttonBankPaid = findViewById(R.id.btn_bankPaid);
         textViewCustomerName = findViewById(R.id.tv_bottomSheetCustomerName);
         relativeLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
         linearLayoutBottomSheetCustomerName = findViewById(R.id.l_bottomSheet_customerName);
@@ -223,6 +227,9 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         imageButtonProductSearch.setOnClickListener(this);
         imageButtonDiscountIncrease.setOnClickListener(this);
         imageButtonDiscountDecrease.setOnClickListener(this);
+        buttonCashPaid.setOnClickListener(this);
+        buttonBKashPaid.setOnClickListener(this);
+        buttonBankPaid.setOnClickListener(this);
 //        buttonSaveInvoice.setOnClickListener(this);
 //        totalBillHandler();
     }
@@ -534,7 +541,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                     } else {
                         Toast.makeText(FullScannerActivitySale.this, "response error True", Toast.LENGTH_SHORT).show();
                     }
-                    
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -632,7 +639,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     @Override
     public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, String item_id, String unitid, String expirydate, String discount_percentage) {
         //product save via Model
-        invoiceItemList.add(new InvoiceItem(Integer.parseInt(productID), item_id,  Integer.parseInt(productQuantity),  Double.parseDouble(product_price),  discount_percentage,  expirydate,  productName, Double.parseDouble(totalBill)));
+        invoiceItemList.add(new InvoiceItem(Integer.parseInt(productID), item_id, Integer.parseInt(productQuantity), Double.parseDouble(product_price), discount_percentage, expirydate, productName, Double.parseDouble(totalBill)));
 
         if (invoiceItemList.size() > 0) {
             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
@@ -1430,37 +1437,17 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 }
                 break;
 
-/*
-            case R.id.btn_invoiceSave:
+            /**
+             * without payment option
+             * 1120 - cash
+             * 1110 - bank
+             * 1160 - bKash
              */
-/*   String customerName = textViewCustomerName.getText().toString();
-                if (!TextUtils.isEmpty(customerName)) {
-                    invoiceModelList = new ArrayList<>();
-                    invoiceModel = new InvoiceModel("1", customerName, "27 Jan 2021", "29 Jan 2021", invoiceItemList, discount, deduction, total);
-                    invoiceModelList.add(invoiceModel);
-                    InvoiceModel current = invoiceModelList.get(0);
-                    Toast.makeText(this, current.getCustomerName(), Toast.LENGTH_SHORT).show();
-
-                    if (invoiceModelList.size() > 0) {
-                        Intent invoiceActivity = new Intent(this, InvoiceViewerActivity.class);
-                        Bundle args = new Bundle();
-                        args.putSerializable("selectedProductList", (Serializable) invoiceModelList);
-                        invoiceActivity.putExtra("BUNDLE", args);
-//                    invoiceActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(invoiceActivity);
-//                    Toast.makeText(this, "array.length", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(this, "Please check customer name.", Toast.LENGTH_SHORT).show();*//*
-
-
+            /*case R.id.btn_invoiceSave:
                 String getCustomerName = textViewCustomerName.getText().toString();
-                if (!TextUtils.isEmpty(getCustomerName))
-                {
+                if (!TextUtils.isEmpty(getCustomerName)) {
                     JSONArray jsonArrayInvoiceItem = new JSONArray();
-                    for (int i = 0; i < invoiceItemList.size(); i++)
-                    {
+                    for (int i = 0; i < invoiceItemList.size(); i++) {
                         InvoiceItem current = invoiceItemList.get(i);
                         JSONObject jsonObjectTemp = new JSONObject();
                         try {
@@ -1493,7 +1480,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                         e.printStackTrace();
                     }
 
-                    HashMap<String, String > mapTemp = new HashMap<>();
+                    HashMap<String, String> mapTemp = new HashMap<>();
                     mapTemp.put(API_KEY, apikey);
                     mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
                     mapTemp.put("status", "1");
@@ -1504,8 +1491,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                             try {
                                 JSONObject temp = new JSONObject(response);
 
-                                if (temp.getString("error").equalsIgnoreCase("false"))
-                                {
+                                if (temp.getString("error").equalsIgnoreCase("false")) {
                                     Toast.makeText(FullScannerActivitySale.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(FullScannerActivitySale.this, SaleInvoiceViewerActivity.class);
 //                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -1536,8 +1522,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 } else
                     Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
 
-                break;
-                */
+                break;*/
 
                 /*case R.id.btn_nxtProductList:
                 invoiceItemList = new ArrayList<>();
@@ -1551,24 +1536,136 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 } else
                     Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
                 break;*/
+            /**
+             * with payment option
+             */
+            case R.id.btn_cashPaid:
+                JSONArray jsonArrayCashPaid = new JSONArray();
+                JSONObject jsonObjectCashPaid = new JSONObject();
+
+                try {
+                    jsonObjectCashPaid.put("accno", 1120);
+                    jsonObjectCashPaid.put("amount", total);
+
+                    jsonArrayCashPaid.put(jsonObjectCashPaid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                invoiceSave(jsonArrayCashPaid);
+
+                break;
 
 
-            //For InvoiceViewActivity
-           /*     searchListItemList = new ArrayList<>();
-                searchListItemList = dbHelper.showAllSelectedProductsInInvoiceActivity();
-                if (searchListItemList.size() > 0) {
-                    Intent invoiceActivity = new Intent(this, InvoiceViewerActivity.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable("selectedProductList", (Serializable) searchListItemList);
-                    invoiceActivity.putExtra("BUNDLE", args);
-//                    invoiceActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    dbHelper.mDeleteProductList();
-                    startActivity(invoiceActivity);
-//                    Toast.makeText(this, "array.length", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
-*/
+            case R.id.btn_bankPaid:
+                JSONArray jsonArrayBankPaid = new JSONArray();
+                JSONObject jsonObjectBankPaid = new JSONObject();
+
+                try {
+                    jsonObjectBankPaid.put("accno", 1110);
+                    jsonObjectBankPaid.put("amount", total);
+
+                    jsonArrayBankPaid.put(jsonObjectBankPaid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                invoiceSave(jsonArrayBankPaid);
+                break;
+
+            case R.id.btn_bkashPaid:
+                JSONArray jsonArrayBKashPaid = new JSONArray();
+                JSONObject jsonObjectBKashPaid = new JSONObject();
+                try {
+                    jsonObjectBKashPaid.put("accno", 1160);
+                    jsonObjectBKashPaid.put("amount", total);
+
+                    jsonArrayBKashPaid.put(jsonObjectBKashPaid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                invoiceSave(jsonArrayBKashPaid);
+                break;
         }
+    }
+
+    private void invoiceSave(JSONArray jsonArrayPayments) {
+        String getCustomerName = textViewCustomerName.getText().toString();
+        if (!TextUtils.isEmpty(getCustomerName)) {
+            JSONArray jsonArrayInvoiceItem = new JSONArray();
+            for (int i = 0; i < invoiceItemList.size(); i++) {
+                InvoiceItem current = invoiceItemList.get(i);
+                JSONObject jsonObjectTemp = new JSONObject();
+                try {
+                    jsonObjectTemp.put("itemno", current.getItemno());
+                    jsonObjectTemp.put("item_id", current.getItem_id());
+                    jsonObjectTemp.put("expirydate", current.getExpirydate());
+                    jsonObjectTemp.put("unitid", current.getSelling_unitid());
+                    jsonObjectTemp.put("qty", current.getQty());
+                    jsonObjectTemp.put("unitprice", current.getRate());
+                    jsonObjectTemp.put("taxrate", current.getTaxrate());
+                    jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                jsonArrayInvoiceItem.put(jsonObjectTemp);
+            }
+            JSONObject jsonObjectInvoiceItem = new JSONObject();
+            try {
+                jsonObjectInvoiceItem.put("customerno", customer_no);
+                jsonObjectInvoiceItem.put("sdate", currentDate);
+                jsonObjectInvoiceItem.put("duedate", currentDate);
+                jsonObjectInvoiceItem.put("currency", 1);
+                jsonObjectInvoiceItem.put("discount", discount);
+                jsonObjectInvoiceItem.put("deduction", deduction);
+                jsonObjectInvoiceItem.put("items", jsonArrayInvoiceItem);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            HashMap<String, String> mapTemp = new HashMap<>();
+            mapTemp.put(API_KEY, apikey);
+            mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
+            mapTemp.put("status", "1");
+            mapTemp.put("payments", jsonArrayPayments.toString());
+            AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+//                        Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_LONG).show();
+                    try {
+                        JSONObject temp = new JSONObject(response);
+
+                        if (temp.getString("error").equalsIgnoreCase("false")) {
+                            Toast.makeText(FullScannerActivitySale.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(FullScannerActivitySale.this, SaleInvoiceViewerActivity.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+
+
+                            textViewSubtotalScannerDisplay.setText("0.00");
+                            textViewCustomerNameScannerDisplay.setText("");
+                            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            }
+                            textViewCustomerName.setText("");
+                            linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
+                            relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                            textViewCartBadge.setText("0");
+                            invoiceItemList.clear();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }, mapTemp);
+        } else
+            Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
     }
 
 /*
