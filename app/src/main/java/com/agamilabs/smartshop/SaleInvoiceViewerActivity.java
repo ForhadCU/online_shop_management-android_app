@@ -214,7 +214,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
                                     }
                                 }, mapForScroll);
                             }
-                        }, 4000);
+                        }, 2000);
                         isLoading = true;
                     }
                 }

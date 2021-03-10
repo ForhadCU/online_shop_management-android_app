@@ -904,6 +904,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                             AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
+                                    Toast.makeText(FullScannerActivitySale.this, response, Toast.LENGTH_SHORT).show();
                                     try {
                                         JSONObject jsonObject = new JSONObject(response);
                                         if (jsonObject.getString("error").equalsIgnoreCase("false")) {
@@ -922,6 +923,10 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
                                             }
 //                                            rvAdapterPersonSearch.notifyDataSetChanged();
+                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true"))
+                                        {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                         }
 
                                     } catch (JSONException e) {
@@ -1098,12 +1103,12 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                     linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
                                                     if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
                                                         sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
                                                     textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
                                                     textViewCustomerNameScannerDisplay.setText(customerName);
-                                                    Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                     progressBar1.setVisibility(View.GONE);
                                                     buttonSaveCustomer.setVisibility(View.VISIBLE);
+
+                                                    Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                     dialogAddCustomer.dismiss();
                                                 }
 

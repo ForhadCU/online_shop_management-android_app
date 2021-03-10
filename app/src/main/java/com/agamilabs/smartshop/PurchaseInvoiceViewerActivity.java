@@ -211,7 +211,7 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
                                     }
                                 }, mapForScroll);
                             }
-                        }, 4000);
+                        }, 2000);
                         isLoading = true;
                     }
                 }

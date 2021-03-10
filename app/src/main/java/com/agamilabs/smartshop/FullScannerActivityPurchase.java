@@ -914,6 +914,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                                             }
 //                                            rvAdapterPersonSearch.notifyDataSetChanged();
+                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true"))
+                                        {
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                         }
 
                                     } catch (JSONException e) {
