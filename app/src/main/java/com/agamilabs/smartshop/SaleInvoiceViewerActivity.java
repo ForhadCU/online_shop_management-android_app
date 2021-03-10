@@ -246,13 +246,11 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
                /* Intent intentSaleScanner = new Intent(getApplicationContext(), FullScannerActivitySale.class);
                 intentSaleScanner.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intentSaleScanner);*/
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }

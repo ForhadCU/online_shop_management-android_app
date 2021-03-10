@@ -96,6 +96,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private RadioGroup radioGroupDiscount;
     private RadioButton discountRadioButton;
     private ProgressBar progressBarSkuRequest;
+    private Button buttonCashPaid, buttonBKashPaid, buttonBankPaid;
+    private LinearLayout llDiscardInvoice;
+
 
     private DbHelper dbHelper;
     private List<InvoiceModel> invoiceModelList;
@@ -200,6 +203,11 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         imageButtonProductSearch = findViewById(R.id.imgBtn_prodcutSearch);
         imageButtonDiscountIncrease = findViewById(R.id.btn_discountIncrease);
         imageButtonDiscountDecrease = findViewById(R.id.btn_discountDecrease);
+        buttonCashPaid = findViewById(R.id.btn_cashPaid);
+        buttonBKashPaid = findViewById(R.id.btn_bkashPaid);
+        buttonBankPaid = findViewById(R.id.btn_bankPaid);
+        llDiscardInvoice = findViewById(R.id.ll_discardInvoice);
+
         textViewSupplierName = findViewById(R.id.tv_bottomSheetCustomerName);
         relativeLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
         linearLayoutBottomSheetSupplierName = findViewById(R.id.l_bottomSheet_customerName);
@@ -219,7 +227,11 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         imageButtonProductSearch.setOnClickListener(this);
         imageButtonDiscountIncrease.setOnClickListener(this);
         imageButtonDiscountDecrease.setOnClickListener(this);
-        buttonSaveInvoice.setOnClickListener(this);
+        buttonCashPaid.setOnClickListener(this);
+        buttonBKashPaid.setOnClickListener(this);
+        buttonBankPaid.setOnClickListener(this);
+        llDiscardInvoice.setOnClickListener(this);
+
     }
 
     @Override
@@ -742,7 +754,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+//                        Toast.makeText(FullScannerActivityPurchase.this, response, Toast.LENGTH_SHORT).show();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getString("error").equalsIgnoreCase("false")) {
@@ -766,7 +778,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }, mapGetClients);
 
@@ -849,7 +861,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                             }
                                         }, mapForScroll);
                                     }
-                                }, 4000);
+                                }, 1500);
                                 isLoading = true;
                             }
                         }
@@ -990,7 +1002,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                         }
                                                     }, mapForScroll);
                                                 }
-                                            }, 4000);
+                                            }, 1500);
                                             isLoading2 = true;
                                         }
                                     }
@@ -1065,14 +1077,19 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                         @Override
                                         public void onResponse(String response) {
                                             try {
-                                                textViewSupplierName.setText(supplierName);
-                                                linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
-                                                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
-                                                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
                                                 JSONObject jsonObject = new JSONObject(response);
 
                                                 if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+
+                                                    String id = jsonObject.getString("id");
+                                                    String name = jsonObject.getString("name");
+                                                    customerClickHandler(id, name);
+
+                                                    textViewSupplierName.setText(supplierName);
+                                                    linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
+                                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
+                                                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
                                                     textViewSupplierNameScannerDisplay.setVisibility(View.VISIBLE);
                                                     textViewSupplierNameScannerDisplay.setText(supplierName);
                                                     Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -1089,10 +1106,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
                                             Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                            progressBar1.setVisibility(View.GONE);
                                             buttonSaveCustomer.setVisibility(View.VISIBLE);
                                         }
                                     }, mapInsertCustomer);
-
                                 }
                             }
                         });
@@ -1468,6 +1485,19 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     e.printStackTrace();
                 }
                 invoiceSave(jsonArrayBKashPaid);
+                break;
+
+            case R.id.ll_discardInvoice:
+                textViewSubtotalScannerDisplay.setText("0.00");
+                textViewSupplierNameScannerDisplay.setText("");
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                textViewSupplierName.setText("");
+                linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
+                relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                textViewCartBadge.setText("0");
+                invoiceItemList.clear();
                 break;
 
         }

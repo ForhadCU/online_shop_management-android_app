@@ -117,7 +117,7 @@
             android:id="@+id/l_bottomSheet_components"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_productView"
@@ -419,11 +419,13 @@
                                     android:orientation="vertical"
                                     android:layout_below="@+id/l2"
                                     android:layout_marginTop="10dp"
-                                    >
+                                    android:id="@+id/ll_discardInvoice"
+                                    android:clickable="true"
+                                    android:focusable="true">
                                     <ImageView
                                         android:layout_width="28dp"
                                         android:layout_height="28dp"
-                                        android:id="@+id/btn_invoiceCancel"
+                                        android:id="@+id/btn_invoiceDiscard"
                                         android:src="@drawable/cross_2"
                                         android:background="@drawable/cross_shape"
                                         android:layout_gravity="center_horizontal"

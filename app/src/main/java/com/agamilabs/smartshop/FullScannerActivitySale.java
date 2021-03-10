@@ -97,6 +97,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private RadioButton discountRadioButton;
     private ProgressBar progressBarSkuRequest;
     private Button buttonCashPaid, buttonBKashPaid, buttonBankPaid;
+    private LinearLayout llDiscardInvoice;
 
     private DbHelper dbHelper;
     private List<InvoiceModel> invoiceModelList;
@@ -131,9 +132,10 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
     private String url_1 = "http://pharmacy.egkroy.com/app-module/php/get_details_of_item_of_sku.php";
     private String url_2 = "http://pharmacy.egkroy.com/app-module/php/get_org_items_by_name.php";
-    private String url_3 = " http://pharmacy.egkroy.com/app-module/php/get_filtered_clients.php";
+    private String url_3 = "http://pharmacy.egkroy.com/app-module/php/get_filtered_clients.php";
     private String url_4 = "http://pharmacy.egkroy.com/app-module/php/insert_a_customer.php";
-    private String url_5 = " http://pharmacy.egkroy.com/app-module/php/insert_a_saleinvoice.php";
+    private String url_5 = "http://pharmacy.egkroy.com/app-module/php/insert_a_saleinvoice.php";
+    private String url_6_all_customer_and_supplier = "http://pharmacy.egkroy.com/app-module/php/get_clients_count.php";
     private static final String API_KEY = "apikey";
     private static final String PRODUCT_SEARCH_KEY = "search_key";
     private static final String PRODUCT_PAGE_NO = "page";
@@ -193,7 +195,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         textViewDiscountOverAll = findViewById(R.id.tv_discountOverAll);
         editText_discount = findViewById(R.id.edtTxt_discount);
         editText_deduction = findViewById(R.id.edtTxt_deduction);
-//        buttonSaveInvoice = findViewById(R.id.btn_invoiceSave);
         imageButtonFlashOn = findViewById(R.id.imgBtn_flash_on);
         imageButtonFlashOff = findViewById(R.id.imgBtn_flash_off);
         imageButtonFocusOn = findViewById(R.id.imgBtn_focus_on);
@@ -205,6 +206,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         buttonCashPaid = findViewById(R.id.btn_cashPaid);
         buttonBKashPaid = findViewById(R.id.btn_bkashPaid);
         buttonBankPaid = findViewById(R.id.btn_bankPaid);
+        llDiscardInvoice = findViewById(R.id.ll_discardInvoice);
         textViewCustomerName = findViewById(R.id.tv_bottomSheetCustomerName);
         relativeLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
         linearLayoutBottomSheetCustomerName = findViewById(R.id.l_bottomSheet_customerName);
@@ -230,7 +232,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         buttonCashPaid.setOnClickListener(this);
         buttonBKashPaid.setOnClickListener(this);
         buttonBankPaid.setOnClickListener(this);
-//        buttonSaveInvoice.setOnClickListener(this);
+        llDiscardInvoice.setOnClickListener(this);
 //        totalBillHandler();
     }
 
@@ -783,7 +785,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 }, mapGetClients);
 
@@ -866,7 +869,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                             }
                                         }, mapForScroll);
                                     }
-                                }, 4000);
+                                }, 1500);
                                 isLoading = true;
                             }
                         }
@@ -1007,7 +1010,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                         }
                                                     }, mapForScroll);
                                                 }
-                                            }, 4000);
+                                            }, 1500);
                                             isLoading2 = true;
                                         }
                                     }
@@ -1082,14 +1085,20 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                         @Override
                                         public void onResponse(String response) {
                                             try {
-                                                textViewCustomerName.setText(customerName);
-                                                linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
-                                                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
-                                                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
                                                 JSONObject jsonObject = new JSONObject(response);
 
                                                 if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+
+                                                    String id = jsonObject.getString("id");
+                                                    String name = jsonObject.getString("name");
+
+                                                    customerClickHandler(id, name);
+
+                                                    textViewCustomerName.setText(customerName);
+                                                    linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
+                                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED)
+                                                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
                                                     textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
                                                     textViewCustomerNameScannerDisplay.setText(customerName);
                                                     Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -1106,6 +1115,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
                                             Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
+                                            progressBar1.setVisibility(View.GONE);
                                             buttonSaveCustomer.setVisibility(View.VISIBLE);
                                         }
                                     }, mapInsertCustomer);
@@ -1585,6 +1595,19 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 }
                 invoiceSave(jsonArrayBKashPaid);
                 break;
+
+            case R.id.ll_discardInvoice:
+                textViewSubtotalScannerDisplay.setText("0.00");
+                textViewCustomerNameScannerDisplay.setText("");
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                textViewCustomerName.setText("");
+                linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
+                relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                textViewCartBadge.setText("0");
+                invoiceItemList.clear();
+                break;
         }
     }
 
@@ -1640,7 +1663,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                             Intent intent = new Intent(FullScannerActivitySale.this, SaleInvoiceViewerActivity.class);
 //                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
-
 
                             textViewSubtotalScannerDisplay.setText("0.00");
                             textViewCustomerNameScannerDisplay.setText("");
@@ -1798,6 +1820,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     @Override
     public void customerClickHandler(String id, String name) {
         customer_no = id;
+        Toast.makeText(this, "Selected Id: "+ id, Toast.LENGTH_SHORT).show();
         linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
         textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
         textViewCustomerName.setText(name);
