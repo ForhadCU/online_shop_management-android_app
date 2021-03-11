@@ -1,9 +1,7 @@
 package com.agamilabs.smartshop;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -33,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -101,8 +98,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private ProgressBar progressBarSkuRequest;
     private Button buttonCashPaid, buttonBKashPaid, buttonBankPaid;
     private LinearLayout llDiscardInvoice;
-    private TextView tv_AdjustFraction;
-    private AlertDialog.Builder builder;
 
     private DbHelper dbHelper;
     private List<InvoiceModel> invoiceModelList;
@@ -198,7 +193,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         textViewSubtotalScannerDisplay = findViewById(R.id.tv_subTotalScannerDisplay);
         textViewCustomerNameScannerDisplay = findViewById(R.id.tv_cusNameScannerDisplay);
         textViewDiscountOverAll = findViewById(R.id.tv_discountOverAll);
-        tv_AdjustFraction = findViewById(R.id.tv_adjustFraction);
         editText_discount = findViewById(R.id.edtTxt_discount);
         editText_deduction = findViewById(R.id.edtTxt_deduction);
         imageButtonFlashOn = findViewById(R.id.imgBtn_flash_on);
@@ -220,7 +214,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         radioGroupDiscount = findViewById(R.id.radioGroupDiscount);
         progressBarSkuRequest = findViewById(R.id.progress_skuRequest);
 
-        builder = new AlertDialog.Builder(this);
 
 //        userList();
 //        productList();
@@ -240,50 +233,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         buttonBKashPaid.setOnClickListener(this);
         buttonBankPaid.setOnClickListener(this);
         llDiscardInvoice.setOnClickListener(this);
-        tv_AdjustFraction.setOnClickListener(this);
-
-        defaultClientSelection();
 //        totalBillHandler();
-    }
-
-    private void defaultClientSelection() {
-        HashMap<String, String> mapGetClients = new HashMap<>();
-        mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(1));
-        mapGetClients.put(LIMIT, String.valueOf(10));
-        mapGetClients.put(API_KEY, apikey);
-        mapGetClients.put(TYPE, type_name);
-
-        AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                        JSONArray customerDataArray = jsonObject.getJSONArray("data");
-                            JSONObject customerData = customerDataArray.getJSONObject(0);
-//                        customerClickHandler(, customerData.getString("name"));
-                        customer_no = customerData.getString("id");
-                        textViewCustomerName.setText(customerData.getString("name"));
-                        textViewCustomerNameScannerDisplay.setText(customerData.getString("name"));
-                        linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
-                        textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
-
-                        }
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        }, mapGetClients);
-
     }
 
     @Override
@@ -749,7 +699,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 //        contentFrame.addView(mScannerView);
     }
 
-    @SuppressLint("DefaultLocale")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -974,7 +923,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
                                             }
 //                                            rvAdapterPersonSearch.notifyDataSetChanged();
-                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true"))
+                                        {
                                             progressBar.setVisibility(View.GONE);
                                             Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                         }
@@ -1482,41 +1432,125 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
                 if (!TextUtils.isEmpty(getDisc)) {
                     double incDisc = Double.parseDouble(getDisc);
-                    incDisc = incDisc + 1.00;
+                    incDisc = incDisc + 1;
                     if (incDisc <= subTotal) {
 //                        editText_discount.setText(String.format("%.2f", incDisc));
-                        deduction = 0.00;
-                        editText_deduction.setText(String.format("%.2f", deduction));
-                        editText_discount.setText(String.format("%.2f", incDisc));
-                    }
-                } else {
-//                    editText_discount.setText("1.00");
-                    double incDisc = 0.00;
-                    incDisc = incDisc + 1.00;
-                    if (incDisc <= subTotal) {
-//                        editText_discount.setText(String.format("%.2f", incDisc));
-                        deduction = 0.00;
-                        editText_deduction.setText(String.format("%.2f", deduction));
-                        editText_discount.setText(String.format("%.2f", incDisc));
+                        editText_discount.setText(String.valueOf((int) incDisc));
                     }
                 }
-                ;
                 break;
             case R.id.btn_discountDecrease:
                 String getDisc2 = editText_discount.getText().toString();
 
                 if (!TextUtils.isEmpty(getDisc2)) {
                     double decDisc = Double.parseDouble(getDisc2);
-                    decDisc = decDisc - 1.00;
-                    if (decDisc > 0) {
-                        deduction = 0.00;
-                        editText_deduction.setText(String.format("%.2f", deduction));
-                        editText_discount.setText(String.format("%.2f", decDisc));
+                    decDisc = decDisc - 1;
+                    if (decDisc > -1) {
+                        editText_discount.setText(String.valueOf((int) decDisc));
 //                        editText_discount.setText(String.format("%.2f", decDisc));
                     }
                 }
                 break;
 
+            /**
+             * without payment option
+             * 1120 - cash
+             * 1110 - bank
+             * 1160 - bKash
+             */
+            /*case R.id.btn_invoiceSave:
+                String getCustomerName = textViewCustomerName.getText().toString();
+                if (!TextUtils.isEmpty(getCustomerName)) {
+                    JSONArray jsonArrayInvoiceItem = new JSONArray();
+                    for (int i = 0; i < invoiceItemList.size(); i++) {
+                        InvoiceItem current = invoiceItemList.get(i);
+                        JSONObject jsonObjectTemp = new JSONObject();
+                        try {
+                            jsonObjectTemp.put("itemno", current.getItemno());
+                            jsonObjectTemp.put("item_id", current.getItem_id());
+                            jsonObjectTemp.put("expirydate", current.getExpirydate());
+                            jsonObjectTemp.put("unitid", current.getSelling_unitid());
+                            jsonObjectTemp.put("qty", current.getQty());
+                            jsonObjectTemp.put("unitprice", current.getRate());
+                            jsonObjectTemp.put("taxrate", current.getTaxrate());
+                            jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        jsonArrayInvoiceItem.put(jsonObjectTemp);
+
+                    }
+                    JSONObject jsonObjectInvoiceItem = new JSONObject();
+                    try {
+                        jsonObjectInvoiceItem.put("customerno", customer_no);
+                        jsonObjectInvoiceItem.put("sdate", currentDate);
+                        jsonObjectInvoiceItem.put("duedate", currentDate);
+                        jsonObjectInvoiceItem.put("currency", 1);
+                        jsonObjectInvoiceItem.put("discount", discount);
+                        jsonObjectInvoiceItem.put("deduction", deduction);
+                        jsonObjectInvoiceItem.put("items", jsonArrayInvoiceItem);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    HashMap<String, String> mapTemp = new HashMap<>();
+                    mapTemp.put(API_KEY, apikey);
+                    mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
+                    mapTemp.put("status", "1");
+                    AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+//                        Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_LONG).show();
+                            try {
+                                JSONObject temp = new JSONObject(response);
+
+                                if (temp.getString("error").equalsIgnoreCase("false")) {
+                                    Toast.makeText(FullScannerActivitySale.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(FullScannerActivitySale.this, SaleInvoiceViewerActivity.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+
+
+                                    textViewSubtotalScannerDisplay.setText("0.00");
+                                    textViewCustomerNameScannerDisplay.setText("");
+                                    if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                    }
+                                    textViewCustomerName.setText("");
+                                    linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
+                                    relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                                    invoiceItemList.clear();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }, mapTemp);
+                } else
+                    Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
+
+                break;*/
+
+                /*case R.id.btn_nxtProductList:
+                invoiceItemList = new ArrayList<>();
+                invoiceItemList = dbHelper.invoiceItemTable();
+                if (invoiceItemList.size() > 0) {
+                    Intent invoiceActivity = new Intent(this, InvoiceActivity.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("selectedProductList", (Serializable) invoiceItemList);
+                    invoiceActivity.putExtra("BUNDLE", args);
+                    startActivity(invoiceActivity);
+                } else
+                    Toast.makeText(this, "No item found!", Toast.LENGTH_SHORT).show();
+                break;*/
             /**
              * with payment option
              */
@@ -1568,63 +1602,16 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 break;
 
             case R.id.ll_discardInvoice:
-              /*  dialog = new Dialog(FullScannerActivitySale.this);
-                dialog.setContentView(R.layout.dialog_searchable_spinner_layout);
-
-                WindowManager.LayoutParams wmlp = dialog.getWindow().getAttributes();
-                wmlp.gravity = Gravity.TOP | Gravity.LEFT;
-                wmlp.x = 30;
-                wmlp.y = 100;
-
-                dialog.getWindow().setLayout(650, 800);
-                //                dialog.getWindow().setGravity(Gravity.BOTTOM);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();*/
-
-                builder.setMessage("Optional message").setTitle("Optional title");
-
-                builder.setMessage("Do you want to discard this invoice?")
-                        .setCancelable(false)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                textViewSubtotalScannerDisplay.setText("0.00");
-                                textViewCustomerNameScannerDisplay.setText("");
-                                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
-                                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                                }
-                                textViewCustomerName.setText("");
-                                linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
-                                relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
-                                textViewCartBadge.setText("0");
-                                editText_deduction.setText("0.00");
-                                editText_discount.setText("0.00");
-                                invoiceItemList.clear();
-                                dialog.cancel();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.setTitle("Alert!!");
-                    alertDialog.show();
-                break;
-
-            case R.id.tv_adjustFraction:
-
-                double fractionalValue = (subTotal - discount) % 1;
-                total = total - fractionalValue;
-                deduction = fractionalValue;
-
-                Toast.makeText(this, String.valueOf(total), Toast.LENGTH_LONG).show();
-                editText_deduction.setText(String.format("%.2f", deduction));
-                textView_total.setText(String.format("%.2f", total));
-
+                textViewSubtotalScannerDisplay.setText("0.00");
+                textViewCustomerNameScannerDisplay.setText("");
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                textViewCustomerName.setText("");
+                linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
+                relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                textViewCartBadge.setText("0");
+                invoiceItemList.clear();
                 break;
         }
     }
@@ -1691,8 +1678,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                             linearLayoutBottomSheetCustomerName.setVisibility(View.GONE);
                             relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
                             textViewCartBadge.setText("0");
-                            editText_deduction.setText("0.00");
-                            editText_discount.setText("0.00");
                             invoiceItemList.clear();
                         }
                     } catch (JSONException e) {
@@ -1840,6 +1825,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     @Override
     public void customerClickHandler(String id, String name) {
         customer_no = id;
+        Toast.makeText(this, "Selected Id: "+ id, Toast.LENGTH_SHORT).show();
         linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
         textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
         textViewCustomerName.setText(name);
