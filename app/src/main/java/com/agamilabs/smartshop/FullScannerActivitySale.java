@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -47,6 +48,7 @@ import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductView;
+import com.agamilabs.smartshop.adapter.SaleInvoiceCardViewAdapter;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.database.DbHelper;
 import com.agamilabs.smartshop.model.Customer;
@@ -114,6 +116,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private InvoiceModel invoiceModel;
     private RvAdapterPersonSearch rvAdapterPersonSearch;
     private RvAdapterProductSearch rvAdapterProductSearch;
+    private SaleInvoiceCardViewAdapter saleInvoiceCardViewAdapter;
 
     private Customer customer;
     private Products products;
@@ -174,6 +177,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
             mCameraId = -1;
         }
 
+
         setContentView(R.layout.activity_simple_scanner_sale);
 //        setupToolbar();
 //        Objects.requireNonNull(getSupportActionBar()).hide();
@@ -219,6 +223,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         textViewCartBadge = findViewById(R.id.tv_cartBadge);
         radioGroupDiscount = findViewById(R.id.radioGroupDiscount);
         progressBarSkuRequest = findViewById(R.id.progress_skuRequest);
+
 
         builder = new AlertDialog.Builder(this);
 

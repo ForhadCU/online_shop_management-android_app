@@ -1693,6 +1693,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         mTest();
     }
 
+
     private void mTest() {
         mAdapterHandler();
         totalBillHandler();

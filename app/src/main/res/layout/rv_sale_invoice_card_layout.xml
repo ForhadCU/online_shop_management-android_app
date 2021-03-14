@@ -148,7 +148,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/v1"
-            android:padding="10dp">
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingBottom="25dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+
+            >
 
             <TextView
                 android:id="@+id/tv2"
@@ -225,11 +232,20 @@
                 android:paddingRight="5dp">
 
                 <TextView
+                    android:id="@+id/tv11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="Items list"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_itemNumInvoiceCard"
+                    android:layout_centerVertical="true"
+                    android:text=" ( 0 Item )"
+                    android:layout_toRightOf="@+id/tv11"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
 
                 <ImageView
@@ -371,7 +387,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/l3"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="25dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="10dp">
 
@@ -401,7 +416,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black" />
 
-                <TextView
+<!--                <TextView
                     android:id="@+id/tv7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -420,7 +435,30 @@
                     android:text="5"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/imgV_webPrint"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_web_print"
+                    android:clickable="true"
+                    android:focusable="true"
+                    />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:id="@+id/imgV_invoice"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_invoice"
+                    android:layout_toLeftOf="@+id/imgV_webPrint"
+                    android:layout_marginRight="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    />
+
+
 
 
             </RelativeLayout>

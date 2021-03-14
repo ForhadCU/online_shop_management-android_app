@@ -8,6 +8,24 @@
 
     <include layout="@layout/app_bar_layout" />
 
+<!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/main_app_bar"
+        android:background="#00FFFFFF"
+        android:gravity="center_vertical|center_horizontal"
+        >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_miniInvoiceReq"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+-->
     <LinearLayout
         android:id="@+id/l1"
         android:layout_width="match_parent"

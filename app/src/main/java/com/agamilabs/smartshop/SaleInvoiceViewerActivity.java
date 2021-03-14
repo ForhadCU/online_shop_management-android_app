@@ -54,6 +54,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
     private boolean isLoading = false;
 
     private RecyclerView recyclerViewInvoiceCardView;
+    private ProgressBar progressBar;
     private Toolbar toolbar;
     private ArrayList<InvoiceModel> saleInvoiceModelList;
 //    private ProgressBar progressBarLoading;
@@ -69,6 +70,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
         recyclerViewInvoiceCardView = findViewById(R.id.rv_invoiceCardView);
         llProgressLoading = findViewById(R.id.l2);
         toolbar = findViewById(R.id.main_app_bar);
+//        progressBar = findViewById(R.id.progress_miniInvoiceReq);
 
         handleAppbar();
         handleBackPressButton();
@@ -263,4 +265,6 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
         startActivity(intentSaleScanner);*/
         this.finish();
     }
+
+
 }
