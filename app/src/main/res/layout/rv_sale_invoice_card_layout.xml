@@ -117,7 +117,7 @@
                     android:id="@+id/tv1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Paid Amount"
+                    android:text="Paid"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -403,12 +403,14 @@
                     android:layout_alignParentLeft="true"
                     android:text="Due date : "
                     android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/tv_dueDateInvoiceCard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_alignBaseline="@+id/tv6"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/tv6"

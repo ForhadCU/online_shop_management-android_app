@@ -136,6 +136,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private String url_3 = " http://pharmacy.egkroy.com/app-module/php/get_filtered_clients.php";
     private String url_4 = "http://pharmacy.egkroy.com/app-module/php/insert_a_customer.php";
     private String url_5 = "http://pharmacy.egkroy.com/app-module/php/insert_a_purchaseinvoice.php";
+    private String url_6 = "http://pharmacy.egkroy.com/app-module/php/get_details_of_item.php";
     private static final String API_KEY = "apikey";
     private static final String PRODUCT_SEARCH_KEY = "search_key";
     private static final String PRODUCT_PAGE_NO = "page";
