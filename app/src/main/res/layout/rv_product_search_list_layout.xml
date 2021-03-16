@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="3dp"
-    android:padding="5dp"
 
     >
     <TextView
@@ -12,12 +11,13 @@
         android:id="@+id/tv_rvProductName"
         android:textColor="@color/primary_text"
         android:text="Item is item"
+        android:padding="5dp"
         android:singleLine="true"
         android:background="@drawable/lv_search_dialog_list_style"
         android:gravity="center_vertical"
         android:layout_alignParentTop="true"
-        android:textSize="16sp"
         />
+<!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +60,7 @@
         android:layout_marginRight="25dp"
         android:layout_alignBaseline="@+id/tv_2"
         />
+-->
 
 
 

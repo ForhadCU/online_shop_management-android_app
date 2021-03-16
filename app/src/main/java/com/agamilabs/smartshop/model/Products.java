@@ -19,6 +19,11 @@ public class Products {
         this.qty = qty;
     }
 
+    public Products(String id, String item_name) {
+        this.id = id;
+        this.item_name = item_name;
+    }
+
     public String getId() {
         return id;
     }

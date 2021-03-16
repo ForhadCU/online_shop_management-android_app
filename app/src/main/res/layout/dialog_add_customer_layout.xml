@@ -55,6 +55,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="5dp"
                 android:background="@android:drawable/editbox_background"
+                android:focusedByDefault="true"
                 />
             <TextView
                 android:layout_width="match_parent"

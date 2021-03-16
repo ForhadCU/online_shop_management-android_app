@@ -77,15 +77,15 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             tvItem = itemView.findViewById(R.id.tv_rvProductName);
-            textViewSku = itemView.findViewById(R.id.tv_rvProductSku);
-            textViewQty = itemView.findViewById(R.id.tv_rvProductQty);
+     /*       textViewSku = itemView.findViewById(R.id.tv_rvProductSku);
+            textViewQty = itemView.findViewById(R.id.tv_rvProductQty);*/
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Products current = productsArrayList.get(getAdapterPosition());
-            iCallbackCustomerSearchClickHandler.productClickHandler(current.getItem_name(), current.getId(), productPageNo);
+            iCallbackCustomerSearchClickHandler.productClickHandler(current.getItem_name(), current.getId());
         }
     }
 
@@ -107,7 +107,7 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
         Products current = productsArrayList.get(position);
 
         viewHolder.tvItem.setText(current.getItem_name());
-        viewHolder.textViewSku.setText(current.getSku());
-        viewHolder.textViewQty.setText(current.getQty());
+       /* viewHolder.textViewSku.setText(current.getSku());
+        viewHolder.textViewQty.setText(current.getQty());*/
     }
 }

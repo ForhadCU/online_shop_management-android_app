@@ -150,7 +150,7 @@
             android:layout_below="@+id/v1"
             android:clickable="true"
             android:focusable="true"
-            android:paddingBottom="25dp"
+            android:paddingBottom="40dp"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
@@ -227,10 +227,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_discountInvoiceCard"
-                android:layout_marginTop="16sp"
+                android:layout_marginTop="25dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp">
 
+<!--
                 <TextView
                     android:id="@+id/tv11"
                     android:layout_width="wrap_content"
@@ -239,13 +240,26 @@
                     android:layout_centerVertical="true"
                     android:text="Items list"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
+
+-->
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:id="@+id/imgV_itemsList"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_items_list"
+                    android:scaleType="fitXY"
+                    />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_itemNumInvoiceCard"
                     android:layout_centerVertical="true"
-                    android:text=" ( 0 Item )"
-                    android:layout_toRightOf="@+id/tv11"
+                    android:layout_marginLeft="5dp"
+                    android:text=" (0 Item)"
+                    android:layout_toRightOf="@+id/imgV_itemsList"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
 
                 <ImageView

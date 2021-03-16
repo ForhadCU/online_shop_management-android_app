@@ -1736,7 +1736,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     }
 
     @Override
-    public void productClickHandler(String name, String id, int productPageNo) {
+    public void productClickHandler(String name, String id) {
         HashMap<String, String> mapGetProductById = new HashMap<>();
         mapGetProductById.put(API_KEY, apikey);
 //        mapGetProductById.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));

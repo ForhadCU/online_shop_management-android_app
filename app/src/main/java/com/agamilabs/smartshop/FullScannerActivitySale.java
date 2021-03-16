@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -138,12 +137,13 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private double subTotal = 0.00;
     ICallBackFromFullScannerActivity icallBackTest;
 
-    private String url_1 = "http://pharmacy.egkroy.com/app-module/php/get_details_of_item_of_sku.php";
-    private String url_2 = "http://pharmacy.egkroy.com/app-module/php/get_org_items_by_name.php";
-    private String url_3 = "http://pharmacy.egkroy.com/app-module/php/get_filtered_clients.php";
-    private String url_4 = "http://pharmacy.egkroy.com/app-module/php/insert_a_customer.php";
-    private String url_5 = "http://pharmacy.egkroy.com/app-module/php/insert_a_saleinvoice.php";
-    private String url_6_all_customer_and_supplier = "http://pharmacy.egkroy.com/app-module/php/get_clients_count.php";
+    private String url_get_details_of_item_of_sku = "http://pharmacy.egkroy.com/app-module/php/get_details_of_item_of_sku.php";
+    private String url_get_org_items_by_name = "http://pharmacy.egkroy.com/app-module/php/get_org_items_by_name.php";
+    private String url_get_filtered_clients = "http://pharmacy.egkroy.com/app-module/php/get_filtered_clients.php";
+    private String url_insert_a_customer = "http://pharmacy.egkroy.com/app-module/php/insert_a_customer.php";
+    private String url_insert_a_saleinvoice = "http://pharmacy.egkroy.com/app-module/php/insert_a_saleinvoice.php";
+    private String url_get_details_of_item = "http://pharmacy.egkroy.com/app-module/php/get_details_of_item.php";
+    private String url_7_all_customer_and_supplier = "http://pharmacy.egkroy.com/app-module/php/get_clients_count.php";
     private static final String API_KEY = "apikey";
     private static final String PRODUCT_SEARCH_KEY = "search_key";
     private static final String PRODUCT_PAGE_NO = "page";
@@ -247,7 +247,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         llDiscardInvoice.setOnClickListener(this);
         tv_AdjustFraction.setOnClickListener(this);
 
-        defaultClientSelection();
+//        defaultClientSelection();
 //        totalBillHandler();
     }
 
@@ -258,7 +258,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         mapGetClients.put(API_KEY, apikey);
         mapGetClients.put(TYPE, type_name);
 
-        AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
+        AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_clients, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -266,15 +266,14 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                         JSONArray customerDataArray = jsonObject.getJSONArray("data");
-                            JSONObject customerData = customerDataArray.getJSONObject(0);
+                        JSONObject customerData = customerDataArray.getJSONObject(0);
 //                        customerClickHandler(, customerData.getString("name"));
                         customer_no = customerData.getString("id");
                         textViewCustomerName.setText(customerData.getString("name"));
                         textViewCustomerNameScannerDisplay.setText(customerData.getString("name"));
                         linearLayoutBottomSheetCustomerName.setVisibility(View.VISIBLE);
                         textViewCustomerNameScannerDisplay.setVisibility(View.VISIBLE);
-
-                        }
+                    }
 
 
                 } catch (JSONException e) {
@@ -285,7 +284,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+//                dialog.dismiss();
             }
         }, mapGetClients);
 
@@ -294,7 +293,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     @Override
     protected void onStart() {
         super.onStart();
-
+//        Toast.makeText(this, "onStart called", Toast.LENGTH_SHORT).show();
     }
 
     public void totalBillHandler() {
@@ -453,6 +452,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         mScannerView.setFlash(mFlash);
         mScannerView.setAutoFocus(mAutoFocus);
 //        Toast.makeText(this, "OnResume", Toast.LENGTH_SHORT).show();
+        defaultClientSelection();
     }
 
     @Override
@@ -571,7 +571,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         map.put(API_KEY, apikey);
         map.put("sku", "10258");
 
-        AppController.getAppController().getAppNetworkController().makeRequest(url_1, new Response.Listener<String>() {
+        AppController.getAppController().getAppNetworkController().makeRequest(url_get_details_of_item_of_sku, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -620,23 +620,15 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage);
         scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");
 
-/*        dialog_cross = new Dialog(FullScannerActivity.this);
-        dialog_cross.setContentView(R.layout.scanner_dialog_frag_cross);
-        dialog_cross.getWindow().setLayout(150, 150);
-//        dialog_cross.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog_cross.getWindow().setGravity(Gravity.BOTTOM);
-        dialog_cross.show();
-        dialog_cross.setCancelable(false);
-        ImageButton imageButton_cross = dialog_cross.findViewById(R.id.imgBtn_scannerDialogCross);
-        imageButton_cross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog_cross.dismiss();
-                scanerDilogFragmentActivity.dismiss();
-                dialogDismissHandler();
-            }
-        });*/
+    }
 
+    public void showMessageDialog(String itemNo, String product_name, String saleRate) {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(itemNo, product_name, saleRate);
+        scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");
     }
 
     public void closeMessageDialog() {
@@ -748,8 +740,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
             rvAdapter_selectedProductView = new RvAdapterSelectedProductView(invoiceItemList, this, this);
             rv_selectedProduct.setAdapter(rvAdapter_selectedProductView);
             rvAdapter_selectedProductView.notifyDataSetChanged();
-
-        }
+        } else
+            textViewSubtotalScannerDisplay.setText("0.00");
 //        setupFormats();
 //        contentFrame.addView(mScannerView);
     }
@@ -807,44 +799,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 recyclerViewPersonSearch.setLayoutManager(new LinearLayoutManager(this));
                 ImageButton imageButtonAddCustomer = dialog.findViewById(R.id.imgBtn_addCustomer);
 
-                pageNo = 1;
-                HashMap<String, String> mapGetClients = new HashMap<>();
-                mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(pageNo));
-                mapGetClients.put(LIMIT, String.valueOf(10));
-                mapGetClients.put(API_KEY, apikey);
-                mapGetClients.put(TYPE, type_name);
-
-                AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                                JSONArray customerDataArray = jsonObject.getJSONArray("data");
-                                customerArrayList = new ArrayList<>();
-
-                                for (int i = 0; i < customerDataArray.length(); i++) {
-                                    progressBar.setVisibility(View.GONE);
-                                    JSONObject customerData = customerDataArray.getJSONObject(i);
-                                    customer = new Customer(customerData.getString("id"), customerData.getString("name"));
-                                    customerArrayList.add(customer);
-                                    rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivitySale.this);
-                                    recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                }, mapGetClients);
+                mGetCustomerList(recyclerViewPersonSearch, progressBar);
 
                 recyclerViewPersonSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -890,7 +845,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                         mapForScroll.put(LIMIT, String.valueOf(10));
 
 
-                                        AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
+                                        AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_clients, new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
@@ -905,9 +860,10 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                                 Customer customer = new Customer(data.getString("id"), data.getString("name"));
                                                                 customerArrayList.add(customer);
                                                             }
+                                                            Toast.makeText(FullScannerActivitySale.this, "Loaded" + "pageNo: " + String.valueOf(pageNo), Toast.LENGTH_SHORT).show();
+
                                                         } else
                                                             Toast.makeText(FullScannerActivitySale.this, "No more data to load", Toast.LENGTH_SHORT).show();
-                                                        Toast.makeText(FullScannerActivitySale.this, "Loaded", Toast.LENGTH_SHORT).show();
                                                         rvAdapterPersonSearch.notifyDataSetChanged();
                                                     /*    rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivity.this);
                                                         recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);*/
@@ -926,6 +882,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                         }, mapForScroll);
                                     }
                                 }, 1500);
+
                                 isLoading = true;
                             }
                         }
@@ -946,57 +903,14 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                     /*    ArrayList<Customer> filteredArray = new ArrayList<>();
                         filteredArray = filter(s.toString());*/
 
+
                         filterCustomers(s.toString());
-                        customerFilteredPageNo = 1;
 
                         if (s.length() >= 3) {
-                            progressBar.setVisibility(View.VISIBLE);
                             ArrayList<Customer> finalFilteredArray = new ArrayList<>();
-                            HashMap<String, String> mapGetClients = new HashMap<>();
-                            mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(customerFilteredPageNo));
-                            mapGetClients.put(LIMIT, String.valueOf(10));
-                            mapGetClients.put(CUSTOMER_SEARCH_KEY, s.toString());
-                            mapGetClients.put(API_KEY, apikey);
-                            AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    Toast.makeText(FullScannerActivitySale.this, response, Toast.LENGTH_SHORT).show();
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(response);
-                                        if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                                            JSONArray customerDataArray = jsonObject.getJSONArray("data");
-//                                            customerArrayList = new ArrayList<>();
+                            mGetFilteredCustomerList(s, progressBar, recyclerViewFilteredPerson, recyclerViewPersonSearch, finalFilteredArray);
 
-                                            for (int i = 0; i < customerDataArray.length(); i++) {
-                                                progressBar.setVisibility(View.GONE);
-                                                recyclerViewFilteredPerson.setVisibility(View.VISIBLE);
-                                                recyclerViewPersonSearch.setVisibility(View.GONE);
-                                                JSONObject customerData = customerDataArray.getJSONObject(i);
-                                                customer = new Customer(customerData.getString("id"), customerData.getString("name"));
-                                                finalFilteredArray.add(customer);
-                                                RvAdapterPersonSearch adapterPersonSearch = new RvAdapterPersonSearch(finalFilteredArray, FullScannerActivitySale.this);
-                                                recyclerViewFilteredPerson.setAdapter(adapterPersonSearch);
-
-                                            }
-//                                            rvAdapterPersonSearch.notifyDataSetChanged();
-                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
-                                            progressBar.setVisibility(View.GONE);
-                                            Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-
-                                }
-                            }, mapGetClients);
-
-
-                            recyclerViewPersonSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            recyclerViewFilteredPerson.addOnScrollListener(new RecyclerView.OnScrollListener() {
                                 @Override
                                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                                     super.onScrollStateChanged(recyclerView, newState);
@@ -1009,10 +923,10 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                                     if (!isLoading2) {
-                                        if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == customerArrayList.size() - 1) {
+                                        if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == finalFilteredArray.size() - 1) {
                                             //bottom of list!
                                             finalFilteredArray.add(new Customer(null, null));
-                                            rvAdapterPersonSearch.notifyItemInserted(customerArrayList.size());
+                                            rvAdapterPersonSearch.notifyItemInserted(finalFilteredArray.size());
                                             customerFilteredPageNo++;
                                             Toast.makeText(FullScannerActivitySale.this, "Please wait...", Toast.LENGTH_SHORT).show();
 
@@ -1023,17 +937,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                     finalFilteredArray.remove(finalFilteredArray.size() - 1);
                                                     int scrollPosition = finalFilteredArray.size();
                                                     rvAdapterPersonSearch.notifyItemRemoved(scrollPosition);
-/*                                        int currentSize = scrollPosition + 1;
-                                        int nextLimit = currentSize + 10;
-                                        pageNo++;
-                                        while (currentSize < nextLimit) {
-                                            customer = new Customer("Item " + currentSize + ", PageNo: " + pageNo);
-                                            customerArrayList.add(customer);
-                                            currentSize++;
-                                        }
-                                        rvAdapterPersonSearch.notifyDataSetChanged();
-                                        isLoading = false;*/
-
                                                     HashMap<String, String> mapForScroll = new HashMap<>();
                                                     mapForScroll.put(API_KEY, apikey);
                                                     mapForScroll.put(CUSTOMER_PAGE_NO, String.valueOf(customerFilteredPageNo));
@@ -1041,7 +944,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                     mapForScroll.put(CUSTOMER_SEARCH_KEY, s.toString());
 
 
-                                                    AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
+                                                    AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_clients, new Response.Listener<String>() {
                                                         @Override
                                                         public void onResponse(String response) {
                                                             try {
@@ -1054,11 +957,16 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                                         Customer customer = new Customer(data.getString("id"), data.getString("name"));
                                                                         finalFilteredArray.add(customer);
                                                                     }
-                                                                    rvAdapterPersonSearch.notifyDataSetChanged();
+                                                                    Toast.makeText(FullScannerActivitySale.this, "after: "+String.valueOf(finalFilteredArray.size()), Toast.LENGTH_SHORT).show();
+
+
+                                                                } else
+                                                                    Toast.makeText(FullScannerActivitySale.this, "No more data to load", Toast.LENGTH_SHORT).show();
+                                                                rvAdapterPersonSearch.notifyDataSetChanged();
                                                                     /*rvAdapterPersonSearch = new RvAdapterPersonSearch(finalFilteredArray, FullScannerActivity.this);
                                                                     recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);*/
-                                                                    isLoading2 = false;
-                                                                }
+                                                                isLoading2 = false;
+
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
@@ -1077,7 +985,11 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                 }
                             });
 
-                        } else
+                        } else if (s.length() == 0)
+                        {
+                            mGetCustomerList(recyclerViewPersonSearch, progressBar);
+                        }
+                        else
                             progressBar.setVisibility(View.GONE);
 
                        /* if (s.length() == 0)
@@ -1141,7 +1053,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                     mapInsertCustomer.put(CUSTOMER_MOBILE_NO, customerPhone);
                                     mapInsertCustomer.put(TYPE, type_name);
 
-                                    AppController.getAppController().getAppNetworkController().makeRequest(url_4, new Response.Listener<String>() {
+                                    AppController.getAppController().getAppNetworkController().makeRequest(url_insert_a_customer, new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
                                             try {
@@ -1200,7 +1112,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 //                dialog.getWindow().setGravity(Gravity.BOTTOM);
                 dialogProductSearch.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialogProductSearch.show();
-//                dialogProductSearch.setCancelable(false);
+                dialogProductSearch.setCancelable(true);
 
                 EditText editTextProduct = dialogProductSearch.findViewById(R.id.edtTxt_productSearch);
                 RecyclerView recyclerViewProductSearch = dialogProductSearch.findViewById(R.id.lv_searchableProductView);
@@ -1216,11 +1128,11 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 mapGetProducts.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
                 mapGetProducts.put(LIMIT, String.valueOf(10));
                 mapGetProducts.put(API_KEY, apikey);
-                AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
+//                mapGetProducts.put("itemno", "2");
+                AppController.getAppController().getAppNetworkController().makeRequest(url_get_org_items_by_name, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                 JSONArray customerDataArray = jsonObject.getJSONArray("data");
@@ -1229,7 +1141,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                 for (int i = 0; i < customerDataArray.length(); i++) {
                                     progressBar2.setVisibility(View.GONE);
                                     JSONObject productData = customerDataArray.getJSONObject(i);
-                                    products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+//                                    products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+                                    products = new Products(productData.getString("id"), productData.getString("text"));
                                     productsArrayList.add(products);
                                     rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivitySale.this, productPageNo);
                                     recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);
@@ -1238,12 +1151,16 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            progressBar2.setVisibility(View.GONE);
+                            dialogProductSearch.dismiss();
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
+                        progressBar2.setVisibility(View.GONE);
+                        dialogProductSearch.dismiss();
                     }
                 }, mapGetProducts);
 
@@ -1262,7 +1179,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                         if (!isLoading3) {
                             if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == productsArrayList.size() - 1) {
                                 //bottom of list!
-                                productsArrayList.add(new Products(null, null, null, null, null));
+                                productsArrayList.add(new Products(null, null));
+//                                productsArrayList.add(new Products(null, null, null, null, null));
                                 rvAdapterProductSearch.notifyItemInserted(productsArrayList.size());
                                 productPageNo++;
                                 Toast.makeText(FullScannerActivitySale.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1291,7 +1209,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                         mapForScroll.put(LIMIT, String.valueOf(10));
 
 
-                                        AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
+                                        AppController.getAppController().getAppNetworkController().makeRequest(url_get_org_items_by_name, new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
                                                 try {
@@ -1302,7 +1220,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                         JSONArray jsonArray = jsonObject.getJSONArray("data");
                                                         for (int i = 0; i < jsonArray.length(); i++) {
                                                             JSONObject productData = jsonArray.getJSONObject(i);
-                                                            products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+                                                            products = new Products(productData.getString("id"), productData.getString("text"));
+//                                                            products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
                                                             productsArrayList.add(products);
                                                         }
                                                         rvAdapterProductSearch.notifyDataSetChanged();
@@ -1321,7 +1240,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                             }
                                         }, mapForScroll);
                                     }
-                                }, 4000);
+                                }, 1500);
                                 isLoading3 = true;
                             }
                         }
@@ -1351,7 +1270,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                             mapGetProducts.put(LIMIT, String.valueOf(10));
                             mapGetProducts.put(PRODUCT_SEARCH_KEY, s.toString());
                             mapGetProducts.put(API_KEY, apikey);
-                            AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
+                            AppController.getAppController().getAppNetworkController().makeRequest(url_get_org_items_by_name, new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
                                     try {
@@ -1365,7 +1284,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                 recyclerViewFilteredProduct.setVisibility(View.VISIBLE);
                                                 recyclerViewProductSearch.setVisibility(View.GONE);
                                                 JSONObject productData = productDataArray.getJSONObject(i);
-                                                products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+                                                products = new Products(productData.getString("id"), productData.getString("text"));
+//                                                products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
                                                 finalFilteredArray.add(products);
                                                 RvAdapterProductSearch adapterProductSearch = new RvAdapterProductSearch(finalFilteredArray, FullScannerActivitySale.this, productPageNo);
                                                 recyclerViewFilteredProduct.setAdapter(adapterProductSearch);
@@ -1401,7 +1321,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                     if (!isLoading4) {
                                         if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == productsArrayList.size() - 1) {
                                             //bottom of list!
-                                            finalFilteredArray.add(new Products(null, null, null, null, null));
+//                                            finalFilteredArray.add(new Products(null, null, null, null, null));
+                                            finalFilteredArray.add(new Products(null, null));
                                             rvAdapterProductSearch.notifyItemInserted(finalFilteredArray.size());
                                             productFilteredPageNo++;
                                             Toast.makeText(FullScannerActivitySale.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1413,7 +1334,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                     finalFilteredArray.remove(finalFilteredArray.size() - 1);
                                                     int scrollPosition = finalFilteredArray.size();
                                                     rvAdapterProductSearch.notifyItemRemoved(scrollPosition);
-/*                                        int currentSize = scrollPosition + 1;
+/*
+                                        int currentSize = scrollPosition + 1;
                                         int nextLimit = currentSize + 10;
                                         pageNo++;
                                         while (currentSize < nextLimit) {
@@ -1422,8 +1344,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                             currentSize++;
                                         }
                                         rvAdapterPersonSearch.notifyDataSetChanged();
-                                        isLoading = false;*/
-
+                                        isLoading = false;
+*/
                                                     HashMap<String, String> mapForScroll = new HashMap<>();
                                                     mapForScroll.put(API_KEY, apikey);
                                                     mapForScroll.put(PRODUCT_PAGE_NO, String.valueOf(productFilteredPageNo));
@@ -1431,7 +1353,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                     mapForScroll.put(PRODUCT_SEARCH_KEY, s.toString());
 
 
-                                                    AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
+                                                    AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_clients, new Response.Listener<String>() {
                                                         @Override
                                                         public void onResponse(String response) {
                                                             try {
@@ -1460,7 +1382,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                                         }
                                                     }, mapForScroll);
                                                 }
-                                            }, 4000);
+                                            }, 1500);
                                             isLoading4 = true;
                                         }
                                     }
@@ -1605,6 +1527,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                                 editText_deduction.setText("0.00");
                                 editText_discount.setText("0.00");
                                 invoiceItemList.clear();
+                                defaultClientSelection();
                                 dialog.cancel();
                             }
                         })
@@ -1615,9 +1538,9 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                             }
                         });
 
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.setTitle("Alert!!");
-                    alertDialog.show();
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setTitle("Alert!!");
+                alertDialog.show();
                 break;
 
             case R.id.tv_adjustFraction:
@@ -1632,6 +1555,94 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
                 break;
         }
+    }
+
+    private void mGetFilteredCustomerList(CharSequence s, ProgressBar progressBar, RecyclerView recyclerViewFilteredPerson, RecyclerView recyclerViewPersonSearch, ArrayList<Customer> finalFilteredArray) {
+        customerFilteredPageNo = 1;
+        progressBar.setVisibility(View.VISIBLE);
+
+        HashMap<String, String> mapGetClients = new HashMap<>();
+        mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(customerFilteredPageNo));
+        mapGetClients.put(LIMIT, String.valueOf(10));
+        mapGetClients.put(CUSTOMER_SEARCH_KEY, s.toString());
+        mapGetClients.put(API_KEY, apikey);
+        AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_clients, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        JSONArray customerDataArray = jsonObject.getJSONArray("data");
+//                                            customerArrayList = new ArrayList<>();
+
+                        for (int i = 0; i < customerDataArray.length(); i++) {
+                            progressBar.setVisibility(View.GONE);
+                            recyclerViewFilteredPerson.setVisibility(View.VISIBLE);
+                            recyclerViewPersonSearch.setVisibility(View.GONE);
+                            JSONObject customerData = customerDataArray.getJSONObject(i);
+                            customer = new Customer(customerData.getString("id"), customerData.getString("name"));
+                            finalFilteredArray.add(customer);
+                            rvAdapterPersonSearch = new RvAdapterPersonSearch(finalFilteredArray, FullScannerActivitySale.this);
+                            recyclerViewFilteredPerson.setAdapter(rvAdapterPersonSearch);
+
+                        }
+//                                            rvAdapterPersonSearch.notifyDataSetChanged();
+                    } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(FullScannerActivitySale.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }, mapGetClients);
+    }
+
+    private void mGetCustomerList(RecyclerView recyclerViewPersonSearch, ProgressBar progressBar) {
+        pageNo = 1;
+        HashMap<String, String> mapGetClients = new HashMap<>();
+        mapGetClients.put(CUSTOMER_PAGE_NO, String.valueOf(pageNo));
+        mapGetClients.put(LIMIT, String.valueOf(10));
+        mapGetClients.put(API_KEY, apikey);
+        mapGetClients.put(TYPE, type_name);
+
+        AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_clients, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        JSONArray customerDataArray = jsonObject.getJSONArray("data");
+                        customerArrayList = new ArrayList<>();
+
+                        for (int i = 0; i < customerDataArray.length(); i++) {
+                            progressBar.setVisibility(View.GONE);
+                            JSONObject customerData = customerDataArray.getJSONObject(i);
+                            customer = new Customer(customerData.getString("id"), customerData.getString("name"));
+                            customerArrayList.add(customer);
+                            rvAdapterPersonSearch = new RvAdapterPersonSearch(customerArrayList, FullScannerActivitySale.this);
+                            recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        }, mapGetClients);
     }
 
     private void invoiceSave(JSONArray jsonArrayPayments) {
@@ -1674,7 +1685,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
             mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
             mapTemp.put("status", "1");
             mapTemp.put("payments", jsonArrayPayments.toString());
-            AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
+            AppController.getAppController().getAppNetworkController().makeRequest(url_insert_a_saleinvoice, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 //                        Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_LONG).show();
@@ -1854,14 +1865,27 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     }
 
     @Override
-    public void productClickHandler(String name, String id, int productPageNo) {
+    public void productClickHandler(String name, String id) {
         HashMap<String, String> mapGetProductById = new HashMap<>();
         mapGetProductById.put(API_KEY, apikey);
+        mapGetProductById.put("itemno", id);
 //        mapGetProductById.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
-        AppController.getAppController().getAppNetworkController().makeRequest(url_1, new Response.Listener<String>() {
+        AppController.getAppController().getAppNetworkController().makeRequest(url_get_details_of_item, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(FullScannerActivitySale.this, response, Toast.LENGTH_SHORT).show();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        JSONObject jsonObjectData = jsonObject.getJSONObject("data");
+                        String saleRate = jsonObjectData.getString("salerate");
+                        showMessageDialog(id, name, saleRate);
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(FullScannerActivitySale.this, "JsonException: " + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -1869,7 +1893,6 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
                 Toast.makeText(FullScannerActivitySale.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         }, mapGetProductById);
-        showMessageDialog("itemNo", "item_id", "product_name", "500", "unitid", "expirydate", "discount_percentage");
 
 
         dialogProductSearch.dismiss();

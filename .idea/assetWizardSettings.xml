@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="/tmp/baseline_sticky_note_2_24.xml" />
+                                                <entry key="imagePath" value="/tmp/baseline_format_list_bulleted_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
                                               </map>
                                             </option>
@@ -36,7 +36,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/sticky_note_2/baseline_sticky_note_2_24.xml" />
+                                                <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/format_list_bulleted/baseline_format_list_bulleted_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -68,9 +68,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_invoice" />
+                                      <entry key="outputName" value="ic_items_list" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="000000" />
+                                      <entry key="themeColor" value="505c68" />
                                     </map>
                                   </option>
                                 </PersistentState>

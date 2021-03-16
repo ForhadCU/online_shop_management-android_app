@@ -49,6 +49,13 @@ public class ScanerDilogFragmentActivity extends DialogFragment implements View.
     private double discount = 0;
     private boolean continueScanning;
 
+    public ScanerDilogFragmentActivity(String itemNo, String product_name, String saleRate) {
+        this.product_name = product_name;
+        this.product_price = saleRate;
+        this.itemNo = itemNo;
+        totalPriceCommon = Double.parseDouble(product_price);
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
