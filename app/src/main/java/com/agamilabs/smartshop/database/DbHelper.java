@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.agamilabs.smartshop.model.InvoiceItem;
+import com.agamilabs.smartshop.model.InvoiceItemModel;
 import com.agamilabs.smartshop.model.InvoiceModel;
 
 
@@ -137,10 +137,10 @@ public class DbHelper extends SQLiteOpenHelper {
         return storeData;
     }
 
-    public List<InvoiceItem> showSelectedProductsInScannerActivity() {
+    public List<InvoiceItemModel> showSelectedProductsInScannerActivity() {
         String sql = "select Product_name, Product_price, Product_quantity, total_bill from " + TABLE_1;
         SQLiteDatabase db = this.getReadableDatabase();
-        List<InvoiceItem> storeProductDetails = new ArrayList<>();
+        List<InvoiceItemModel> storeProductDetails = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
@@ -158,10 +158,10 @@ public class DbHelper extends SQLiteOpenHelper {
         return storeProductDetails;
     }
 
-    public List<InvoiceItem> invoiceItemTable() {
+    public List<InvoiceItemModel> invoiceItemTable() {
         String sql = "select Product_name, Product_price, Product_quantity, total_bill from " + TABLE_1;
         SQLiteDatabase db = this.getReadableDatabase();
-        List<InvoiceItem> storeData = new ArrayList<>();
+        List<InvoiceItemModel> storeData = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
@@ -178,10 +178,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<InvoiceItem> showAllSelectedProductsInInvoiceActivity() {
+    public ArrayList<InvoiceItemModel> showAllSelectedProductsInInvoiceActivity() {
         String sql = "select * from " + TABLE_1;
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<InvoiceItem> storeProductDetails = new ArrayList<>();
+        ArrayList<InvoiceItemModel> storeProductDetails = new ArrayList<>();
 
         Cursor cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {

@@ -26,8 +26,11 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
-        <activity android:name=".PurchaseInvoiceViewerActivity"></activity>
+        android:theme="@style/Theme.MyApplication"
+
+        >
+        <activity android:name=".PurchaseInvoiceViewerActivity"
+            ></activity>
         <!-- rofiqul -->
         <activity android:name=".activity.DeviceListActivity" />
         <activity android:name=".activity.PrintingActivity" />
@@ -43,7 +46,9 @@
         <activity android:name=".LoginActivity" /> <!-- <activity android:name=".InvoiceActivity"/> -->
         <activity android:name=".SaleInvoiceViewerActivity" />
         <activity android:name=".BaseScannerActivity" />
-        <activity android:name=".FullScannerActivitySale" />
+        <activity android:name=".FullScannerActivitySale"
+            android:configChanges="orientation|screenSize"
+            />
         <activity android:name=".FullScannerActivityPurchase" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>

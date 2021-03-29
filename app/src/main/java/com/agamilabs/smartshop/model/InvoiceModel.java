@@ -1,6 +1,7 @@
 package com.agamilabs.smartshop.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class InvoiceModel implements Serializable {
     int customerNo;
@@ -24,6 +25,7 @@ public class InvoiceModel implements Serializable {
     String supplierName;
     double totalAmountToPay;
     double unPaidAmount;
+    ArrayList<String> arrayListPayments;
 
 //    ArrayList<InvoiceItem> invoiceItemArrayList = new ArrayList<>();
 
@@ -50,7 +52,8 @@ public class InvoiceModel implements Serializable {
         this.supplierNo = supplierNo;
     }
 
-    public InvoiceModel(int supplierNo, String pDate, String dueDate, int currency, int statusId, int orgNo, int billNo, double discount, double paid, int addedBy, double deduction, double amount, String supplierName, double totalAmountToPay, double unPaidAmount) {
+    public InvoiceModel(int supplierNo, String pDate, String dueDate, int currency, int statusId, int orgNo, int billNo,
+                        double discount, double paid, int addedBy, double deduction, double amount, String supplierName, double totalAmountToPay, double unPaidAmount) {
         this.supplierNo = supplierNo;
         this.pDate = pDate;
         this.dueDate = dueDate;
@@ -68,7 +71,9 @@ public class InvoiceModel implements Serializable {
         this.unPaidAmount = unPaidAmount;
     }
 
-    public InvoiceModel(int customerNo, String sDate, String dueDate, int currency, int statusId, int orgNo, int invoiceNo, double discount, double paid, int addedBy, double deduction, double amount, String cShortText, String cText, String customerName, double totalAmountToPay, double unPaidAmount) {
+    public InvoiceModel(int customerNo, String sDate, String dueDate, int currency, int statusId, int orgNo, int invoiceNo, double discount,
+                        double paid, int addedBy, double deduction, double amount, String cShortText, String cText, String customerName,
+                        double totalAmountToPay, double unPaidAmount, ArrayList<String> arrayListPayments) {
         this.customerNo = customerNo;
         this.sDate = sDate;
         this.dueDate = dueDate;
@@ -86,8 +91,16 @@ public class InvoiceModel implements Serializable {
         this.customerName = customerName;
         this.totalAmountToPay = totalAmountToPay;
         this.unPaidAmount = unPaidAmount;
+        this.arrayListPayments = arrayListPayments;
     }
 
+    public ArrayList<String> getArrayListPayments() {
+        return arrayListPayments;
+    }
+
+    public void setArrayListPayments(ArrayList<String> arrayListPayments) {
+        this.arrayListPayments = arrayListPayments;
+    }
 
     public int getSupplierNo() {
         return supplierNo;

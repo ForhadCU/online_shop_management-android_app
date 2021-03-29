@@ -24,6 +24,9 @@
     <color name="divider">#B6B6B6</color>
     <color name="lightgray">#DFE3E2</color>
     <color name="darkblue">#001FCD</color>
+    <color name="table_color">#EDEDED</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="green">#00C853</color>
 
 
 
@@ -36,5 +39,6 @@
     <color name="toolbar_themed">#22704e77</color>
     <color name="toolbar_background">@color/white</color>
     <color name="toolbar_title_text_color">@color/colorPrimary</color>
+
 
 </resources>

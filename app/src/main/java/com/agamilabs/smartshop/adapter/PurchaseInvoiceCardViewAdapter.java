@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.controller.AppController;
-import com.agamilabs.smartshop.model.InvoiceItem;
+import com.agamilabs.smartshop.model.InvoiceItemModel;
 import com.agamilabs.smartshop.model.InvoiceModel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -39,7 +39,7 @@ public class PurchaseInvoiceCardViewAdapter extends RecyclerView.Adapter<Recycle
     private static final int VIEW_TYPE_ITEM = 0;
 
     private ArrayList<InvoiceModel> invoiceModelList;
-    private ArrayList<InvoiceItem> invoiceItemArrayList;
+    private ArrayList<InvoiceItemModel> invoiceItemModelArrayList;
     private Context context;
     private RvAdapterInvoiceItemList rvAdapter_invoiceItemList;
 //    private int isItemListVisible = 0;
@@ -113,7 +113,7 @@ public class PurchaseInvoiceCardViewAdapter extends RecyclerView.Adapter<Recycle
                                     holder.recyclerViewSelectedProductListInvoiceCard.setVisibility(View.VISIBLE);
                                     holder.imageView_down.setVisibility(View.GONE);
                                     holder.imageView_up.setVisibility(View.VISIBLE);
-                                    invoiceItemArrayList = new ArrayList<>();
+                                    invoiceItemModelArrayList = new ArrayList<>();
 
                                     JSONObject data = jsonObject.getJSONObject("data");
                                     JSONArray itemsArray = data.getJSONArray("items");
@@ -131,11 +131,15 @@ public class PurchaseInvoiceCardViewAdapter extends RecyclerView.Adapter<Recycle
 
                                         double item_bill = qty * unitprice;
 
-                                        invoiceItemArrayList.add(new InvoiceItem(itemno, qty, unitprice, itemname, item_bill));
+                                        /**
+                                         * temp comment
+                                         */
+
+//                                        invoiceItemModelArrayList.add(new InvoiceItemModel(itemno, item_id, qty, unitprice, discount_percentage, expirydate, itemname, Double.parseDouble(totalBill), item_bill));
 //                                            Toast.makeText(mContext, String.valueOf(invoiceItemArrayList.size()), Toast.LENGTH_SHORT).show();
 
                                     }
-                                    rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemArrayList);
+                                    rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemModelArrayList);
                                     holder.recyclerViewSelectedProductListInvoiceCard.setAdapter(rvAdapter_invoiceItemList);
 
                                     selectedItemListRvHandler(holder);
@@ -176,7 +180,7 @@ public class PurchaseInvoiceCardViewAdapter extends RecyclerView.Adapter<Recycle
                     jsonObject = new JSONObject(response);
 
                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                        invoiceItemArrayList = new ArrayList<>();
+                        invoiceItemModelArrayList = new ArrayList<>();
 
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONArray itemsArray = data.getJSONArray("items");
@@ -198,7 +202,7 @@ public class PurchaseInvoiceCardViewAdapter extends RecyclerView.Adapter<Recycle
     private void selectedItemListRvHandler(ItemViewHolder holder) {
         holder.recyclerViewSelectedProductListInvoiceCard.setHasFixedSize(true);
         holder.recyclerViewSelectedProductListInvoiceCard.setLayoutManager(new LinearLayoutManager(context));
-        rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemArrayList);
+        rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemModelArrayList);
         holder.recyclerViewSelectedProductListInvoiceCard.setAdapter(rvAdapter_invoiceItemList);
 //        rvAdapter_invoiceItemList.notifyDataSetChanged();
     }

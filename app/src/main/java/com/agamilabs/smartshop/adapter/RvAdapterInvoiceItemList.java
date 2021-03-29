@@ -8,16 +8,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.model.InvoiceItem;
+import com.agamilabs.smartshop.model.InvoiceItemModel;
 import com.agamilabs.smartshop.R;
 
 import java.util.ArrayList;
 
 public class RvAdapterInvoiceItemList extends RecyclerView.Adapter<RvAdapterInvoiceItemList.MyViewHolder> {
-    private ArrayList<InvoiceItem> invoiceItemList;
+    private ArrayList<InvoiceItemModel> invoiceItemModelList;
 
-    public RvAdapterInvoiceItemList(ArrayList<InvoiceItem> invoiceItemList) {
-        this.invoiceItemList = invoiceItemList;
+    public RvAdapterInvoiceItemList(ArrayList<InvoiceItemModel> invoiceItemModelList) {
+        this.invoiceItemModelList = invoiceItemModelList;
     }
 
     @NonNull
@@ -30,19 +30,18 @@ public class RvAdapterInvoiceItemList extends RecyclerView.Adapter<RvAdapterInvo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        InvoiceItem current = invoiceItemList.get(position);
+        InvoiceItemModel current = invoiceItemModelList.get(position);
         holder.textViewItemSerial.setText(String.valueOf(position+1));
         holder.textView_itemName.setText(current.getItemname());
-        holder.textView_itemPriceForCal.setText(String.format("%.2f", current.getRate()));
-        holder.textView_rate.setText((String.format("%.2f", current.getRate())));
+        holder.textView_itemPriceForCal.setText("\u09F3 " + String.format("%.2f", current.getRate()));
+        holder.textView_rate.setText(("\u09F3 " + String.format("%.2f", current.getRate())));
         holder.textView_qty.setText(String.valueOf((int) current.getQty()));
-        holder.textView_total.setText((String.format("%.2f", current.getItem_bill())));
-
+        holder.textView_total.setText(("\u09F3 " + String.format("%.2f", current.getItem_bill())));
     }
 
     @Override
     public int getItemCount() {
-        return invoiceItemList == null ? 0 : invoiceItemList.size();
+        return invoiceItemModelList == null ? 0 : invoiceItemModelList.size();
     }
 
     public class MyViewHolder extends  RecyclerView.ViewHolder {

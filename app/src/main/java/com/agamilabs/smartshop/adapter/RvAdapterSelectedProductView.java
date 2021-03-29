@@ -13,17 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
 import com.agamilabs.smartshop.R;
-import com.agamilabs.smartshop.model.InvoiceItem;
+import com.agamilabs.smartshop.model.InvoiceItemModel;
 
 import java.util.List;
 
 public class RvAdapterSelectedProductView extends RecyclerView.Adapter<RvAdapterSelectedProductView.MyViewHolder> {
-    private List<InvoiceItem> invoiceItemList;
+    private List<InvoiceItemModel> invoiceItemModelList;
     private Context context;
     private ICallBackFromFullScannerActivity icallBackTest;
 
-    public RvAdapterSelectedProductView(List<InvoiceItem> invoiceItemList, Context context, ICallBackFromFullScannerActivity icallBackTest) {
-        this.invoiceItemList = invoiceItemList;
+    public RvAdapterSelectedProductView(List<InvoiceItemModel> invoiceItemModelList, Context context, ICallBackFromFullScannerActivity icallBackTest) {
+        this.invoiceItemModelList = invoiceItemModelList;
         this.context = context;
         this.icallBackTest = icallBackTest;
     }
@@ -40,7 +40,7 @@ public class RvAdapterSelectedProductView extends RecyclerView.Adapter<RvAdapter
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        InvoiceItem current = invoiceItemList.get(position);
+        InvoiceItemModel current = invoiceItemModelList.get(position);
 
         holder.tv_productName.setText(current.getItemname());
         holder.tv_productQuantity.setText(String.valueOf((int) current.getQty()));
@@ -50,7 +50,7 @@ public class RvAdapterSelectedProductView extends RecyclerView.Adapter<RvAdapter
 
     @Override
     public int getItemCount() {
-        return invoiceItemList.size();
+        return invoiceItemModelList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -82,7 +82,7 @@ public class RvAdapterSelectedProductView extends RecyclerView.Adapter<RvAdapter
 
         @Override
         public void onClick(View v) {
-            InvoiceItem current = invoiceItemList.get(getAdapterPosition());
+            InvoiceItemModel current = invoiceItemModelList.get(getAdapterPosition());
 
             double unitPrice = current.getRate();
             double itemBill = current.getItem_bill();
@@ -116,9 +116,9 @@ public class RvAdapterSelectedProductView extends RecyclerView.Adapter<RvAdapter
                     break;
 
                 case R.id.imgBtn_rvProductView_productDelete:
-                    invoiceItemList.remove(getAdapterPosition());
+                    invoiceItemModelList.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
-                    notifyItemRangeChanged(getAdapterPosition(), invoiceItemList.size());
+                    notifyItemRangeChanged(getAdapterPosition(), invoiceItemModelList.size());
                     icallBackTest.mCallbackQty();
                     break;
             }

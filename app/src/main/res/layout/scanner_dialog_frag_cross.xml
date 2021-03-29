@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:background="@drawable/cross_shape"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="5dp"
     android:layout_height="wrap_content">
 
-    <ImageButton
+  <!--  <ImageButton
         android:id="@+id/imgBtn_scannerDialogCross"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -15,6 +15,53 @@
         android:scaleType="centerInside"
         android:padding="10dp"
         android:src="@drawable/cross_2"
-        />
+        />-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relative"
+        android:layout_margin="14dp"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/imgV_profileImg"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/person_img"
+            android:scaleType="centerCrop"
+
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:contentDescription="TODO"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dp" />
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/statusBg"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_toRightOf="@+id/imgV_profileImg"
+            android:layout_alignBottom="@+id/imgV_profileImg"
+            android:layout_marginStart="-20dp"
+            android:layout_marginBottom="-2dp"
+            android:src="@mipmap/ic_launcher"
+            app:civ_border_color="#FFFF"
+            app:civ_border_width="10dp"
+            android:layout_marginLeft="-20dp" />
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/imgV_activeIcon"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_toRightOf="@+id/imgV_profileImg"
+            android:layout_alignBottom="@+id/imgV_profileImg"
+            android:layout_marginStart="-17dp"
+            android:layout_marginBottom="1dp"
+            android:src="@mipmap/ic_launcher"
+            app:civ_border_color="#00C853"
+            app:civ_border_width="10dp"
+            android:layout_marginLeft="-17dp" />
+    </RelativeLayout>
 
 </RelativeLayout>

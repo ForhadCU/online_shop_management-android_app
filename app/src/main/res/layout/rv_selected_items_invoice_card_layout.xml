@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/l5"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#9A9A9A"
         android:orientation="horizontal">
 
@@ -105,10 +105,10 @@
             android:layout_marginLeft="1dp"
             android:layout_weight="1"
             android:background="#ffff"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|end"
             android:paddingLeft="5dp"
             android:paddingTop="2dp"
-            android:paddingRight="2dp"
+            android:paddingRight="5dp"
             android:paddingBottom="2dp"
             android:text="300.00"
             android:textAppearance="@style/TextAppearance.AppCompat"
@@ -141,10 +141,10 @@
             android:layout_marginLeft="1dp"
             android:layout_weight="1.5"
             android:background="#ffff"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|end"
             android:paddingLeft="5dp"
             android:paddingTop="2dp"
-            android:paddingRight="2dp"
+            android:paddingRight="5dp"
             android:paddingBottom="2dp"
             android:text="900.00"
             android:textAppearance="@style/TextAppearance.AppCompat"

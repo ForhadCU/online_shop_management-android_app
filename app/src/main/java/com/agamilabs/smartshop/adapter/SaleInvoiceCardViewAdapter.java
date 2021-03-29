@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +30,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.controller.AppController;
-import com.agamilabs.smartshop.model.InvoiceItem;
+import com.agamilabs.smartshop.model.InvoiceItemModel;
 import com.agamilabs.smartshop.model.InvoiceModel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +59,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
 
     private ArrayList<InvoiceModel> invoiceModelList;
-    private ArrayList<InvoiceItem> invoiceItemArrayList;
+    private ArrayList<InvoiceItemModel> invoiceItemModelArrayList;
     private Context context;
     private RvAdapterInvoiceItemList rvAdapter_invoiceItemList;
     private Dialog dialogPrinterConfirmation;
@@ -103,16 +103,70 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
         //ProgressBar would be displayed
     }
 
+    @SuppressLint("DefaultLocale")
     private void populatedItemRows(ItemViewHolder holder, int position) {
         InvoiceModel current = invoiceModelList.get(position);
         holder.tv_customer.setText(current.getCustomerName());
         holder.tv_date.setText(current.getsDate());
-        holder.tv_invoiceNo.setText(String.valueOf(current.getInvoiceNo()));
-        holder.tv_discount.setText(String.format("%.2f", current.getDiscount()));
-        holder.tv_amount.setText(String.format("%.2f", current.getAmount()));
-        holder.tv_paidAmount.setText(String.format("%.2f", current.getPaid()));
         holder.tv_dueDate.setText(current.getDueDate());
+        holder.tv_invoiceNo.setText(String.valueOf(current.getInvoiceNo()));
+        holder.tv_discount.setText(String.format("\u09F3 " + "%.2f", current.getDiscount()));
+        holder.tv_deduction.setText(String.format("\u09F3 " + "%.2f", current.getDeduction()));
+        holder.tv_amount.setText(String.format("\u09F3 " + "%.2f", current.getAmount()));
+
+        holder.tv_grandTotal.setText(String.format("\u09F3 " + "%.2f", current.getTotalAmountToPay()));
         productItemsCount(holder, position);
+
+        /**
+         * 1120 = cash paid
+         * 1110 = bank paid
+         * 1160 = bKash paid
+         */
+        if (current.getUnPaidAmount() < 0.1) {
+            holder.tv_dueText.setVisibility(View.GONE);
+            holder.tv_paidText.setVisibility(View.VISIBLE);
+            holder.circularImageView_customerImg.setBorderColor(holder.mContext.getResources().getColor((R.color.green)));
+            holder.circularImageView_activeIcon.setBorderColor(holder.mContext.getResources().getColor((R.color.green)));
+            holder.tv_paidOrDue.setText(String.format("\u09F3 " + "%.2f", current.getPaid()));
+            StringBuilder stringBuffer = new StringBuilder();
+            for (int i = 0; i < current.getArrayListPayments().size(); i++) {
+                if (i == 0) {
+                    switch (current.getArrayListPayments().get(i)) {
+                        case "1120":
+                            stringBuffer.append("Cash");
+                            break;
+                        case "1110":
+                            stringBuffer.append("Bank");
+                            break;
+                        case "1160":
+                            stringBuffer.append("bKash");
+                            break;
+                    }
+                } else {
+                    holder.tv_paidText.setTextSize(12);
+                    switch (current.getArrayListPayments().get(i)) {
+                        case "1120":
+                            stringBuffer.append("/").append("Cash");
+                            break;
+                        case "1110":
+                            stringBuffer.append("/").append("Bank");
+                            break;
+                        case "1160":
+                            stringBuffer.append("/").append("bKash");
+                            break;
+                    }
+                }
+            }
+            holder.tv_paidText.setText(stringBuffer.toString());
+
+        } else {
+            holder.tv_dueText.setVisibility(View.VISIBLE);
+            holder.tv_paidText.setVisibility(View.GONE);
+            holder.tv_paidOrDue.setText(String.format("\u09F3 " + "%.2f", current.getUnPaidAmount()));
+//            holder.circularImageView_customerImg.setBorderColor(R.color.yellow);
+            holder.circularImageView_customerImg.setBorderColor(context.getResources().getColor(R.color.yellow));
+            holder.circularImageView_activeIcon.setBorderColor(context.getResources().getColor(R.color.yellow));
+        }
 
         holder.relativeLayoutExpandInvoiceItemList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +183,6 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     AppController.getAppController().getAppNetworkController().makeRequest(url_get_saleInvoiceDetails_of_an_invoice_org, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-//                                Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
                             JSONObject jsonObject = null;
                             try {
                                 jsonObject = new JSONObject(response);
@@ -139,7 +192,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
                                     holder.recyclerViewSelectedProductListInvoiceCard.setVisibility(View.VISIBLE);
                                     holder.imageView_down.setVisibility(View.GONE);
                                     holder.imageView_up.setVisibility(View.VISIBLE);
-                                    invoiceItemArrayList = new ArrayList<>();
+                                    invoiceItemModelArrayList = new ArrayList<>();
 
                                     JSONObject data = jsonObject.getJSONObject("data");
                                     JSONArray itemsArray = data.getJSONArray("items");
@@ -156,23 +209,25 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
                                         double item_bill = qty * unitprice;
 
-                                        invoiceItemArrayList.add(new InvoiceItem(itemno, qty, unitprice, itemname, item_bill));
+                                        /**
+                                         * temp comment
+                                         */
+                                        invoiceItemModelArrayList.add(new InvoiceItemModel(itemno, qty, unitprice, itemname, item_bill));
 //                                            Toast.makeText(mContext, String.valueOf(invoiceItemArrayList.size()), Toast.LENGTH_SHORT).show();
-
                                     }
                                   /*  rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemArrayList);
                                     holder.recyclerViewSelectedProductListInvoiceCard.setAdapter(rvAdapter_invoiceItemList);*/
-
                                     selectedItemListRvHandler(holder);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                Toast.makeText(context, "JSONException: " + e.toString(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(holder.mContext, error.toString(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(holder.mContext, "error: " + error.toString(), Toast.LENGTH_SHORT).show();
                         }
                     }, map_temp);
                 } else {
@@ -262,8 +317,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.getString("error").equalsIgnoreCase("false"))
-                            {
+                            if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                 Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
@@ -335,7 +389,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
                     jsonObject = new JSONObject(response);
 
                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                        invoiceItemArrayList = new ArrayList<>();
+                        invoiceItemModelArrayList = new ArrayList<>();
 
                         JSONObject data = jsonObject.getJSONObject("data");
                         JSONArray itemsArray = data.getJSONArray("items");
@@ -360,7 +414,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private void selectedItemListRvHandler(ItemViewHolder holder) {
         holder.recyclerViewSelectedProductListInvoiceCard.setHasFixedSize(true);
         holder.recyclerViewSelectedProductListInvoiceCard.setLayoutManager(new LinearLayoutManager(context));
-        rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemArrayList);
+        rvAdapter_invoiceItemList = new RvAdapterInvoiceItemList(invoiceItemModelArrayList);
         holder.recyclerViewSelectedProductListInvoiceCard.setAdapter(rvAdapter_invoiceItemList);
 //        rvAdapter_invoiceItemList.notifyDataSetChanged();
     }
@@ -376,11 +430,13 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_items, tv_customer, tv_date, tv_dueDate, tv_amount, tv_discount, tv_invoiceNo, tv_paidAmount;
+        TextView tv_items, tv_customer, tv_date, tv_dueDate, tv_amount, tv_discount, tv_invoiceNo, tv_paidOrDue, tv_deduction, tv_grandTotal,
+                tv_dueText, tv_paidText;
         RecyclerView recyclerViewSelectedProductListInvoiceCard;
         LinearLayout linearLayoutClickToRv;
         RelativeLayout relativeLayoutExpandInvoiceItemList;
         ImageView imageView_up, imageView_down, imageView_webPrint, imageView_invoiceView;
+        CircularImageView circularImageView_customerImg, circularImageView_activeIcon;
         SharedPreferences sharedPreferencesPrinterUrl;
         Context mContext;
         int isItemListVisible = 0;
@@ -395,12 +451,18 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
             tv_items = itemView.findViewById(R.id.tv_itemNumInvoiceCard);
             tv_discount = itemView.findViewById(R.id.tv_discountInvoiceCard);
             tv_invoiceNo = itemView.findViewById(R.id.tv_invoiceNo);
-            tv_paidAmount = itemView.findViewById(R.id.tv_paidInvoiceCard);
+            tv_paidOrDue = itemView.findViewById(R.id.tv_paidOrDueInvoiceCard);
+            tv_deduction = itemView.findViewById(R.id.tv_deductionInvoiceCard);
+            tv_grandTotal = itemView.findViewById(R.id.tv_grandTotalInvoiceCard);
+            tv_dueText = itemView.findViewById(R.id.tv_dueText);
+            tv_paidText = itemView.findViewById(R.id.tv_paidText);
             relativeLayoutExpandInvoiceItemList = itemView.findViewById(R.id.l3);
             imageView_up = itemView.findViewById(R.id.imgV_up);
             imageView_down = itemView.findViewById(R.id.imgV_down);
             imageView_webPrint = itemView.findViewById(R.id.imgV_webPrint);
             imageView_invoiceView = itemView.findViewById(R.id.imgV_invoice);
+            circularImageView_customerImg = itemView.findViewById(R.id.imgV_customerImgInvoiceCard);
+            circularImageView_activeIcon = itemView.findViewById(R.id.imgV_activeIcon);
             recyclerViewSelectedProductListInvoiceCard = itemView.findViewById(R.id.rv_selectedProductListInvoiceCard);
             linearLayoutClickToRv = itemView.findViewById(R.id.l5);
             mContext = itemView.getContext();

@@ -88,50 +88,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
 //        map_sale_input.put(PAGE_NO, String.valueOf(pageNo));
         map_sale_input.put(PAGE_NO, String.valueOf(pageNo));
 
-        AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_sale_invoice, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-//                Toast.makeText(SaleInvoiceViewerActivity.this, response, Toast.LENGTH_SHORT).show();
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                        llProgressLoading.setVisibility(View.GONE);
-                        JSONArray data_sale_invoice_list = jsonObject.getJSONArray("data");
-                        for (int i = 0; i < data_sale_invoice_list.length(); i++) {
-                            JSONObject dataObject = data_sale_invoice_list.getJSONObject(i);
-                            int customerNo = dataObject.getInt("customerno");
-                            String sDate = dataObject.getString("sdate");
-                            String dueDate = dataObject.getString("duedate");
-                            int currency = dataObject.getInt("currency");
-                            int statusId = dataObject.getInt("statusid");
-                            int orgNo = dataObject.getInt("orgno");
-                            int invoiceNo = dataObject.getInt("invoiceno");
-                            double discount = dataObject.getDouble("discount");
-                            double paid = dataObject.getDouble("paid");
-                            int addedBy = dataObject.getInt("addedby");
-                            double deduction = dataObject.getDouble("deduction");
-                            double amount = dataObject.getDouble("amount");
-                            String cShortText = dataObject.getString("cshorttext");
-                            String cText = dataObject.getString("ctext");
-                            String name = dataObject.getString("name");
-                            double totalAmountToPay = dataObject.getDouble("total_amount_to_pay");
-                            double unPaidAmount = dataObject.getDouble("unpaid_amount");
-
-                            saleInvoiceModelList.add(new InvoiceModel(customerNo, sDate, dueDate, currency, statusId, orgNo, invoiceNo,
-                                    discount, paid, addedBy, deduction, amount, cShortText, cText, name, totalAmountToPay, unPaidAmount));
-                            rvAdapter_selectedProductDetailsView.notifyDataSetChanged();
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(SaleInvoiceViewerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }, map_sale_input);
+        mGetFilteredInvoice(map_sale_input);
 
         recyclerViewInvoiceCardView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -167,54 +124,7 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
                                 mapForScroll.put(API_KEY, apikey);
                                 mapForScroll.put(PAGE_NO, String.valueOf(pageNo));
                                 mapForScroll.put(LIMIT, String.valueOf(10));
-
-                                AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_sale_invoice, new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(response);
-                                            if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                                                JSONArray data_sale_invoice_list = jsonObject.getJSONArray("data");
-                                                for (int i = 0; i < data_sale_invoice_list.length(); i++) {
-                                                    JSONObject dataObject = data_sale_invoice_list.getJSONObject(i);
-                                                    int customerNo = dataObject.getInt("customerno");
-                                                    String sDate = dataObject.getString("sdate");
-                                                    String dueDate = dataObject.getString("duedate");
-                                                    int currency = dataObject.getInt("currency");
-                                                    int statusId = dataObject.getInt("statusid");
-                                                    int orgNo = dataObject.getInt("orgno");
-                                                    int invoiceNo = dataObject.getInt("invoiceno");
-                                                    double discount = dataObject.getDouble("discount");
-                                                    double paid = dataObject.getDouble("paid");
-                                                    int addedBy = dataObject.getInt("addedby");
-                                                    double deduction = dataObject.getDouble("deduction");
-                                                    double amount = dataObject.getDouble("amount");
-                                                    String cShortText = dataObject.getString("cshorttext");
-                                                    String cText = dataObject.getString("ctext");
-                                                    String name = dataObject.getString("name");
-                                                    double totalAmountToPay = dataObject.getDouble("total_amount_to_pay");
-                                                    double unPaidAmount = dataObject.getDouble("unpaid_amount");
-
-                                                    saleInvoiceModelList.add(new InvoiceModel(customerNo, sDate, dueDate, currency, statusId, orgNo, invoiceNo,
-                                                            discount, paid, addedBy, deduction, amount, cShortText, cText, name, totalAmountToPay, unPaidAmount));
-                                                    rvAdapter_selectedProductDetailsView.notifyDataSetChanged();
-                                                }
-                                            } else
-                                                Toast.makeText(SaleInvoiceViewerActivity.this, "No more data load.", Toast.LENGTH_SHORT).show();
-                                            Toast.makeText(SaleInvoiceViewerActivity.this, "Loaded", Toast.LENGTH_SHORT).show();
-                                            isLoading = false;
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                            Toast.makeText(SaleInvoiceViewerActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
-                                        }
-
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Toast.makeText(SaleInvoiceViewerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }, mapForScroll);
+                                mGetFilteredInvoice(mapForScroll);
                             }
                         }, 2000);
                         isLoading = true;
@@ -222,6 +132,68 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void mGetFilteredInvoice(HashMap<String, String> mapForScroll) {
+        AppController.getAppController().getAppNetworkController().makeRequest(url_get_filtered_sale_invoice, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        llProgressLoading.setVisibility(View.GONE);
+
+                        JSONArray data_sale_invoice_list = jsonObject.getJSONArray("data");
+                        for (int i = 0; i < data_sale_invoice_list.length(); i++) {
+                            JSONObject dataObject = data_sale_invoice_list.getJSONObject(i);
+                            int customerNo = dataObject.getInt("customerno");
+                            String sDate = dataObject.getString("sdate");
+                            String dueDate = dataObject.getString("duedate");
+                            int currency = dataObject.getInt("currency");
+                            int statusId = dataObject.getInt("statusid");
+                            int orgNo = dataObject.getInt("orgno");
+                            int invoiceNo = dataObject.getInt("invoiceno");
+                            double discount = dataObject.getDouble("discount");
+                            double paid = dataObject.getDouble("paid");
+                            int addedBy = dataObject.getInt("addedby");
+                            double deduction = dataObject.getDouble("deduction");
+                            double amount = dataObject.getDouble("amount");
+                            String cShortText = dataObject.getString("cshorttext");
+                            String cText = dataObject.getString("ctext");
+                            String name = dataObject.getString("name");
+                            double totalAmountToPay = dataObject.getDouble("total_amount_to_pay");
+                            double unPaidAmount = dataObject.getDouble("unpaid_amount");
+
+                            JSONArray jsonArrayPayments = dataObject.getJSONArray("payments");
+                            ArrayList<String> arrayListPayments = new ArrayList<>();
+                            for (int j=0; j<jsonArrayPayments.length(); j++)
+                            {
+                                JSONObject objectPayments = jsonArrayPayments.getJSONObject(j);
+                                String payment_amount = objectPayments.getString("accno");
+                                arrayListPayments.add(payment_amount);
+                            }
+
+                            saleInvoiceModelList.add(new InvoiceModel(customerNo, sDate, dueDate, currency, statusId, orgNo, invoiceNo,
+                                    discount, paid, addedBy, deduction, amount, cShortText, cText, name, totalAmountToPay, unPaidAmount, arrayListPayments));
+                            rvAdapter_selectedProductDetailsView.notifyDataSetChanged();
+                        }
+                    } else
+                        Toast.makeText(SaleInvoiceViewerActivity.this, "No more data load.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SaleInvoiceViewerActivity.this, "Loaded", Toast.LENGTH_SHORT).show();
+                    isLoading = false;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(SaleInvoiceViewerActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(SaleInvoiceViewerActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, mapForScroll);
+
     }
 
     private void handleAppbar() {

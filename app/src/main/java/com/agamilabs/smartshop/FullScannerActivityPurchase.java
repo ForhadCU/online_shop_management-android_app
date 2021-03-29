@@ -47,7 +47,7 @@ import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductView;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.database.DbHelper;
 import com.agamilabs.smartshop.model.Customer;
-import com.agamilabs.smartshop.model.InvoiceItem;
+import com.agamilabs.smartshop.model.InvoiceItemModel;
 import com.agamilabs.smartshop.model.InvoiceModel;
 import com.agamilabs.smartshop.model.Products;
 import com.android.volley.Response;
@@ -102,7 +102,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     private DbHelper dbHelper;
     private List<InvoiceModel> invoiceModelList;
-    private ArrayList<InvoiceItem> invoiceItemList;
+    private ArrayList<InvoiceItemModel> invoiceItemModelList;
     private ArrayList<Customer> personArrayList;
     private ArrayList<Products> productsArrayList;
     //    private ArrayList<String> productArrayList;
@@ -110,6 +110,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private InvoiceModel invoiceModel;
     private RvAdapterPersonSearch rvAdapterPersonSearch;
     private RvAdapterProductSearch rvAdapterProductSearch;
+    private ArrayList<String> arrayListSku;
 
     private Customer customer;
     private Products products;
@@ -184,7 +185,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         sheetBehavior = BottomSheetBehavior.from(bottomsSheetLayout);
         sheetBehaviorHandler();
 
-        invoiceItemList = new ArrayList<>();
+        invoiceItemModelList = new ArrayList<>();
         mScannerView = new ZXingScannerView(this);
 
         rv_selectedProduct = findViewById(R.id.rv_productView);
@@ -242,12 +243,12 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     public void totalBillHandler() {
         subTotal = 0;
-        textViewCartBadge.setText(String.valueOf(invoiceItemList.size()));
-        if (invoiceItemList.size() == 0 && relativeLayoutBottomSheetComponents.getVisibility() == View.VISIBLE) {
+        textViewCartBadge.setText(String.valueOf(invoiceItemModelList.size()));
+        if (invoiceItemModelList.size() == 0 && relativeLayoutBottomSheetComponents.getVisibility() == View.VISIBLE) {
             relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
         } else {
-            for (int i = 0; i < invoiceItemList.size(); i++) {
-                InvoiceItem current = invoiceItemList.get(i);
+            for (int i = 0; i < invoiceItemModelList.size(); i++) {
+                InvoiceItemModel current = invoiceItemModelList.get(i);
                 subTotal = subTotal + current.getItem_bill();
                 String num = String.valueOf((int) current.getItem_bill());
             }
@@ -399,7 +400,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     protected void onDestroy() {
         super.onDestroy();
 //        dbHelper.mDeleteProductList();
-        invoiceItemList.clear();
+        invoiceItemModelList.clear();
 //        Toast.makeText(this, "onDestroy!!", Toast.LENGTH_SHORT).show();
     }
 
@@ -521,7 +522,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     if (object.getString("error").equalsIgnoreCase("false")) {
                         progressBarSkuRequest.setVisibility(View.GONE);
                         JSONObject data = object.getJSONObject("data");
-
+                        arrayListSku = new ArrayList<>();
                         String itemNo = data.getString("itemno");
                         String product_name = data.getString("itemname");
                         String productRate = data.getString("salerate");
@@ -529,11 +530,12 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                         String expirydate = data.getString("hasexpiry");
                         String discount_percentage = data.getString("discount_rate");
                         String unitid = data.getString("unitid");
+                        arrayListSku.add(item_id);
 
 /* showMessageDialog("Contents = " + rawResult.getText() + ", Format = " + rawResult.getBarcodeFormat().toString(),
                                 itemNo, product_name, productRate, item_id, unitid, expirydate, discount_percentage);*/
 
-                        showMessageDialog(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage);
+                        showMessageDialog(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage, arrayListSku);
                     } else {
                         Toast.makeText(FullScannerActivityPurchase.this, "response error True", Toast.LENGTH_SHORT).show();
                     }
@@ -551,13 +553,13 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     }
 
-    public void showMessageDialog(String itemNo, String item_id, String product_name, String productRate, String unitid, String expirydate, String discount_percentage) {
+    public void showMessageDialog(String itemNo, String item_id, String product_name, String productRate, String unitid, String expirydate, String discount_percentage, ArrayList<String> arrayListSku) {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage);
-        scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");
+      /*  FragmentManager fragmentManager = getSupportFragmentManager();
+        ScanerDilogFragmentActivity scanerDilogFragmentActivity = new ScanerDilogFragmentActivity(this, itemNo, product_name, productRate, unitid, expirydate, discount_percentage, arrayListSku);
+        scanerDilogFragmentActivity.show(fragmentManager, "scannerDialogFragmentActivity");*/
 
 /*        dialog_cross = new Dialog(FullScannerActivity.this);
         dialog_cross.setContentView(R.layout.scanner_dialog_frag_cross);
@@ -633,12 +635,12 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
 
     @Override
-    public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, String item_id, String unitid, String expirydate, String discount_percentage) {
+    public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, ArrayList<String> item_id, String unitid, String expirydate, String discount_percentage) {
         //product save via Model
         Toast.makeText(this, productID, Toast.LENGTH_SHORT).show();
-        invoiceItemList.add(new InvoiceItem(Integer.parseInt(productID), item_id,  Integer.parseInt(productQuantity),  Double.parseDouble(product_price),  discount_percentage,  expirydate,  productName, Double.parseDouble(totalBill), 1));
+        invoiceItemModelList.add(new InvoiceItemModel(Integer.parseInt(productID), item_id,  Integer.parseInt(productQuantity),  Double.parseDouble(product_price),  discount_percentage,  expirydate,  productName, Double.parseDouble(totalBill), 1));
 
-        if (invoiceItemList.size() > 0) {
+        if (invoiceItemModelList.size() > 0) {
             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
             relativeLayoutBottomSheetComponents.setVisibility(View.VISIBLE);
             linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
@@ -684,8 +686,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     private void mAdapterHandler() {
 //        recyclerViewHandler();
-        if (invoiceItemList.size() > 0) {
-            rvAdapter_selectedProductView = new RvAdapterSelectedProductView(invoiceItemList, this, this);
+        if (invoiceItemModelList.size() > 0) {
+            rvAdapter_selectedProductView = new RvAdapterSelectedProductView(invoiceItemModelList, this, this);
             rv_selectedProduct.setAdapter(rvAdapter_selectedProductView);
             rvAdapter_selectedProductView.notifyDataSetChanged();
 
@@ -1502,7 +1504,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
                 relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
                 textViewCartBadge.setText("0");
-                invoiceItemList.clear();
+                invoiceItemModelList.clear();
                 break;
 
         }
@@ -1514,9 +1516,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         if (!TextUtils.isEmpty(getSupplierName))
         {
             JSONArray jsonArrayInvoiceItem = new JSONArray();
-            for (int i = 0; i < invoiceItemList.size(); i++)
+            for (int i = 0; i < invoiceItemModelList.size(); i++)
             {
-                InvoiceItem current = invoiceItemList.get(i);
+                InvoiceItemModel current = invoiceItemModelList.get(i);
                 JSONObject jsonObjectTemp = new JSONObject();
                 try {
                     jsonObjectTemp.put("itemno", current.getItemno());
@@ -1578,7 +1580,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                             linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
                             relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
                             textViewCartBadge.setText("0");
-                            invoiceItemList.clear();
+                            invoiceItemModelList.clear();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1751,7 +1753,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         }, mapGetProductById);
-        showMessageDialog("itemNo", "item_id", "product_name", "500", "unitid", "expirydate", "discount_percentage");
+        showMessageDialog("itemNo", "item_id", "product_name", "500", "unitid", "expirydate", "discount_percentage", arrayListSku);
 
 
         dialogProductSearch.dismiss();
