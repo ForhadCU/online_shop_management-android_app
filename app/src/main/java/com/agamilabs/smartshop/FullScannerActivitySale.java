@@ -96,7 +96,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     private ImageButton imageButtonDiscountIncrease, imageButtonDiscountDecrease;
     private Dialog dialog, dialogAddCustomer, dialogProductSearch;
     private TextView textViewCustomerName, textViewCustomerNameScannerDisplay, textViewDiscountOverAll;
-    private RelativeLayout relativeLayoutBottomSheetComponents;
+    private LinearLayout relativeLayoutBottomSheetComponents;
     private LinearLayout linearLayoutBottomSheetCustomerName;
     private TextView textViewCartBadge;
     private RadioGroup radioGroupDiscount;

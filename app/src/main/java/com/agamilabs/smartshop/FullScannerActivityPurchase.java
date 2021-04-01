@@ -196,7 +196,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         textViewDiscountOverAll = findViewById(R.id.tv_discountOverAll);
         editText_discount = findViewById(R.id.edtTxt_discount);
         editText_deduction = findViewById(R.id.edtTxt_deduction);
-        buttonSaveInvoice = findViewById(R.id.btn_invoiceSave);
+//        buttonSaveInvoice = findViewById(R.id.btn_invoiceSave);
         imageButtonFlashOn = findViewById(R.id.imgBtn_flash_on);
         imageButtonFlashOff = findViewById(R.id.imgBtn_flash_off);
         imageButtonFocusOn = findViewById(R.id.imgBtn_focus_on);

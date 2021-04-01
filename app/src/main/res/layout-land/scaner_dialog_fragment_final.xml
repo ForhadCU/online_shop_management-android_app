@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgV_productImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_alignParentLeft="true"
+                    android:scaleType="fitCenter"
+                    app:srcCompat="@drawable/product_img" />
+
+                <TextView
+                    android:id="@+id/tv_productName"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/imgV_productImage"
+                    android:maxLines="2"
+                    android:text="Converse High Ankie white Sneakers"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_productPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_productName"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/imgV_productImage"
+                    android:fontFamily="serif"
+                    android:text="300.00"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#F44336"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/l1"
+            android:layout_marginTop="10dp"
+            android:background="#CCCBCB" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:paddingRight="15dp"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Sku"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textStyle="bold"
+                        />
+                    <TextView
+                        android:layout_weight="1.5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Qty"
+                        android:textStyle="bold"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textAlignment="textEnd"
+                        android:gravity="end" />
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rl3"
+                    >
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rv_sku"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1.5"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:id="@+id/rl2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_horizontal"
+                    >
+
+                    <ImageButton
+                        android:id="@+id/btn_quantityDecrease"
+                        android:layout_width="35dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/decr_btn_shape"
+                        android:backgroundTint="@color/lightgray"
+                        android:src="@drawable/ic_minus" />
+
+                    <TextView
+                        android:id="@+id/tv_productQuantity"
+                        android:layout_width="45dp"
+                        android:layout_height="25dp"
+                        android:layout_toRightOf="@+id/btn_quantityDecrease"
+                        android:background="@drawable/product_qty_shape"
+                        android:backgroundTint="#01B3CA"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:typeface="serif" />
+
+                    <ImageButton
+                        android:id="@+id/btn_quantityIncrease"
+                        android:layout_width="35dp"
+                        android:layout_height="25dp"
+                        android:layout_toRightOf="@+id/tv_productQuantity"
+                        android:background="@drawable/incr_btn_shape"
+                        android:backgroundTint="@color/lightgray"
+                        android:src="@drawable/ic_add" />
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv11"
+                        android:text="Available stock"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_availableStock"
+                        android:text="0"
+                        android:layout_below="@+id/tv11"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textStyle="bold"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/l1"
+            android:layout_marginTop="10dp"
+            android:background="#CCCBCB" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl2"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="10dp"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/tv_productTotalPrice"
+                    android:layout_toLeftOf="@+id/tv_productTotalPrice"
+                    android:text="Total Price : "
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_productTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="serif"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="70000.00"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#4CAF50"
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/l2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_productTotalPrice"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="35dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/btn_AddProductViewDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:backgroundTint="#2BCA31"
+                    android:text="Add"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_dismissProductViewDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:backgroundTint="#F44336"
+                    android:text="Discard"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <CheckBox
+                    android:id="@+id/checkbox_continueScanning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btn_dismissProductViewDialog"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#009688"
+                    android:checked="true"
+                    android:text="Continue scanning?" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
