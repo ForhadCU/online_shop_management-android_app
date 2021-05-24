@@ -2,6 +2,7 @@ package com.agamilabs.smartshop;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,12 +16,14 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -31,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
@@ -38,18 +42,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
+import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivityPurchase;
+import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivitySale;
 import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
-import com.agamilabs.smartshop.Interfaces.ProductDetailsInterface;
+import com.agamilabs.smartshop.Interfaces.ProductDetailsInterfacePurchase;
+import com.agamilabs.smartshop.adapter.RvAdapterAddedItemViewPurchase;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
-import com.agamilabs.smartshop.adapter.RvAdapterSelectedProductView;
 import com.agamilabs.smartshop.controller.AppController;
-import com.agamilabs.smartshop.database.DbHelper;
 import com.agamilabs.smartshop.model.Customer;
-import com.agamilabs.smartshop.model.InvoiceItemModel;
-import com.agamilabs.smartshop.model.InvoiceModel;
+import com.agamilabs.smartshop.model.LotsModel;
 import com.agamilabs.smartshop.model.Products;
+import com.agamilabs.smartshop.model.PurchaseItemModel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -70,7 +74,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class FullScannerActivityPurchase extends BaseScannerActivity implements MessageDialogFragment.MessageDialogListener,
         ZXingScannerView.ResultHandler, FormatSelectorDialogFragment.FormatSelectorDialogListener,
-        CameraSelectorDialogFragment.CameraSelectorDialogListener, ProductDetailsInterface, View.OnClickListener, ICallBackFromFullScannerActivity, ICallbackCustomerSearchClickHandler {
+        CameraSelectorDialogFragment.CameraSelectorDialogListener, ProductDetailsInterfacePurchase, View.OnClickListener, ICallBackFromFullScannerActivityPurchase, ICallbackCustomerSearchClickHandler {
     private static final String FLASH_STATE = "FLASH_STATE";
     private static final String AUTO_FOCUS_STATE = "AUTO_FOCUS_STATE";
     private static final String SELECTED_FORMATS = "SELECTED_FORMATS";
@@ -78,19 +82,16 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 7;
     private RecyclerView rv_selectedProduct;
-    private RvAdapterSelectedProductView rvAdapter_selectedProductView;
-    private Dialog dialog_cross;
     private BottomSheetBehavior sheetBehavior;
     private RelativeLayout bottomsSheetLayout;
     private EditText editText_discount, editText_deduction;
     private TextView textView_subTotal, textView_total, textViewSubtotalScannerDisplay;
     private ViewGroup contentFrame;
-    private Button buttonSaveInvoice;
     private ImageButton imageButtonFlashOn, imageButtonFlashOff, imageButtonFocusOn, imageButtonFocusOff, imageButtonPersonSearch, imageButtonProductSearch;
     private ImageButton imageButtonDiscountIncrease, imageButtonDiscountDecrease;
     private Dialog dialog, dialogAddSupplier, dialogProductSearch;
-    private TextView textViewSupplierName, textViewSupplierNameScannerDisplay, textViewDiscountOverAll;
-    private RelativeLayout relativeLayoutBottomSheetComponents;
+    private TextView textViewSupplierName, textViewSupplierNameScannerDisplay, textViewDiscountOverAll, tv_AdjustFraction;
+    private LinearLayout linearLayoutBottomSheetComponents;
     private LinearLayout linearLayoutBottomSheetSupplierName;
     private TextView textViewCartBadge;
     private RadioGroup radioGroupDiscount;
@@ -98,19 +99,16 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private ProgressBar progressBarSkuRequest;
     private Button buttonCashPaid, buttonBKashPaid, buttonBankPaid;
     private LinearLayout llDiscardInvoice;
+    private FrameLayout frameLayoutCart;
+    private ArrayList<LotsModel> lotsModelArrayList;
+    private AlertDialog.Builder builder;
+    private ArrayList<PurchaseItemModel> purchaseItemModelArrayList;
+    private RvAdapterAddedItemViewPurchase rvAdapterAddedItemViewPurchase;
 
-
-    private DbHelper dbHelper;
-    private List<InvoiceModel> invoiceModelList;
-    private ArrayList<InvoiceItemModel> invoiceItemModelList;
     private ArrayList<Customer> personArrayList;
     private ArrayList<Products> productsArrayList;
-    //    private ArrayList<String> productArrayList;
-    private ArrayList<String> userList;
-    private InvoiceModel invoiceModel;
     private RvAdapterPersonSearch rvAdapterPersonSearch;
     private RvAdapterProductSearch rvAdapterProductSearch;
-    private ArrayList<String> arrayListSku;
 
     private Customer customer;
     private Products products;
@@ -130,7 +128,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     private double discount, deduction, total = 0;
     private double subTotal = 0.00;
-    ICallBackFromFullScannerActivity icallBackTest;
+    ICallBackFromFullScannerActivitySale icallBackTest;
 
     private String url_1 = "http://pharmacy.egkroy.com/app-module/php/get_details_of_item_of_sku.php";
     private String url_2 = "http://pharmacy.egkroy.com/app-module/php/get_org_items_by_name.php";
@@ -152,8 +150,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private String apikey = "ewfw?f23u#rfg3872r23=jrfg87wefc";
     private String supplier_no;
     private String currentDate;
+    private int currentItemNo;
+    private double currentPurchaseRate;
 
-//apex
+    //apex
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -181,11 +181,12 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         currentDate = sdf.format(new Date());
 
         contentFrame = (ViewGroup) findViewById(R.id.content_frame);
-        bottomsSheetLayout = findViewById(R.id.bottom_sheet_purchase);
+        bottomsSheetLayout = findViewById(R.id.bottom_sheet);
         sheetBehavior = BottomSheetBehavior.from(bottomsSheetLayout);
         sheetBehaviorHandler();
 
-        invoiceItemModelList = new ArrayList<>();
+        purchaseItemModelArrayList = new ArrayList<>();
+        purchaseItemModelArrayList = new ArrayList<>();
         mScannerView = new ZXingScannerView(this);
 
         rv_selectedProduct = findViewById(R.id.rv_productView);
@@ -194,9 +195,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         textViewSubtotalScannerDisplay = findViewById(R.id.tv_subTotalScannerDisplay);
         textViewSupplierNameScannerDisplay = findViewById(R.id.tv_cusNameScannerDisplay);
         textViewDiscountOverAll = findViewById(R.id.tv_discountOverAll);
+        tv_AdjustFraction = findViewById(R.id.tv_adjustFraction);
         editText_discount = findViewById(R.id.edtTxt_discount);
         editText_deduction = findViewById(R.id.edtTxt_deduction);
-//        buttonSaveInvoice = findViewById(R.id.btn_invoiceSave);
         imageButtonFlashOn = findViewById(R.id.imgBtn_flash_on);
         imageButtonFlashOff = findViewById(R.id.imgBtn_flash_off);
         imageButtonFocusOn = findViewById(R.id.imgBtn_focus_on);
@@ -209,17 +210,18 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         buttonBKashPaid = findViewById(R.id.btn_bkashPaid);
         buttonBankPaid = findViewById(R.id.btn_bankPaid);
         llDiscardInvoice = findViewById(R.id.ll_discardInvoice);
-
         textViewSupplierName = findViewById(R.id.tv_bottomSheetCustomerName);
-        relativeLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
+        linearLayoutBottomSheetComponents = findViewById(R.id.l_bottomSheet_components);
         linearLayoutBottomSheetSupplierName = findViewById(R.id.l_bottomSheet_customerName);
         textViewCartBadge = findViewById(R.id.tv_cartBadge);
         radioGroupDiscount = findViewById(R.id.radioGroupDiscount);
         progressBarSkuRequest = findViewById(R.id.progress_skuRequest);
+        frameLayoutCart = findViewById(R.id.l3);
 
         recyclerViewHandler();
         setupFormats();
         contentFrame.addView(mScannerView);
+        builder = new AlertDialog.Builder(this);
 
         imageButtonFocusOn.setOnClickListener(this);
         imageButtonFocusOff.setOnClickListener(this);
@@ -233,6 +235,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         buttonBKashPaid.setOnClickListener(this);
         buttonBankPaid.setOnClickListener(this);
         llDiscardInvoice.setOnClickListener(this);
+        frameLayoutCart.setOnClickListener(this);
+        tv_AdjustFraction.setOnClickListener(this);
 
     }
 
@@ -243,14 +247,14 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     public void totalBillHandler() {
         subTotal = 0;
-        textViewCartBadge.setText(String.valueOf(invoiceItemModelList.size()));
-        if (invoiceItemModelList.size() == 0 && relativeLayoutBottomSheetComponents.getVisibility() == View.VISIBLE) {
-            relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+        textViewCartBadge.setText(String.valueOf(purchaseItemModelArrayList.size()));
+        if (purchaseItemModelArrayList.size() == 0 && linearLayoutBottomSheetComponents.getVisibility() == View.VISIBLE) {
+            linearLayoutBottomSheetComponents.setVisibility(View.GONE);
         } else {
-            for (int i = 0; i < invoiceItemModelList.size(); i++) {
-                InvoiceItemModel current = invoiceItemModelList.get(i);
-                subTotal = subTotal + current.getItem_bill();
-                String num = String.valueOf((int) current.getItem_bill());
+            for (int i = 0; i < purchaseItemModelArrayList.size(); i++) {
+                PurchaseItemModel current = purchaseItemModelArrayList.get(i);
+                subTotal = subTotal + current.getTotalAmount();
+                String num = String.valueOf((int) current.getTotalAmount());
             }
             textViewSubtotalScannerDisplay.setText(String.format("%.2f", subTotal));
             textView_subTotal.setText(String.format("%.2f", subTotal));
@@ -339,7 +343,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    mScannerView.stopCamera();
+                } else
+                    mScannerView.startCamera();
             }
 
             @Override
@@ -393,14 +400,55 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         mScannerView.startCamera(mCameraId);
         mScannerView.setFlash(mFlash);
         mScannerView.setAutoFocus(mAutoFocus);
+        defaultClientSelection();
+
 //        Toast.makeText(this, "OnResume", Toast.LENGTH_SHORT).show();
     }
+
+    private void defaultClientSelection() {
+        HashMap<String, String> mapGetClients = new HashMap<>();
+        mapGetClients.put(SUPPLIER_PAGE_NO, String.valueOf(1));
+        mapGetClients.put(LIMIT, String.valueOf(10));
+        mapGetClients.put(API_KEY, apikey);
+        mapGetClients.put(TYPE, type_name);
+
+        AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        JSONArray customerDataArray = jsonObject.getJSONArray("data");
+                        JSONObject customerData = customerDataArray.getJSONObject(0);
+//                        customerClickHandler(, customerData.getString("name"));
+                        supplier_no = customerData.getString("id");
+                        textViewSupplierName.setText(customerData.getString("name"));
+                        textViewSupplierNameScannerDisplay.setText(customerData.getString("name"));
+                        linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
+                        textViewSupplierNameScannerDisplay.setVisibility(View.VISIBLE);
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+//                dialog.dismiss();
+            }
+        }, mapGetClients);
+    }
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 //        dbHelper.mDeleteProductList();
-        invoiceItemModelList.clear();
+        purchaseItemModelArrayList.clear();
 //        Toast.makeText(this, "onDestroy!!", Toast.LENGTH_SHORT).show();
     }
 
@@ -510,38 +558,90 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     private void mSendVolleyRequest(Result rawResult) {
         HashMap<String, String> map = new HashMap<>();
         map.put(API_KEY, apikey);
-        map.put("sku", "10258");
-
+        map.put("sku", "15167");
+        Toast.makeText(this, "called", Toast.LENGTH_SHORT).show();
         AppController.getAppController().getAppNetworkController().makeRequest(url_1, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-//                    Toast.makeText(FullScannerActivity.this, response, Toast.LENGTH_SHORT).show();
 
                     JSONObject object = new JSONObject(response);
                     if (object.getString("error").equalsIgnoreCase("false")) {
                         progressBarSkuRequest.setVisibility(View.GONE);
                         JSONObject data = object.getJSONObject("data");
-                        arrayListSku = new ArrayList<>();
+                        lotsModelArrayList = new ArrayList<>();
+                        int itemOrgno = data.getInt("orgno");
                         String itemNo = data.getString("itemno");
                         String product_name = data.getString("itemname");
-                        String productRate = data.getString("salerate");
+                        String purchaserate = data.getString("last_purchaserate");
+                        if (purchaserate == null) {
+                            purchaserate = "0";
+                        }
+                        String saleRate = data.getString("salerate");
                         String item_id = data.getString("upc");
                         String expirydate = data.getString("hasexpiry");
                         String discount_percentage = data.getString("discount_rate");
                         String unitid = data.getString("unitid");
-                        arrayListSku.add(item_id);
+                        String taxrate = data.getString("taxrate");
+
+
+                        //                        lotsModelArrayList = mGetLotsArrayList(itemNo);
+                        HashMap<String, String> mapGetProductById = new HashMap<>();
+                        mapGetProductById.put(API_KEY, apikey);
+                        mapGetProductById.put("itemno", itemNo);
+                        String finalPurchaserate = purchaserate;
+                        AppController.getAppController().getAppNetworkController().makeRequest(url_6, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+//                Toast.makeText(FullScannerActivitySale.this, response, Toast.LENGTH_LONG).show();
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                                        lotsModelArrayList = new ArrayList<>();
+                                        JSONObject data = jsonObject.getJSONObject("data");
+                                        JSONArray jsonArraySku = data.getJSONArray("lots");
+
+                                        for (int i = 0; i < jsonArraySku.length(); i++) {
+                                            JSONObject object = jsonArraySku.getJSONObject(i);
+                                            if (object.getInt("qty") > 0) {
+
+                                                int itemno = object.getInt("itemno");
+                                                int orgno = object.getInt("orgno");
+                                                int lotno = object.getInt("lotno");
+                                                String sku = object.getString("sku");
+                                                int qty = object.getInt("qty");
+                                                String expirydateOfLots = object.getString("expirydate");
+                                                lotsModelArrayList.add(new LotsModel(itemno, orgno, lotno, sku, qty, expirydateOfLots, false, false, 0));
+                                            }
+                                        }
+                                        showMessageDialog(itemOrgno, itemNo, product_name, saleRate, finalPurchaserate, unitid, expirydate, discount_percentage, lotsModelArrayList, taxrate);
+
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(FullScannerActivityPurchase.this, "JsonException: " + e.toString(), Toast.LENGTH_SHORT).show();
+                                }
+
+
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        }, mapGetProductById);
+//                        showMessageDialog(itemNo, product_name, purchaserate, unitid, expirydate, discount_percentage, lotsModelArrayList);
 
 /* showMessageDialog("Contents = " + rawResult.getText() + ", Format = " + rawResult.getBarcodeFormat().toString(),
-                                itemNo, product_name, productRate, item_id, unitid, expirydate, discount_percentage);*/
+                                itemNo, product_name, purchaserate, item_id, unitid, expirydate, discount_percentage);*/
 
-                        showMessageDialog(itemNo, item_id, product_name, productRate, unitid, expirydate, discount_percentage, arrayListSku);
-                    } else {
-                        Toast.makeText(FullScannerActivityPurchase.this, "response error True", Toast.LENGTH_SHORT).show();
+                    } else if (object.getString("error").equalsIgnoreCase("true")) {
+                        Toast.makeText(FullScannerActivityPurchase.this, object.getString("message"), Toast.LENGTH_SHORT).show();
                     }
-                    
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(FullScannerActivityPurchase.this, "JSONException: " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -635,22 +735,43 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
 
     @Override
-    public void dataParsingMethod(boolean continueScanning, String productID, String productName, String productQuantity, String product_price, String totalBill, ArrayList<String> item_id, String unitid, String expirydate, String discount_percentage) {
-        //product save via Model
-        Toast.makeText(this, productID, Toast.LENGTH_SHORT).show();
-        invoiceItemModelList.add(new InvoiceItemModel(Integer.parseInt(productID), item_id,  Integer.parseInt(productQuantity),  Double.parseDouble(product_price),  discount_percentage,  expirydate,  productName, Double.parseDouble(totalBill), 1));
+    public void dataParsingMethod(boolean continueScanning, int orgNo, int itemNO, String itemName, double purchaseRate, double saleRate, double totalAmount, String unitId,
+                                  String expiryDate, String discountPercentage, int allIncreaseQty,
+                                  ArrayList<LotsModel> SummeryArrayList, ArrayList<LotsModel> lotsModelArrayList, String taxrate) {
+        currentPurchaseRate = purchaseRate;
+        boolean hasItem = false;
+        for (int i = 0; i < purchaseItemModelArrayList.size(); i++) {
+            PurchaseItemModel current = purchaseItemModelArrayList.get(i);
+            if (current.getItemNO() == itemNO && current.getOrgNo() == orgNo) {
+                hasItem = true;
+                current.setPurchaseRate(purchaseRate);
+                current.setSaleRate(saleRate);
+                current.setTotalAmount(totalAmount);
+                current.setAllIncreaseQty(allIncreaseQty);
+                current.setSummeryArrayList(SummeryArrayList);
+                current.setLotsModelArrayList(lotsModelArrayList);
+                current.setTaxrate(taxrate);
+            }
+        }
+        if (!hasItem) {
+            purchaseItemModelArrayList.add(new PurchaseItemModel(orgNo, itemNO, itemName, purchaseRate, saleRate, totalAmount, unitId,
+                    expiryDate, discountPercentage, allIncreaseQty, SummeryArrayList, lotsModelArrayList, taxrate));
+        }
 
-        if (invoiceItemModelList.size() > 0) {
+
+        if (purchaseItemModelArrayList.size() > 0) {
             Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_SHORT).show();
-            relativeLayoutBottomSheetComponents.setVisibility(View.VISIBLE);
+            linearLayoutBottomSheetComponents.setVisibility(View.VISIBLE);
             linearLayoutBottomSheetSupplierName.setVisibility(View.VISIBLE);
 
             mAdapterHandler();
             totalBillHandler();
-            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED && !continueScanning)
+            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED && !continueScanning) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                mScannerView.stopCameraPreview();
+            } else
+                mScannerView.resumeCameraPreview(this);
 
-            mScannerView.resumeCameraPreview(this);
         } else {
             Toast.makeText(getApplicationContext(), "Failed to add product", Toast.LENGTH_SHORT).show();
 /*            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED && !continueScanning)
@@ -659,24 +780,6 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
             }*/
             mScannerView.resumeCameraPreview(this);
         }
-
-
-        //Product save via sqlite
-/*        long id = dbHelper.mAddSelectedProduct(productID, productName, productQuantity, product_price, totalBill);
-        if (id < 0) {
-            Toast.makeText(getApplicationContext(), "Failed to add product", Toast.LENGTH_SHORT).show();
-*//*            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED && !continueScanning)
-            {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }*//*
-            mScannerView.resumeCameraPreview(this);
-        } else {
-            Toast.makeText(getApplicationContext(), "Successfully added product into db", Toast.LENGTH_SHORT).show();
-            mAdapterHandler();
-            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED && !continueScanning)
-                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            mScannerView.resumeCameraPreview(this);
-        }*/
     }
 
     @Override
@@ -686,15 +789,17 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
     private void mAdapterHandler() {
 //        recyclerViewHandler();
-        if (invoiceItemModelList.size() > 0) {
-            rvAdapter_selectedProductView = new RvAdapterSelectedProductView(invoiceItemModelList, this, this);
-            rv_selectedProduct.setAdapter(rvAdapter_selectedProductView);
-            rvAdapter_selectedProductView.notifyDataSetChanged();
-
+        if (purchaseItemModelArrayList.size() > 0) {
+            rvAdapterAddedItemViewPurchase = new RvAdapterAddedItemViewPurchase(purchaseItemModelArrayList, this, this);
+            rv_selectedProduct.setAdapter(rvAdapterAddedItemViewPurchase);
+            rvAdapterAddedItemViewPurchase.notifyDataSetChanged();
+        } else {
+            textViewSubtotalScannerDisplay.setText("0.00");
         }
 //        setupFormats();
 //        contentFrame.addView(mScannerView);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -724,6 +829,15 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 mScannerView.setAutoFocus(mAutoFocus);
                 break;
 
+            case R.id.l3:
+                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    mScannerView.stopCameraPreview();
+                } else {
+                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    mScannerView.startCamera();
+                }
+                break;
             case R.id.imgBtn_personSearch:
                 dialog = new Dialog(FullScannerActivityPurchase.this);
                 dialog.setContentView(R.layout.dialog_searchable_spinner_layout);
@@ -800,7 +914,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                         if (!isLoading) {
                             if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == personArrayList.size() - 1) {
                                 //bottom of list!
-                                personArrayList.add(new Customer(null,null));
+                                personArrayList.add(new Customer(null, null));
                                 rvAdapterPersonSearch.notifyItemInserted(personArrayList.size());
                                 pageNo++;
                                 Toast.makeText(FullScannerActivityPurchase.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -917,8 +1031,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                                             }
 //                                            rvAdapterPersonSearch.notifyDataSetChanged();
-                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true"))
-                                        {
+                                        } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
                                             progressBar.setVisibility(View.GONE);
                                             Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                         }
@@ -1129,15 +1242,16 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 dialogProductSearch.setContentView(R.layout.dialog_product_search_layout);
 
                 WindowManager.LayoutParams wmlp1 = dialogProductSearch.getWindow().getAttributes();
-                wmlp1.gravity = Gravity.BOTTOM | Gravity.LEFT;
+                /*wmlp1.gravity = Gravity.BOTTOM | Gravity.LEFT;
                 wmlp1.x = 30;
-                wmlp1.y = 230;
-
+                wmlp1.y = 230;*/
+                wmlp1.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
                 dialogProductSearch.getWindow().setLayout(650, 800);
 //                dialog.getWindow().setGravity(Gravity.BOTTOM);
                 dialogProductSearch.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialogProductSearch.show();
-//                dialogProductSearch.setCancelable(false);
+                dialogProductSearch.setCancelable(true);
+
 
                 EditText editTextProduct = dialogProductSearch.findViewById(R.id.edtTxt_productSearch);
                 RecyclerView recyclerViewProductSearch = dialogProductSearch.findViewById(R.id.lv_searchableProductView);
@@ -1148,41 +1262,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 recyclerViewProductSearch.setLayoutManager(new LinearLayoutManager(this));
                 recyclerViewFilteredProduct.setLayoutManager(new LinearLayoutManager(this));
 
-                productPageNo = 1;
-                HashMap<String, String> mapGetProducts = new HashMap<>();
-                mapGetProducts.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
-                mapGetProducts.put(LIMIT, String.valueOf(10));
-                mapGetProducts.put(API_KEY, apikey);
-                AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
+                mGetProductList(recyclerViewProductSearch, progressBar2);
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                                JSONArray customerDataArray = jsonObject.getJSONArray("data");
-                                productsArrayList = new ArrayList<>();
-
-                                for (int i = 0; i < customerDataArray.length(); i++) {
-                                    progressBar2.setVisibility(View.GONE);
-                                    JSONObject productData = customerDataArray.getJSONObject(i);
-                                    products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
-                                    productsArrayList.add(products);
-                                    rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivityPurchase.this, productPageNo);
-                                    recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }, mapGetProducts);
 
                 recyclerViewProductSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -1198,8 +1279,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                         if (!isLoading3) {
                             if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == productsArrayList.size() - 1) {
-                                //bottom of list!
-                                productsArrayList.add(new Products(null, null, null, null, null));
+                                //bottom of list! and start loading
+                                productsArrayList.add(new Products(null, null));
+//                                productsArrayList.add(new Products(null, null, null, null, null));
                                 rvAdapterProductSearch.notifyItemInserted(productsArrayList.size());
                                 productPageNo++;
                                 Toast.makeText(FullScannerActivityPurchase.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1237,15 +1319,20 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                     JSONObject jsonObject = new JSONObject(response);
                                                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                                                         JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                                        for (int i = 0; i < jsonArray.length(); i++) {
-                                                            JSONObject productData = jsonArray.getJSONObject(i);
-                                                            products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
-                                                            productsArrayList.add(products);
-                                                        }
+                                                        if (jsonArray.length() > 0) {
+                                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                                JSONObject productData = jsonArray.getJSONObject(i);
+                                                                products = new Products(productData.getString("id"), productData.getString("text"));
+                                                                productsArrayList.add(products);
+                                                            }
+                                                        }/* else
+                                                            Toast.makeText(FullScannerActivitySale.this, "No more data to load", Toast.LENGTH_SHORT).show();
+*/
                                                         rvAdapterProductSearch.notifyDataSetChanged();
-                                                      /*  rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivity.this);
-                                                        recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);*/
                                                         isLoading3 = false;
+                                                    } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                                                        progressBar2.setVisibility(View.GONE);
+                                                        Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                     }
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
@@ -1258,7 +1345,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                             }
                                         }, mapForScroll);
                                     }
-                                }, 4000);
+                                }, 1500);
                                 isLoading3 = true;
                             }
                         }
@@ -1278,50 +1365,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                         recyclerViewFilteredProduct.setVisibility(View.GONE);
 
                         filterProducts(s.toString());
-                        productFilteredPageNo = 1;
 
                         if (s.length() >= 3) {
-                            progressBar2.setVisibility(View.VISIBLE);
                             ArrayList<Products> finalFilteredArray = new ArrayList<>();
-                            HashMap<String, String> mapGetProducts = new HashMap<>();
-                            mapGetProducts.put(PRODUCT_PAGE_NO, String.valueOf(productFilteredPageNo));
-                            mapGetProducts.put(LIMIT, String.valueOf(10));
-                            mapGetProducts.put(PRODUCT_SEARCH_KEY, s.toString());
-                            mapGetProducts.put(API_KEY, apikey);
-                            AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(response);
-                                        if (jsonObject.getString("error").equalsIgnoreCase("false")) {
-                                            JSONArray productDataArray = jsonObject.getJSONArray("data");
-//                                            customerArrayList = new ArrayList<>();
-
-                                            for (int i = 0; i < productDataArray.length(); i++) {
-                                                progressBar2.setVisibility(View.GONE);
-                                                recyclerViewFilteredProduct.setVisibility(View.VISIBLE);
-                                                recyclerViewProductSearch.setVisibility(View.GONE);
-                                                JSONObject productData = productDataArray.getJSONObject(i);
-                                                products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
-                                                finalFilteredArray.add(products);
-                                                RvAdapterProductSearch adapterProductSearch = new RvAdapterProductSearch(finalFilteredArray, FullScannerActivityPurchase.this, productPageNo);
-                                                recyclerViewFilteredProduct.setAdapter(adapterProductSearch);
-
-                                            }
-//                                            rvAdapterPersonSearch.notifyDataSetChanged();
-                                        }
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
-                                }
-                            }, mapGetProducts);
-
+                            mGetFilteredProductList(s, progressBar2, recyclerViewFilteredProduct, recyclerViewProductSearch, finalFilteredArray);
 
                             recyclerViewFilteredProduct.addOnScrollListener(new RecyclerView.OnScrollListener() {
                                 @Override
@@ -1338,7 +1385,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                     if (!isLoading4) {
                                         if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == productsArrayList.size() - 1) {
                                             //bottom of list!
-                                            finalFilteredArray.add(new Products(null, null, null, null, null));
+//                                            finalFilteredArray.add(new Products(null, null, null, null, null));
+                                            finalFilteredArray.add(new Products(null, null));
                                             rvAdapterProductSearch.notifyItemInserted(finalFilteredArray.size());
                                             productFilteredPageNo++;
                                             Toast.makeText(FullScannerActivityPurchase.this, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -1350,7 +1398,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                     finalFilteredArray.remove(finalFilteredArray.size() - 1);
                                                     int scrollPosition = finalFilteredArray.size();
                                                     rvAdapterProductSearch.notifyItemRemoved(scrollPosition);
-/*                                        int currentSize = scrollPosition + 1;
+/*
+                                        int currentSize = scrollPosition + 1;
                                         int nextLimit = currentSize + 10;
                                         pageNo++;
                                         while (currentSize < nextLimit) {
@@ -1359,8 +1408,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                             currentSize++;
                                         }
                                         rvAdapterPersonSearch.notifyDataSetChanged();
-                                        isLoading = false;*/
-
+                                        isLoading = false;
+*/
                                                     HashMap<String, String> mapForScroll = new HashMap<>();
                                                     mapForScroll.put(API_KEY, apikey);
                                                     mapForScroll.put(PRODUCT_PAGE_NO, String.valueOf(productFilteredPageNo));
@@ -1368,7 +1417,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                     mapForScroll.put(PRODUCT_SEARCH_KEY, s.toString());
 
 
-                                                    AppController.getAppController().getAppNetworkController().makeRequest(url_3, new Response.Listener<String>() {
+                                                    AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
                                                         @Override
                                                         public void onResponse(String response) {
                                                             try {
@@ -1378,13 +1427,20 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                                     JSONArray jsonArray = jsonObject.getJSONArray("data");
                                                                     for (int i = 0; i < jsonArray.length(); i++) {
                                                                         JSONObject productData = jsonArray.getJSONObject(i);
-                                                                        products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+                                                                        Products products = new Products(productData.getString("id"), productData.getString("text"));
                                                                         finalFilteredArray.add(products);
                                                                     }
                                                                     rvAdapterProductSearch.notifyDataSetChanged();
                                                                     /*rvAdapterPersonSearch = new RvAdapterPersonSearch(finalFilteredArray, FullScannerActivity.this);
                                                                     recyclerViewPersonSearch.setAdapter(rvAdapterPersonSearch);*/
                                                                     isLoading4 = false;
+
+//                                                                    Toast.makeText(FullScannerActivitySale.this, "after: " + String.valueOf(finalFilteredArray.size()), Toast.LENGTH_SHORT).show();
+                                                                }/* else
+                                                                    Toast.makeText(FullScannerActivitySale.this, "No more data to load", Toast.LENGTH_SHORT).show();
+*/ else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                                                                    progressBar2.setVisibility(View.GONE);
+                                                                    Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                                                                 }
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
@@ -1397,13 +1453,15 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                                                         }
                                                     }, mapForScroll);
                                                 }
-                                            }, 4000);
+                                            }, 1500);
                                             isLoading4 = true;
                                         }
                                     }
                                 }
                             });
 
+                        } else if (s.length() == 0) {
+                            mGetProductList(recyclerViewProductSearch, progressBar2);
                         } else
                             progressBar2.setVisibility(View.GONE);
 
@@ -1424,10 +1482,22 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                 if (!TextUtils.isEmpty(getDisc)) {
                     double incDisc = Double.parseDouble(getDisc);
-                    incDisc = incDisc + 1;
+                    incDisc = incDisc + 1.00;
                     if (incDisc <= subTotal) {
 //                        editText_discount.setText(String.format("%.2f", incDisc));
-                        editText_discount.setText(String.valueOf((int) incDisc));
+                        deduction = 0.00;
+                        editText_deduction.setText(String.format("%.2f", deduction));
+                        editText_discount.setText(String.format("%.2f", incDisc));
+                    }
+                } else {
+//                    editText_discount.setText("1.00");
+                    double incDisc = 0.00;
+                    incDisc = incDisc + 1.00;
+                    if (incDisc <= subTotal) {
+//                        editText_discount.setText(String.format("%.2f", incDisc));
+                        deduction = 0.00;
+                        editText_deduction.setText(String.format("%.2f", deduction));
+                        editText_discount.setText(String.format("%.2f", incDisc));
                     }
                 }
                 break;
@@ -1436,13 +1506,16 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
 
                 if (!TextUtils.isEmpty(getDisc2)) {
                     double decDisc = Double.parseDouble(getDisc2);
-                    decDisc = decDisc - 1;
-                    if (decDisc > -1) {
-                        editText_discount.setText(String.valueOf((int) decDisc));
+                    decDisc = decDisc - 1.00;
+                    if (decDisc > 0) {
+                        deduction = 0.00;
+                        editText_deduction.setText(String.format("%.2f", deduction));
+                        editText_discount.setText(String.format("%.2f", decDisc));
 //                        editText_discount.setText(String.format("%.2f", decDisc));
                     }
                 }
                 break;
+
 
             /**
              * with payment option
@@ -1495,41 +1568,303 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 break;
 
             case R.id.ll_discardInvoice:
-                textViewSubtotalScannerDisplay.setText("0.00");
-                textViewSupplierNameScannerDisplay.setText("");
-                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                textViewSupplierName.setText("");
-                linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
-                relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
-                textViewCartBadge.setText("0");
-                invoiceItemModelList.clear();
+                builder.setMessage("Optional message").setTitle("Optional title");
+                builder.setMessage("Do you want to discard this invoice?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                textViewSubtotalScannerDisplay.setText("0.00");
+                                textViewSupplierNameScannerDisplay.setText("");
+                                if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                }
+                                textViewSupplierName.setText("");
+                                linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
+                                linearLayoutBottomSheetComponents.setVisibility(View.GONE);
+                                textViewCartBadge.setText("0");
+                                editText_deduction.setText("0.00");
+                                editText_discount.setText("0.00");
+                                purchaseItemModelArrayList.clear();
+                                total = 0.00;
+                                defaultClientSelection();
+                                dialog.cancel();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setTitle("Alert!!");
+                alertDialog.show();
+                break;
+
+            case R.id.tv_adjustFraction:
+                String tempTotal = textView_total.getText().toString();
+                double fractionalValue = (subTotal - discount) % 1;
+                total = Double.parseDouble(tempTotal) - fractionalValue;
+                deduction = fractionalValue;
+
+                editText_deduction.setText(String.format("%.2f", deduction));
+                textView_total.setText(String.format("%.2f", total));
+
                 break;
 
         }
     }
 
-    private void invoiceSave(JSONArray jsonArrayPayment) {
-
-        String getSupplierName = textViewSupplierName.getText().toString();
-        if (!TextUtils.isEmpty(getSupplierName))
-        {
-            JSONArray jsonArrayInvoiceItem = new JSONArray();
-            for (int i = 0; i < invoiceItemModelList.size(); i++)
-            {
-                InvoiceItemModel current = invoiceItemModelList.get(i);
-                JSONObject jsonObjectTemp = new JSONObject();
+    private void mGetFilteredProductList(CharSequence s, ProgressBar progressBar2, RecyclerView recyclerViewFilteredProduct, RecyclerView recyclerViewProductSearch, ArrayList<Products> finalFilteredArray) {
+        productFilteredPageNo = 1;
+        progressBar2.setVisibility(View.VISIBLE);
+        HashMap<String, String> mapGetProducts = new HashMap<>();
+        mapGetProducts.put(PRODUCT_PAGE_NO, String.valueOf(productFilteredPageNo));
+        mapGetProducts.put(LIMIT, String.valueOf(10));
+        mapGetProducts.put(PRODUCT_SEARCH_KEY, s.toString());
+        mapGetProducts.put(API_KEY, apikey);
+        AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
                 try {
-                    jsonObjectTemp.put("itemno", current.getItemno());
-                    jsonObjectTemp.put("item_id", current.getItem_id());
-                    jsonObjectTemp.put("expirydate", current.getExpirydate());
-                    jsonObjectTemp.put("unitid", current.getSelling_unitid());
-                    jsonObjectTemp.put("qty", current.getQty());
-                    jsonObjectTemp.put("unitprice", current.getRate());
-                    jsonObjectTemp.put("taxrate", current.getTaxrate());
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        JSONArray productDataArray = jsonObject.getJSONArray("data");
+//                                            customerArrayList = new ArrayList<>();
+
+                        for (int i = 0; i < productDataArray.length(); i++) {
+                            progressBar2.setVisibility(View.GONE);
+                            recyclerViewFilteredProduct.setVisibility(View.VISIBLE);
+                            recyclerViewProductSearch.setVisibility(View.GONE);
+                            JSONObject productData = productDataArray.getJSONObject(i);
+                            products = new Products(productData.getString("id"), productData.getString("text"));
+//                                                products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+                            finalFilteredArray.add(products);
+                            rvAdapterProductSearch = new RvAdapterProductSearch(finalFilteredArray, FullScannerActivityPurchase.this, productPageNo);
+                            recyclerViewFilteredProduct.setAdapter(rvAdapterProductSearch);
+
+                        }
+                    } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                        progressBar2.setVisibility(View.GONE);
+                        Toast.makeText(FullScannerActivityPurchase.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(FullScannerActivityPurchase.this, "JSONException : " + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, mapGetProducts);
+    }
+
+    private void mGetProductList(RecyclerView recyclerViewProductSearch, ProgressBar progressBar2) {
+        productPageNo = 1;
+        HashMap<String, String> mapGetProducts = new HashMap<>();
+        mapGetProducts.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
+        mapGetProducts.put(LIMIT, String.valueOf(10));
+        mapGetProducts.put(API_KEY, apikey);
+//                mapGetProducts.put("itemno", "2");
+        AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        JSONArray customerDataArray = jsonObject.getJSONArray("data");
+                        productsArrayList = new ArrayList<>();
+
+                        for (int i = 0; i < customerDataArray.length(); i++) {
+                            progressBar2.setVisibility(View.GONE);
+                            JSONObject productData = customerDataArray.getJSONObject(i);
+//                                    products = new Products(productData.getString("id"), productData.getString("sku"), productData.getString("lot_num"), productData.getString("text"), productData.getString("qty"));
+                            products = new Products(productData.getString("id"), productData.getString("text"));
+                            productsArrayList.add(products);
+                            rvAdapterProductSearch = new RvAdapterProductSearch(productsArrayList, FullScannerActivityPurchase.this, productPageNo);
+                            recyclerViewProductSearch.setAdapter(rvAdapterProductSearch);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    progressBar2.setVisibility(View.GONE);
+                    dialogProductSearch.dismiss();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+                progressBar2.setVisibility(View.GONE);
+                dialogProductSearch.dismiss();
+            }
+        }, mapGetProducts);
+    }
+
+    private void invoiceSave(JSONArray jsonArrayPayment) {
+        String getSupplierName = textViewSupplierName.getText().toString();
+        if (!TextUtils.isEmpty(getSupplierName)) {
+            JSONObject jsonObjectInvoice = new JSONObject();
+            JSONArray jsonArrayInvoiceItem = new JSONArray();
+            for (int i = 0; i < purchaseItemModelArrayList.size(); i++) {
+                PurchaseItemModel current = purchaseItemModelArrayList.get(i);
+                for (int j = 0; j < current.getSummeryArrayList().size(); j++) {
+                    try {
+                        JSONObject jsonObjectInvoiceItem = new JSONObject();
+
+                        LotsModel currentSummery = current.getSummeryArrayList().get(j);
+
+
+                        jsonObjectInvoiceItem.put("itemno", current.getItemNO());
+                        jsonObjectInvoiceItem.put("item_id", currentSummery.getSku());
+                        jsonObjectInvoiceItem.put("qty", currentSummery.getQtyIncrease());
+                        jsonObjectInvoiceItem.put("unitprice", current.getPurchaseRate());
+                        jsonObjectInvoiceItem.put("taxrate", current.getTaxrate());
+                        jsonObjectInvoiceItem.put("discount_percentage", current.getDiscount_percentage());
+                        jsonObjectInvoiceItem.put("salerate", current.getSaleRate());
+                        //Get expiryDate
+                        for (int k = 0; k < current.getLotsModelArrayList().size(); k++) {
+                            LotsModel currentLots = current.getLotsModelArrayList().get(k);
+                            if (currentSummery.getLotno() == currentLots.getLotno()) {
+                                if (!currentLots.isNoExpiry()) {
+                                    jsonObjectInvoiceItem.put("expirydate", currentLots.getUpdatedExpiryDate());
+                                } else
+                                    jsonObjectInvoiceItem.put("expirydate", "null");
+                            }
+                        }
+
+                        jsonArrayInvoiceItem.put(jsonObjectInvoiceItem);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+
+            try {
+                jsonObjectInvoice.put("supplieno", supplier_no);
+                jsonObjectInvoice.put("pdate", currentDate);
+                jsonObjectInvoice.put("duedate", currentDate);
+                jsonObjectInvoice.put("currency", "1");
+                jsonObjectInvoice.put("discount", discount);
+                jsonObjectInvoice.put("deduction", deduction);
+                jsonObjectInvoice.put("items", jsonArrayInvoiceItem);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            HashMap<String, String> mapTemp = new HashMap<>();
+            mapTemp.put(API_KEY, apikey);
+            mapTemp.put("payments", jsonArrayPayment.toString());
+            mapTemp.put("invoice", jsonObjectInvoice.toString());
+            mapTemp.put("status", "1");
+            Log.d("myInvoice", "invoice save input: " + mapTemp.toString());
+//            Toast.makeText(this, mapTemp.toString(), Toast.LENGTH_LONG).show();
+            AppController.getAppController().getAppNetworkController().makeRequest(url_5, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject temp = new JSONObject(response);
+
+                        if (temp.getString("error").equalsIgnoreCase("false")) {
+                            Toast.makeText(FullScannerActivityPurchase.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(FullScannerActivityPurchase.this, PurchaseInvoiceViewerActivity.class);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+
+                            textViewSubtotalScannerDisplay.setText("0.00");
+                            textViewSupplierNameScannerDisplay.setText("");
+                            if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            }
+                            textViewSupplierName.setText("");
+                            linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
+                            linearLayoutBottomSheetComponents.setVisibility(View.GONE);
+                            textViewCartBadge.setText("0");
+                            editText_deduction.setText("0.00");
+                            editText_discount.setText("0.00");
+                            purchaseItemModelArrayList.clear();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }, mapTemp);
+        } else
+            Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * My json for inserting purchase invoice
+     *
+     * @param view
+     */
+/*
+    private void invoiceSave(JSONArray jsonArrayPayment) {
+        String getSupplierName = textViewSupplierName.getText().toString();
+        if (!TextUtils.isEmpty(getSupplierName)) {
+            JSONArray jsonArrayInvoiceItem = new JSONArray();
+            for (int i = 0; i < purchaseItemModelArrayList.size(); i++) {
+                PurchaseItemModel current = purchaseItemModelArrayList.get(i);
+                JSONObject jsonObjectTemp = new JSONObject();
+                JSONArray skuJsonArray = new JSONArray();
+                JSONArray jsonArraySkuDetails = new JSONArray();
+                for (int j = 0; j < current.getSummeryArrayList().size(); j++) {
+                    try {
+                        JSONObject jsonObjectSkuDetails = new JSONObject();
+
+                        LotsModel currentSummery = current.getSummeryArrayList().get(j);
+
+
+
+                        skuJsonArray.put(currentSummery.getSku());
+                        jsonObjectSkuDetails.put("sku", currentSummery.getSku());
+                        jsonObjectSkuDetails.put("qty_increase", currentSummery.getQtyIncrease());
+                        //Get expiryDate
+                        for (int k = 0; k < current.getLotsModelArrayList().size(); k++)
+                        {
+                            LotsModel currentLots = current.getLotsModelArrayList().get(k);
+                            if (currentSummery.getLotno() == currentLots.getLotno())
+                            {
+                                if (!currentLots.isNoExpiry())
+                                {
+                                    jsonObjectSkuDetails.put("expiry_date", currentLots.getUpdatedExpiryDate());
+                                } else
+                                    jsonObjectSkuDetails.put("expiry_date", "null");
+                            }
+                        }
+
+                        jsonArraySkuDetails.put(jsonObjectSkuDetails);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    jsonObjectTemp.put("itemno", current.getItemNO());
+                    jsonObjectTemp.put("item_id", skuJsonArray);
+                    jsonObjectTemp.put("sku_details", jsonArraySkuDetails);
+//                    jsonObjectTemp.put("expirydate", current.getExpirydate());
+                    jsonObjectTemp.put("unitid", current.getUnitid());
+                    jsonObjectTemp.put("qty", current.getAllIncreaseQty());
+                    jsonObjectTemp.put("unitprice", current.getPurchaseRate());
+//                    jsonObjectTemp.put("taxrate", current.get());
                     jsonObjectTemp.put("discount_percentage", current.getDiscount_percentage());
-                    jsonObjectTemp.put("salerate", current.getSale_rate());
+                    jsonObjectTemp.put("salerate", current.getSaleRate());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1550,8 +1885,9 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            Toast.makeText(this, jsonArrayInvoiceItem.toString(), Toast.LENGTH_SHORT).show();
 
-            HashMap<String, String > mapTemp = new HashMap<>();
+            HashMap<String, String> mapTemp = new HashMap<>();
             mapTemp.put(API_KEY, apikey);
             mapTemp.put("invoice", jsonObjectInvoiceItem.toString());
             mapTemp.put("status", "1");
@@ -1563,10 +1899,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                     try {
                         JSONObject temp = new JSONObject(response);
 
-                        if (temp.getString("error").equalsIgnoreCase("false"))
-                        {
+                        if (temp.getString("error").equalsIgnoreCase("false")) {
                             Toast.makeText(FullScannerActivityPurchase.this, temp.getString("message"), Toast.LENGTH_SHORT).show();
 
+                            Log.d("MyTag", "onResponse: " + mapTemp.toString());
                             Intent intent = new Intent(FullScannerActivityPurchase.this, PurchaseInvoiceViewerActivity.class);
 //                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -1578,9 +1914,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                             }
                             textViewSupplierName.setText("");
                             linearLayoutBottomSheetSupplierName.setVisibility(View.GONE);
-                            relativeLayoutBottomSheetComponents.setVisibility(View.GONE);
+                            linearLayoutBottomSheetComponents.setVisibility(View.GONE);
                             textViewCartBadge.setText("0");
-                            invoiceItemModelList.clear();
+                            purchaseItemModelArrayList.clear();
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1595,8 +1932,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
             }, mapTemp);
         } else
             Toast.makeText(this, "Please, select a customer", Toast.LENGTH_SHORT).show();
-
     }
+*/
 
 /*
     private void loadMore(ArrayList<Customer> rowsArrayList, RvAdapterPersonSearch rvAdapterPersonSearch) {
@@ -1626,10 +1963,7 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
             }
         }, 2000);
 
-
-    }
-*/
-
+    }*/
     public void onRadioBtnDiscount(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -1676,16 +2010,28 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         }
     }
 
+    public void showMessageDialog(int orgno, String itemNo, String product_name, String saleRate, String productRate, String unitid, String expirydate, String discount_percentage, ArrayList<LotsModel> arrayListSku, String taxrate) {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ScanerDilogFragmentActivityPurchase scanerDilogFragmentActivityPurchase = new ScanerDilogFragmentActivityPurchase(this, orgno, itemNo, product_name,
+                productRate, saleRate, unitid, expirydate, discount_percentage, arrayListSku, purchaseItemModelArrayList, taxrate);
+        scanerDilogFragmentActivityPurchase.show(fragmentManager, "scannerDialogFragmentActivity");
+        mScannerView.stopCameraPreview();
+    }
+
+
     @Override
     public void onBackPressed() {
-//        Intent mainActivity = new Intent(this, MainActivity.class);
-//        mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(mainActivity);
 
-        ScanerDilogFragmentActivity scanerDilogFragmentActivity = (ScanerDilogFragmentActivity) getSupportFragmentManager().findFragmentByTag("scannerDialogFragmentActivity");
-        if (scanerDilogFragmentActivity != null && scanerDilogFragmentActivity.isVisible()) {
-            scanerDilogFragmentActivity.dismiss();
+        ScanerDilogFragmentActivitySale scanerDilogFragmentActivitySale = (ScanerDilogFragmentActivitySale) getSupportFragmentManager().findFragmentByTag("scannerDialogFragmentActivity");
+        if (scanerDilogFragmentActivitySale != null && scanerDilogFragmentActivitySale.isVisible()) {
+            scanerDilogFragmentActivitySale.dismiss();
             finish();
+        }
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else
             super.onBackPressed();
 
@@ -1694,6 +2040,20 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     @Override
     public void mCallbackQty() {
         mTest();
+    }
+
+    @Override
+    public void mCallBackEditItem(int orgno, int itemNo, String product_name, double productRate, double saleRate, String unitid,
+                                  String expirydate, String discount_percentage, ArrayList<LotsModel> arrayListSku, String taxrate) {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ScanerDilogFragmentActivityPurchase scanerDilogFragmentActivityPurchase = new ScanerDilogFragmentActivityPurchase(this, orgno, String.valueOf(itemNo), product_name,
+                String.valueOf(productRate), String.valueOf(saleRate), unitid, expirydate, discount_percentage, arrayListSku, purchaseItemModelArrayList, taxrate);
+        scanerDilogFragmentActivityPurchase.show(fragmentManager, "scannerDialogFragmentActivity");
+        mScannerView.stopCameraPreview();
     }
 
 
@@ -1741,11 +2101,56 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     public void productClickHandler(String name, String id) {
         HashMap<String, String> mapGetProductById = new HashMap<>();
         mapGetProductById.put(API_KEY, apikey);
+        mapGetProductById.put("itemno", id);
 //        mapGetProductById.put(PRODUCT_PAGE_NO, String.valueOf(productPageNo));
-        AppController.getAppController().getAppNetworkController().makeRequest(url_1, new Response.Listener<String>() {
+        AppController.getAppController().getAppNetworkController().makeRequest(url_6, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(FullScannerActivityPurchase.this, response, Toast.LENGTH_SHORT).show();
+                Log.d("ProductDetails", "onResponse: " + response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+//                        assert arrayListSku == null;
+                        lotsModelArrayList = new ArrayList<>();
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        int itemOrgno = data.getInt("orgno");
+                        String itemNo = data.getString("itemno");
+                        String product_name = data.getString("itemname");
+                        String purchaserate = data.getString("last_purchaserate");
+                        if (purchaserate == null) {
+                            purchaserate = "0";
+                        }
+                        String saleRate = data.getString("salerate");
+//                        String item_id = data.getString("upc");
+                        String expirydate = data.getString("hasexpiry");
+                        String discount_percentage = data.getString("discount_rate");
+                        String unitid = data.getString("unitid");
+                        String taxrate = data.getString("taxrate");
+                        JSONArray jsonArraySku = data.getJSONArray("lots");
+
+                        for (int i = 0; i < jsonArraySku.length(); i++) {
+                            JSONObject object = jsonArraySku.getJSONObject(i);
+                            if (object.getInt("qty") > 0) {
+                                int itemno = object.getInt("itemno");
+                                int orgno = object.getInt("orgno");
+                                int lotno = object.getInt("lotno");
+                                String sku = object.getString("sku");
+                                int qty = object.getInt("qty");
+                                String expirydateOfLots = object.getString("expirydate");
+                                lotsModelArrayList.add(new LotsModel(itemno, orgno, lotno, sku, qty, expirydateOfLots, false, false, 0));
+                            }
+
+
+                        }
+//                        showMessageDialog(id, name, saleRate);
+                        showMessageDialog(itemOrgno, itemNo, product_name, saleRate, purchaserate, unitid, expirydate, discount_percentage, lotsModelArrayList, taxrate);
+
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(FullScannerActivityPurchase.this, "JsonException: " + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -1753,7 +2158,6 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
                 Toast.makeText(FullScannerActivityPurchase.this, error.toString(), Toast.LENGTH_SHORT).show();
             }
         }, mapGetProductById);
-        showMessageDialog("itemNo", "item_id", "product_name", "500", "unitid", "expirydate", "discount_percentage", arrayListSku);
 
 
         dialogProductSearch.dismiss();

@@ -26,12 +26,8 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
-
-        >
-        <activity android:name=".PurchaseInvoiceViewerActivity"
-            ></activity>
-        <!-- rofiqul -->
+        android:theme="@style/Theme.MyApplication">
+        <activity android:name=".PurchaseInvoiceViewerActivity" /> <!-- rofiqul -->
         <activity android:name=".activity.DeviceListActivity" />
         <activity android:name=".activity.PrintingActivity" />
         <activity android:name=".activity.NewCampaignActivity" />
@@ -41,16 +37,15 @@
         <activity android:name=".activity.ShopInboxActivity" />
         <activity android:name=".activity.OrderReportActivity" />
         <activity android:name=".activity.StockReportActivity" />
-        <activity android:name=".activity.CardShopActivity" />
-        <activity android:name=".ShopAdminHome" />
-        <activity android:name=".LoginActivity" /> <!-- <activity android:name=".InvoiceActivity"/> -->
+        <activity android:name=".activity.CardShopActivity" /> <!-- <activity android:name=".ShopAdminHome" /> -->
+        <!-- <activity android:name=".LoginActivity" /> &lt;!&ndash; <activity android:name=".InvoiceActivity"/> &ndash;&gt; -->
         <activity android:name=".SaleInvoiceViewerActivity" />
         <activity android:name=".BaseScannerActivity" />
-        <activity android:name=".FullScannerActivitySale"
-            android:configChanges="orientation|screenSize"
-            />
+        <activity
+            android:name=".FullScannerActivitySale"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".FullScannerActivityPurchase" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".ShopAdminHome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,7 +55,21 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <!-- rofiqul -->
             </intent-filter>
-        </activity> <!-- <service -->
+        </activity>
+        <!--
+        <activity android:name=".SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+                &lt;!&ndash; rofiqul &ndash;&gt;
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                &lt;!&ndash; rofiqul &ndash;&gt;
+            </intent-filter>
+        </activity>
+        -->
+        <!-- <service -->
         <!-- android:name=".services.TokenReceiver"> -->
         <!-- <intent-filter> -->
         <!-- <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/> -->

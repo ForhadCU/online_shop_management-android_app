@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +20,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.data.SingleRefDataBufferIterator;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
@@ -81,6 +86,7 @@ public class StockReportActivity extends AppCompatActivity {
     private int totalItemCount, pastVisiblesItems,  visibleItemCount, page =1, previousTotal ;
     private boolean loading = true ;
     private ProgressBar mProgressbar;
+    private TextView textViewSpanTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +107,13 @@ public class StockReportActivity extends AppCompatActivity {
         mImgBtnDF = findViewById(R.id.imagebtn_date_from);
         mImgBtnDT = findViewById(R.id.imagebtn_date_to);
         mProgressbar = findViewById(R.id.progressbar) ;
+//        textViewSpanTest =findViewById(R.id.tv_testSpan);
+
+
+
+//        mSpanTesting();
+
+
 
         dialogBuilder = new AlertDialog.Builder(this);
         mStockRecyclerView = findViewById(R.id.recycler_stock_report) ;
@@ -169,6 +182,18 @@ public class StockReportActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void mSpanTesting() {
+        String currentText = textViewSpanTest.getText().toString();
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(currentText);
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(0xFF4CAF50),
+                currentText.indexOf("(")+1,
+                currentText.length()-1,
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        spannableStringBuilder.replace(currentText.indexOf(":")+2, currentText.indexOf(" ("),
+                "800");
+        textViewSpanTest.setText(spannableStringBuilder);
     }
 
     private void createPopupDialog()

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:padding="5dp"
+    android:layout_margin="5dp"
+    tools:targetApi="lollipop">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    >
+    <ImageView
+        android:id="@+id/imgV_rvProductView_productImage"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/product_img" />
+
+    <TextView
+        android:id="@+id/tv_rvProductView_productName"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/imgV_rvProductView_productImage"
+        android:maxLines="2"
+        android:text="Converse High Ankie white Sneakers"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/imgBtn_rvProductView_productDelete"
+        android:src="@drawable/ic_delete"
+        android:background="@color/white"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitCenter"
+        />
+    <ImageButton
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/imgBtn_rvProductView_productEditor"
+        android:src="@drawable/ic_edit_product_purchase"
+        android:background="@color/white"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitCenter"
+        android:layout_toLeftOf="@id/imgBtn_rvProductView_productDelete"
+        android:layout_marginRight="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_rvProductView_productPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/imgV_rvProductView_productImage"
+        android:layout_below="@+id/tv_rvProductView_productName"
+        android:fontFamily="serif"
+        android:text="3000.00"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="#F44336"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/l5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_below="@+id/imgV_rvProductView_productImage"
+        android:layout_marginTop="10dp"
+        >
+
+        <View
+            android:layout_marginBottom="5dp"
+            android:id="@+id/v2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#CCCBCB" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="#9A9A9A"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0.2dp"
+                android:layout_marginTop="0.2dp"
+                android:layout_marginRight="0.2dp"
+                android:layout_marginBottom="0.2dp"
+                android:layout_weight="0.4"
+                android:background="#ffff"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="#"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0.2dp"
+                android:layout_marginTop="0.2dp"
+                android:layout_marginRight="0.2dp"
+                android:layout_marginBottom="0.2dp"
+                android:layout_weight="1.8"
+                android:background="#ffff"
+                android:paddingLeft="5dp"
+                android:paddingTop="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="2dp"
+                android:text="Sku"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0.2dp"
+                android:layout_marginTop="0.2dp"
+                android:layout_marginRight="0.2dp"
+                android:layout_marginBottom="0.2dp"
+                android:layout_weight="1.3"
+                android:background="#ffff"
+                android:gravity="end"
+                android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp"
+                android:text="Qty (+)"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <!--                <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="1dp"
+                                android:layout_weight="0.7"
+                                android:gravity="center_horizontal|center_vertical"
+                                android:padding="2dp"
+                                android:text="Qty"
+                                android:textAppearance="@style/TextAppearance.AppCompat"
+                                android:textColor="@color/black"
+                                android:background="#ffff"
+                                android:layout_margin="0.2dp"
+                                android:textStyle="bold"
+
+                                />-->
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0.2dp"
+                android:layout_marginTop="0.2dp"
+                android:layout_marginRight="0.2dp"
+                android:layout_marginBottom="0.2dp"
+                android:layout_weight="1.5"
+                android:background="#ffff"
+                android:gravity="end"
+                android:paddingLeft="5dp"
+                android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp"
+                android:text="Amount"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/v4"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:layout_below="@+id/l5"
+            android:background="#C8C7C7" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_selectedSkuList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/v4"
+            android:visibility="visible" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tv_rvProductView_productTotalPrice"
+        android:layout_toLeftOf="@+id/tv_rvProductView_productTotalPrice"
+        android:text="Total : "
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_rvProductView_productTotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/l5"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="10dp"
+        android:fontFamily="serif"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="70000.00"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="#4CAF50"
+        android:textSize="17dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"
+        />
+
+
+
+</RelativeLayout>
+
+
+
+
+</androidx.cardview.widget.CardView>
+
+
+    <!--    android:id="@+id/tv_rvProductView_productName"
+        android:id="@+id/tv_rvProductView_productQuantity"
+        android:id="@+id/tv_rvProductView_productTotalPrice"-->
+
+
+

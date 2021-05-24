@@ -203,8 +203,20 @@
 
                             />
                     </LinearLayout>
+<!--                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_testSpan"
+                        android:text="Qty : 592 (+51)"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginBottom="10dp"
+                        />-->
 
                 </LinearLayout>
+
+
 
 
             </androidx.cardview.widget.CardView>

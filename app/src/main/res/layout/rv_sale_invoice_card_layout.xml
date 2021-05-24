@@ -25,37 +25,38 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="fitCenter"
-                app:civ_border_color="#00C853"
                 android:src="@drawable/person_img"
+                app:civ_border_color="#00C853"
                 app:civ_border_width="2dp"
                 app:civ_shadow="true"
                 app:civ_shadow_color="#737373"
                 app:civ_shadow_radius="3dp" />
+
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/statusBg"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
                 android:layout_alignBottom="@+id/imgV_customerImgInvoiceCard"
                 android:layout_marginLeft="-28dp"
                 android:layout_marginBottom="8dp"
+                android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
                 android:src="@mipmap/ic_launcher"
                 app:civ_border_color="#FFFFFF"
                 app:civ_border_width="10dp"
 
                 />
+
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/imgV_activeIcon"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
                 android:layout_alignBottom="@+id/imgV_customerImgInvoiceCard"
                 android:layout_marginLeft="-27dp"
                 android:layout_marginBottom="9dp"
+                android:layout_toRightOf="@+id/imgV_customerImgInvoiceCard"
                 android:src="@mipmap/ic_launcher"
                 app:civ_border_color="@color/green"
-                app:civ_border_width="8dp"
-                />
+                app:civ_border_width="8dp" />
 
             <TextView
                 android:id="@+id/tv_customerNameInvoiceCard"
@@ -85,9 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-
                     >
-
                     <TextView
                         android:id="@+id/tv4"
                         android:layout_width="0dp"
@@ -95,7 +94,6 @@
                         android:layout_weight="3.8"
                         android:text="Sale Date"
                         android:textAppearance="@style/TextAppearance.AppCompat" />
-
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -104,7 +102,6 @@
                         android:text=":"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat" />
-
                     <TextView
                         android:id="@+id/tv_dateInvoiceCard"
                         android:layout_width="0dp"
@@ -183,6 +180,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
+
                 <TextView
                     android:id="@+id/tv_dueText"
                     android:layout_width="wrap_content"
@@ -191,8 +189,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_paidOrDueInvoiceCard"
@@ -230,16 +227,12 @@
             >
 
 
-
-
-
-
             <RelativeLayout
                 android:id="@+id/l6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
                 android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
                 android:paddingRight="5dp">
 
                 <!--
@@ -380,9 +373,9 @@
                     android:layout_marginBottom="0.2dp"
                     android:layout_weight="1.5"
                     android:background="#ffff"
+                    android:gravity="end"
                     android:paddingLeft="5dp"
                     android:paddingTop="2dp"
-                    android:gravity="end"
                     android:paddingRight="5dp"
                     android:paddingBottom="2dp"
                     android:text="Total Tk"
@@ -405,20 +398,22 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/v2"
                 android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/rv_selectedProductListInvoiceCard"
                 android:orientation="vertical"
-                android:visibility="visible"
-                >
+                android:visibility="visible">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:background="#9A9A9A"
+                    android:orientation="horizontal"
 
                     >
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -434,8 +429,8 @@
                         android:text="Sub Total"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textColor="@color/black"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp" />
+
                     <TextView
                         android:id="@+id/tv_totalInvoiceCard"
                         android:layout_width="0dp"
@@ -454,12 +449,13 @@
                         android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:background="#9A9A9A"
-                    >
+                    android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -475,8 +471,8 @@
                         android:text="(-) Invoice Discount"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textColor="@color/black"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp" />
+
                     <TextView
                         android:id="@+id/tv_discountInvoiceCard"
                         android:layout_width="0dp"
@@ -495,12 +491,13 @@
                         android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:background="#9A9A9A"
-                    >
+                    android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -516,8 +513,8 @@
                         android:text="(-) Invoice Deduction"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textColor="@color/black"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp" />
+
                     <TextView
                         android:id="@+id/tv_deductionInvoiceCard"
                         android:layout_width="0dp"
@@ -536,12 +533,13 @@
                         android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:background="#9A9A9A"
-                    >
+                    android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -555,11 +553,11 @@
                         android:paddingRight="25dp"
                         android:paddingBottom="3dp"
                         android:text="Grand Total"
-                        android:textStyle="bold"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textColor="@color/black"
                         android:textSize="12sp"
-                        />
+                        android:textStyle="bold" />
+
                     <TextView
                         android:id="@+id/tv_grandTotalInvoiceCard"
                         android:layout_width="0dp"
@@ -574,10 +572,10 @@
                         android:paddingRight="5dp"
                         android:paddingBottom="3dp"
                         android:text="850.00"
-                        android:textStyle="bold"
                         android:textAppearance="@style/TextAppearance.AppCompat"
                         android:textColor="@color/black"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>

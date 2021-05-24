@@ -1,50 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PurchaseInvoiceViewerActivity">
 
-    <include layout="@layout/app_bar_layout"
-        />
-
-
-    <LinearLayout
-        android:id="@+id/l1"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/l2"
-        android:layout_below="@+id/main_app_bar"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="25dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+        <include layout="@layout/app_bar_layout"
+            />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
+            android:id="@+id/l1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rv_invoiceCardView"
-            />
-    </LinearLayout>
-    <LinearLayout
+            android:layout_above="@+id/l2"
+            android:layout_below="@+id/main_app_bar"
+            android:layout_marginTop="2dp"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_invoiceCardView"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:id="@+id/l2"
+            >
+            <include layout="@layout/item_loading" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please wait..."
+                android:layout_marginTop="5dp"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/purchaseBillViewerDarkBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/l2"
-        >
-        <include layout="@layout/item_loading" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Please wait..."
-            android:layout_marginTop="5dp"
-            />
-
-    </LinearLayout>
-
-
-
-
-    <!---->
-
-</RelativeLayout>
+        android:background="#80000000"
+        android:visibility="gone"
+        />
+    <include layout="@layout/bottom_sheet_layout_details_of_purchase_item"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

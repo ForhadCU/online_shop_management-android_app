@@ -3,6 +3,7 @@ package com.agamilabs.smartshop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -142,7 +143,8 @@ public class SaleInvoiceViewerActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                         llProgressLoading.setVisibility(View.GONE);
-
+                        Log.d("saleInvoiceView", "onResponse: "+response);
+//                        Toast.makeText(SaleInvoiceViewerActivity.this, response, Toast.LENGTH_SHORT).show();
                         JSONArray data_sale_invoice_list = jsonObject.getJSONArray("data");
                         for (int i = 0; i < data_sale_invoice_list.length(); i++) {
                             JSONObject dataObject = data_sale_invoice_list.getJSONObject(i);

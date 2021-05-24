@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.agamilabs.smartshop.LoginActivity;
+//import com.agamilabs.smartshop.LoginActivity;
 import com.agamilabs.smartshop.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;

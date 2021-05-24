@@ -3,9 +3,12 @@ package com.agamilabs.smartshop;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,12 +18,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.agamilabs.smartshop.Interfaces.ICallbackForBillDetails;
 import com.agamilabs.smartshop.adapter.PurchaseInvoiceCardViewAdapter;
-import com.agamilabs.smartshop.adapter.SaleInvoiceCardViewAdapter;
+import com.agamilabs.smartshop.adapter.RvAdapterAddedItemViewPurchase;
+import com.agamilabs.smartshop.adapter.RvAdapterBillDetails;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.model.InvoiceModel;
+import com.agamilabs.smartshop.model.LotsModel;
+import com.agamilabs.smartshop.model.PurchaseItemModel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +47,7 @@ duedate
 statusid
  */
 
-public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
+public class PurchaseInvoiceViewerActivity extends AppCompatActivity implements ICallbackForBillDetails, View.OnClickListener {
     private static final String url_get_filtered_purchase_invoice = "http://pharmacy.egkroy.com/app-module/php/get_filtered_purchase_invoices.php";
     private static final String API_KEY = "apikey";
     private static final String PAGE_NO = "pageno";
@@ -53,10 +61,19 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
     private int pageNo = 1;
     private boolean isLoading = false;
 
-    private RecyclerView recyclerViewInvoiceCardView;
+    private RecyclerView recyclerViewInvoiceCardView, recyclerViewDetailsOfPurchaseBill;
     private Toolbar toolbar;
     private ArrayList<InvoiceModel> purchaseInvoiceModelList;
-    private LinearLayout llProgressLoading;
+    private LinearLayout llProgressLoading, llDiscardInvoice;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private RelativeLayout relativeLayoutBottomSheet;
+    private ArrayList<LotsModel> billDetailsSummaryList;
+//    private ArrayList<PurchaseItemModel> purchaseItemModelArrayList;
+    private RvAdapterBillDetails rvAdapterBillDetails;
+    private FrameLayout frameLayoutDarkBg;
+
+
+
 
     private PurchaseInvoiceCardViewAdapter purchaseInvoiceCardViewAdapter;
     //apex
@@ -68,11 +85,25 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
         recyclerViewInvoiceCardView = findViewById(R.id.rv_invoiceCardView);
         llProgressLoading = findViewById(R.id.l2);
         toolbar = findViewById(R.id.main_app_bar);
+        relativeLayoutBottomSheet = findViewById(R.id.bottom_sheet_details_of_purchase);
+        bottomSheetBehavior = BottomSheetBehavior.from(relativeLayoutBottomSheet);
+        recyclerViewDetailsOfPurchaseBill = findViewById(R.id.rv_productView);
+        llDiscardInvoice = findViewById(R.id.ll_discardInvoice);
+        frameLayoutDarkBg = findViewById(R.id.purchaseBillViewerDarkBg);
+
+//        purchaseItemModelArrayList = new ArrayList<>();
+
+
+
+        sheetBehaviorHandler();
 
         handleAppbar();
         handleBackPressButton();
         rvHandler();
         getFilteredPurchaseInvoiceList();
+
+        llDiscardInvoice.setOnClickListener(this);
+        frameLayoutDarkBg.setOnClickListener(this);
     }
 
     private void handleBackPressButton() {
@@ -81,6 +112,23 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+    private void sheetBehaviorHandler() {
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    frameLayoutDarkBg.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+    }
+
 
     private void getFilteredPurchaseInvoiceList() {
         HashMap<String, String> map_sale_input = new HashMap<>();
@@ -93,6 +141,7 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
+                    Log.d("mytag", "onResponse: "+response);
                     if (jsonObject.getString("error").equalsIgnoreCase("false")) {
                         llProgressLoading.setVisibility(View.GONE);
                         JSONArray data_sale_invoice_list = jsonObject.getJSONArray("data");
@@ -227,8 +276,11 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
     private void rvHandler() {
         recyclerViewInvoiceCardView.setHasFixedSize(true);
         recyclerViewInvoiceCardView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDetailsOfPurchaseBill.setHasFixedSize(true);
+        recyclerViewDetailsOfPurchaseBill.setLayoutManager(new LinearLayoutManager(this));
         purchaseInvoiceModelList = new ArrayList<>();
-        purchaseInvoiceCardViewAdapter = new PurchaseInvoiceCardViewAdapter(purchaseInvoiceModelList, this);
+
+        purchaseInvoiceCardViewAdapter = new PurchaseInvoiceCardViewAdapter(purchaseInvoiceModelList, this, this);
         recyclerViewInvoiceCardView.setAdapter(purchaseInvoiceCardViewAdapter);
         purchaseInvoiceCardViewAdapter.notifyDataSetChanged();
     }
@@ -239,9 +291,9 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.finish();
-                Intent intentSaleScanner = new Intent(getApplicationContext(), FullScannerActivityPurchase.class);
+              /*  Intent intentSaleScanner = new Intent(getApplicationContext(), FullScannerActivityPurchase.class);
                 intentSaleScanner.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intentSaleScanner);
+                startActivity(intentSaleScanner);*/
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -249,11 +301,53 @@ public class PurchaseInvoiceViewerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         /*Intent intentSaleScanner = new Intent(getApplicationContext(), FullScannerActivityPurchase.class);
         intentSaleScanner.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intentSaleScanner);*/
-        this.finish();
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            this.finish();
+            super.onBackPressed();
+        }
     }
 
+    private void mAdpaterHandler(ArrayList<PurchaseItemModel> purchaseItemModelArrayList) {
+        if (purchaseItemModelArrayList.size() > 0) {
+            rvAdapterBillDetails = new RvAdapterBillDetails(purchaseItemModelArrayList, this, this);
+            recyclerViewDetailsOfPurchaseBill.setAdapter(rvAdapterBillDetails);
+            rvAdapterBillDetails.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void handleBottomSheet() {
+        if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            frameLayoutDarkBg.setVisibility(View.VISIBLE);
+        } else{
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            frameLayoutDarkBg.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void dataParsedBillDetails(ArrayList<PurchaseItemModel> purchaseItemModelArrayList) {
+        mAdpaterHandler(purchaseItemModelArrayList);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.purchaseBillViewerDarkBg:
+            case R.id.ll_discardInvoice:
+                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                break;
+
+
+        }
+    }
 }

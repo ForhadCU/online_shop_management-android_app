@@ -26,6 +26,7 @@ public class InvoiceModel implements Serializable {
     double totalAmountToPay;
     double unPaidAmount;
     ArrayList<String> arrayListPayments;
+    ArrayList<PurchaseItemModel> purchaseItemModelArrayList;
 
 //    ArrayList<InvoiceItem> invoiceItemArrayList = new ArrayList<>();
 
@@ -100,6 +101,14 @@ public class InvoiceModel implements Serializable {
 
     public void setArrayListPayments(ArrayList<String> arrayListPayments) {
         this.arrayListPayments = arrayListPayments;
+    }
+
+    public ArrayList<PurchaseItemModel> getPurchaseItemModelArrayList() {
+        return purchaseItemModelArrayList;
+    }
+
+    public void setPurchaseItemModelArrayList(ArrayList<PurchaseItemModel> purchaseItemModelArrayList) {
+        this.purchaseItemModelArrayList = purchaseItemModelArrayList;
     }
 
     public int getSupplierNo() {

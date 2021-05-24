@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivity;
+import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivitySale;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.model.InvoiceItemModel;
@@ -63,11 +63,11 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
     private Context context;
     private RvAdapterInvoiceItemList rvAdapter_invoiceItemList;
     private Dialog dialogPrinterConfirmation;
-    private ICallBackFromFullScannerActivity iCallBackFromFullScannerActivity;
+    private ICallBackFromFullScannerActivitySale iCallBackFromFullScannerActivitySale;
 //    private int isItemListVisible = 0;
 
-    public SaleInvoiceCardViewAdapter(ICallBackFromFullScannerActivity iCallBackFromFullScannerActivity) {
-        this.iCallBackFromFullScannerActivity = iCallBackFromFullScannerActivity;
+    public SaleInvoiceCardViewAdapter(ICallBackFromFullScannerActivitySale iCallBackFromFullScannerActivitySale) {
+        this.iCallBackFromFullScannerActivitySale = iCallBackFromFullScannerActivitySale;
     }
 
     public SaleInvoiceCardViewAdapter(ArrayList<InvoiceModel> invoiceModelList, Context context) {
@@ -117,11 +117,26 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.tv_grandTotal.setText(String.format("\u09F3 " + "%.2f", current.getTotalAmountToPay()));
         productItemsCount(holder, position);
 
-        /**
+        if (current.getUnPaidAmount() < 0.1) {
+            holder.tv_dueText.setVisibility(View.GONE);
+            holder.tv_paidText.setVisibility(View.VISIBLE);
+            holder.circularImageView_customerImg.setBorderColor(holder.mContext.getResources().getColor((R.color.green)));
+            holder.circularImageView_activeIcon.setBorderColor(holder.mContext.getResources().getColor((R.color.green)));
+            holder.tv_paidOrDue.setText(String.format("\u09F3 " + "%.2f", current.getPaid()));
+
+        } else {
+            holder.tv_dueText.setVisibility(View.VISIBLE);
+            holder.tv_paidText.setVisibility(View.GONE);
+            holder.tv_paidOrDue.setText(String.format("\u09F3 " + "%.2f", current.getUnPaidAmount()));
+//            holder.circularImageView_customerImg.setBorderColor(R.color.yellow);
+            holder.circularImageView_customerImg.setBorderColor(context.getResources().getColor(R.color.yellow));
+            holder.circularImageView_activeIcon.setBorderColor(context.getResources().getColor(R.color.yellow));
+        }
+ /*       *//**
          * 1120 = cash paid
          * 1110 = bank paid
          * 1160 = bKash paid
-         */
+         *//*
         if (current.getUnPaidAmount() < 0.1) {
             holder.tv_dueText.setVisibility(View.GONE);
             holder.tv_paidText.setVisibility(View.VISIBLE);
@@ -167,7 +182,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
             holder.circularImageView_customerImg.setBorderColor(context.getResources().getColor(R.color.yellow));
             holder.circularImageView_activeIcon.setBorderColor(context.getResources().getColor(R.color.yellow));
         }
-
+*/
         holder.relativeLayoutExpandInvoiceItemList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

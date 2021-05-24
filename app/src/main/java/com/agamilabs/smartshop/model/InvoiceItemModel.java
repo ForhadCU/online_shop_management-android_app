@@ -105,6 +105,7 @@ package com.agamilabs.smartshop.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InvoiceItemModel implements Serializable {
 
@@ -162,7 +163,7 @@ public class InvoiceItemModel implements Serializable {
         this.sale_rate = sale_rate;
     }
 
-    public InvoiceItemModel(int itemno, ArrayList<String> item_id, int qty, double rate, String discount_percentage, String expirydate, String itemname, double item_bill) {
+    public InvoiceItemModel( int orgno, int itemno, ArrayList<String> item_id, int qty, double rate, String discount_percentage, String expirydate, String itemname, double item_bill) {
         this.itemno = itemno;
         this.item_id = item_id;
         this.qty = qty;
@@ -171,6 +172,7 @@ public class InvoiceItemModel implements Serializable {
         this.expirydate = expirydate;
         this.itemname = itemname;
         this.item_bill = item_bill;
+        this.orgno = orgno;
     }
     /*
     productName, productID, item_id, expirydate, unitid, Double.parseDouble(product_price),

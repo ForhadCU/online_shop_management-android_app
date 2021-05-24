@@ -1,3 +1,4 @@
+/*
 package com.agamilabs.smartshop;
 
 import android.content.Intent;
@@ -142,4 +143,4 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show();
 
     }
-}
+}*/

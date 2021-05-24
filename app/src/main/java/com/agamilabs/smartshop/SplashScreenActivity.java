@@ -1,3 +1,4 @@
+/*
 package com.agamilabs.smartshop;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -92,4 +93,4 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onResume();
         SPLASH_TIME = 1000;
     }
-}
+}*/
