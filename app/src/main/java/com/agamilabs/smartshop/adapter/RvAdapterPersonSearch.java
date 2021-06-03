@@ -1,17 +1,15 @@
 package com.agamilabs.smartshop.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
+import com.agamilabs.smartshop.Interfaces.ICallbackClickHandler;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.model.Customer;
 
@@ -19,13 +17,13 @@ import java.util.ArrayList;
 
 public class RvAdapterPersonSearch extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Customer> customerArrayList;
-    private ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler;
+    private ICallbackClickHandler iCallbackClickHandler;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
-    public RvAdapterPersonSearch(ArrayList<Customer> customerArrayList, ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler) {
+    public RvAdapterPersonSearch(ArrayList<Customer> customerArrayList, ICallbackClickHandler iCallbackClickHandler) {
         this.customerArrayList = customerArrayList;
-        this.iCallbackCustomerSearchClickHandler = iCallbackCustomerSearchClickHandler;
+        this.iCallbackClickHandler = iCallbackClickHandler;
     }
 
     @NonNull
@@ -83,7 +81,7 @@ public class RvAdapterPersonSearch extends RecyclerView.Adapter<RecyclerView.Vie
         @Override
         public void onClick(View v) {
             Customer current = customerArrayList.get(getAdapterPosition());
-            iCallbackCustomerSearchClickHandler.customerClickHandler(current.getId(), current.getName());
+            iCallbackClickHandler.customerClickHandler(current.getId(), current.getName());
         }
     }
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp"
+
+    >
+    <TextView
+        android:layout_height="40dp"
+        android:layout_width="match_parent"
+        android:id="@+id/tv_rvProductName"
+        android:textColor="@color/primary_text"
+        android:text="Item is item"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:background="@drawable/lv_search_dialog_list_style"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        />
+<!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sku : "
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_below="@+id/tv_rvProductName"
+        android:id="@+id/tv_1"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_rvProductSku"
+        android:text="25245"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_below="@+id/tv_rvProductName"
+        android:layout_toRightOf="@+id/tv_1"
+        android:layout_marginLeft="5dp"
+        android:layout_alignBaseline="@+id/tv_1"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_2"
+        android:text="Quantity : "
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_below="@+id/tv_rvProductName"
+        android:layout_toLeftOf="@+id/tv_rvProductQty"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_rvProductQty"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_below="@+id/tv_rvProductName"
+        android:text="50"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="25dp"
+        android:layout_alignBaseline="@+id/tv_2"
+        />
+-->
+
+
+
+
+</RelativeLayout>

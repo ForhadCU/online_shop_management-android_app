@@ -3,9 +3,11 @@ package com.agamilabs.smartshop.adapter;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,10 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivitySale;
+import com.agamilabs.smartshop.PdfConverterActivity;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.model.InvoiceItemModel;
@@ -187,9 +191,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
             @Override
             public void onClick(View v) {
                 holder.isItemListVisible++;
-
                 if (holder.isItemListVisible % 2 != 0) {
-
                     InvoiceModel current = invoiceModelList.get(position);
                     HashMap<String, String> map_temp = new HashMap<>();
                     map_temp.put(API_KEY, apikey);
@@ -280,7 +282,6 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
                 editText_printerUrl.setText(url);
                 editText_printerName.setText(name);
 
-
                 btn_saveAndPrint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -316,9 +317,7 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
                         dialogPrinterConfirmation.cancel();
                     }
                 });
-
                 getMiniInvoiceDetails(rl_loadingMiniInvoiceDetails, rl_printerDetails);
-
             }
 
             private void printInvoice(String printer_id, String printer_size, JSONObject jsonObjectData, String printerUrl) {
@@ -383,7 +382,18 @@ public class SaleInvoiceCardViewAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.imageView_invoiceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "InvoiceView click", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "InvoiceView click", Toast.LENGTH_SHORT).show();
+/*
+                Intent intentToPdfConverter = new Intent(holder.mContext, PdfConverterActivity.class);
+                intentToPdfConverter.putExtra("invoiceNo", String.valueOf(current.getInvoiceNo()));
+                intentToPdfConverter.putExtra("orgNo", String.valueOf(current.getOrgNo()));
+                holder.mContext.startActivity(intentToPdfConverter);
+*/
+
+                String url = "http://pharmacy.egkroy.com/reports/iframe_invoice_report.php?invoiceno="+String.valueOf(current.getInvoiceNo())+"&orgno="+String.valueOf(current.getOrgNo());
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(holder.mContext, Uri.parse(url));
             }
         });
 

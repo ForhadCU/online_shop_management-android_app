@@ -45,7 +45,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.agamilabs.smartshop.Interfaces.ICallBackFromFullScannerActivitySale;
-import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
+import com.agamilabs.smartshop.Interfaces.ICallbackClickHandler;
 import com.agamilabs.smartshop.Interfaces.ProductDetailsInterfaceSale;
 import com.agamilabs.smartshop.adapter.RvAdapterAddedItemViewSale;
 import com.agamilabs.smartshop.adapter.RvAdapterPersonSearch;
@@ -80,7 +80,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class FullScannerActivitySale extends BaseScannerActivity implements MessageDialogFragment.MessageDialogListener,
         ZXingScannerView.ResultHandler, FormatSelectorDialogFragment.FormatSelectorDialogListener,
-        CameraSelectorDialogFragment.CameraSelectorDialogListener, ProductDetailsInterfaceSale, View.OnClickListener, ICallBackFromFullScannerActivitySale, ICallbackCustomerSearchClickHandler {
+        CameraSelectorDialogFragment.CameraSelectorDialogListener, ProductDetailsInterfaceSale, View.OnClickListener, ICallBackFromFullScannerActivitySale, ICallbackClickHandler {
     private static final String FLASH_STATE = "FLASH_STATE";
     private static final String AUTO_FOCUS_STATE = "AUTO_FOCUS_STATE";
     private static final String SELECTED_FORMATS = "SELECTED_FORMATS";
@@ -2170,5 +2170,18 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
 
 
         dialogProductSearch.dismiss();
+    }
+
+    @Override
+    public void catClickHandler(String id, String name) {}
+
+    @Override
+    public void dataParsedStockLots(ArrayList<LotsModel> lotsModelArrayList) {
+
+    }
+
+    @Override
+    public void handleBottomSheet() {
+
     }
 }

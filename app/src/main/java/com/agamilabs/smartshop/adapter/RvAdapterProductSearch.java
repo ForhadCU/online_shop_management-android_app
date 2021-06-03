@@ -9,7 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.agamilabs.smartshop.Interfaces.ICallbackCustomerSearchClickHandler;
+import com.agamilabs.smartshop.Interfaces.ICallbackCatSearchClickHandler;
+import com.agamilabs.smartshop.Interfaces.ICallbackClickHandler;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.model.Products;
 
@@ -17,14 +18,20 @@ import java.util.ArrayList;
 
 public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Products> productsArrayList;
-    private ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler;
+    private ICallbackClickHandler iCallbackClickHandler;
+    private ICallbackCatSearchClickHandler iCallbackCatSearchClickHandler;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     private int productPageNo;
 
-    public RvAdapterProductSearch(ArrayList<Products> productsArrayList, ICallbackCustomerSearchClickHandler iCallbackCustomerSearchClickHandler, int productPageNo) {
+    public RvAdapterProductSearch(ArrayList<Products> productsArrayList, ICallbackClickHandler iCallbackClickHandler, int productPageNo) {
         this.productsArrayList = productsArrayList;
-        this.iCallbackCustomerSearchClickHandler = iCallbackCustomerSearchClickHandler;
+        this.iCallbackClickHandler = iCallbackClickHandler;
+        this.productPageNo = productPageNo;
+    }
+    public RvAdapterProductSearch(ArrayList<Products> productsArrayList, ICallbackCatSearchClickHandler iCallbackCatSearchClickHandler, int productPageNo) {
+        this.productsArrayList = productsArrayList;
+        this.iCallbackCatSearchClickHandler = iCallbackCatSearchClickHandler;
         this.productPageNo = productPageNo;
     }
 
@@ -84,7 +91,7 @@ public class RvAdapterProductSearch extends RecyclerView.Adapter<RecyclerView.Vi
         @Override
         public void onClick(View v) {
             Products current = productsArrayList.get(getAdapterPosition());
-            iCallbackCustomerSearchClickHandler.productClickHandler(current.getItem_name(), current.getId());
+            iCallbackClickHandler.productClickHandler(current.getItem_name(), current.getId());
         }
     }
 

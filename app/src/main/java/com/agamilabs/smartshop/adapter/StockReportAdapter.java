@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.agamilabs.smartshop.Interfaces.ICallbackClickHandler;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.model.AdminDashboardModel;
 import com.agamilabs.smartshop.model.StockReportModel;
@@ -21,19 +23,15 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StockReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-
     private Context mCtx;
     private List<StockReportModel> mItemList;
+    private ICallbackClickHandler iCallbackClickHandler;
 
-
-    public StockReportAdapter(Context mCtx, List<StockReportModel> mItemList) {
+    public StockReportAdapter(Context mCtx, List<StockReportModel> mItemList, ICallbackClickHandler iCallbackClickHandler) {
         this.mCtx = mCtx;
         this.mItemList = mItemList;
-
+        this.iCallbackClickHandler = iCallbackClickHandler;
     }
-
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,30 +40,24 @@ public class StockReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return new StockReportAdapter.StockReportViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        StockReportModel mStockReport = mItemList.get(position);
-
-        ((StockReportAdapter.StockReportViewHolder) holder).bind(mStockReport, position);
-
+        StockReportModel current = mItemList.get(position);
+        ((StockReportAdapter.StockReportViewHolder) holder).bind(current, position);
     }
 
     @Override
     public int getItemCount() {
-        return mItemList.size();
+        return mItemList == null ? 0 : mItemList.size();
     }
 
     class StockReportViewHolder extends RecyclerView.ViewHolder {
-
-        TextView mId, mItemName, mInitialQty, mRemainingQty, mSaleRate, mPurchaseRate, mStockAmount, mReorder ;
+        TextView mItemName, mInitialQty, mRemainingQty, mSaleRate, mPurchaseRate, mStockAmount, mReorder ;
         CircleImageView mImageLogo;
-
+        private ImageView imgV_stockLots;
 
         public StockReportViewHolder(View itemView) {
             super(itemView);
-
-//            mId = itemView.findViewById(R.id.text_id);
             mItemName = itemView.findViewById(R.id.text_item_name);
             mInitialQty = itemView.findViewById(R.id.text_initial_qty);
             mRemainingQty = itemView.findViewById(R.id.text_remaining_qty);
@@ -74,32 +66,39 @@ public class StockReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mStockAmount = itemView.findViewById(R.id.text_stock_amount);
             mReorder = itemView.findViewById(R.id.text_reorder_point);
             mImageLogo = itemView.findViewById(R.id.image_logo);
+            imgV_stockLots = itemView.findViewById(R.id.imgV_stockLots);
 
         }
 
-        public void bind(StockReportModel mStockReport, int position) {
-            double numb = Double.parseDouble(mStockReport.getStockamount()) ;
-            double amount = Double.parseDouble(new DecimalFormat("##.##").format(numb)) ;
-            Log.e("TAG", "amount:  "+ amount ) ;
-//            mId.setText(mStockReport.getItemno());
-            mItemName.setText(mStockReport.getItemname());
-            mItemName.setText(mStockReport.getItemname());
-            mInitialQty.setText(mStockReport.getInitialqty());
-            mRemainingQty.setText(mStockReport.getRemainingqty());
-            mSaleRate.setText(mStockReport.getSalerate());
-            mPurchaseRate.setText(mStockReport.getPrate());
-            mStockAmount.setText(String.valueOf(amount));
-            mReorder.setText(mStockReport.getReorderpoint());
+        public void bind(StockReportModel current, int position) {
+            mItemName.setText(current.getItemname());
+            mInitialQty.setText(String.valueOf(current.getInitialqty()));
+            mRemainingQty.setText(String.valueOf(current.getRemainingqty()));
+            mSaleRate.setText(String.format("\u09F3 " + "%.2f", current.getSalerate()));
+            mPurchaseRate.setText(String.format("\u09F3 " + "%.2f", current.getPrate()));
+            mStockAmount.setText(String.format("\u09F3 " + "%.2f", current.getStockamount()));
+            String reorder;
+            if (current.getReorderpoint().equalsIgnoreCase("null"))
+                reorder = "0";
+            else
+                reorder = current.getReorderpoint();
+            mReorder.setText(reorder);
 
-
-
-            if(Double.parseDouble(mStockReport.getRemainingqty()) < Integer.valueOf(mStockReport.getReorderpoint() )){
+            if(current.getRemainingqty() <= Integer.parseInt(reorder)){
                 mImageLogo.setBorderColor(Color.RED);
-            } else if(Double.parseDouble(mStockReport.getRemainingqty()) < Integer.valueOf(mStockReport.getReorderpoint())*2   ){
+            } else if(current.getRemainingqty() <= Integer.parseInt(reorder) * 2){
                 mImageLogo.setBorderColor(Color.YELLOW);
             } else{
                 mImageLogo.setBorderColor(Color.GREEN);
             }
+
+            imgV_stockLots.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    iCallbackClickHandler.dataParsedStockLots(current.getLotsModelArrayList());
+                    iCallbackClickHandler.handleBottomSheet();
+                }
+            });
         }
     }
 }

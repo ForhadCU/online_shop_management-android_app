@@ -6,6 +6,8 @@ public class LotsModel {
     int lotno;
     String sku;
     int qty;
+    String stockLotNo;
+    String stockQty;
     String expirydate;
     String updatedExpiryDate;
     boolean isSelected;
@@ -14,6 +16,9 @@ public class LotsModel {
     boolean deletable;
     int lastIndexPosition;
     boolean noExpiry  = false;
+    double purchaseRate;
+    String last_purchaserate;
+    String lastlot_purchaserate;
 
     public LotsModel() {
     }
@@ -43,6 +48,56 @@ public class LotsModel {
         this.orgno = orgno;
         this.sku = sku;
         this.qtyIncrease = qtyIncrease;
+    }
+
+    //for StockList lots
+    public LotsModel(String stockLotNo, String sku, String stockQty, String expirydate, String last_purchaserate, String lastlot_purchaserate) {
+        this.stockLotNo = stockLotNo;
+        this.sku = sku;
+        this.stockQty = stockQty;
+        this.expirydate = expirydate;
+        this.last_purchaserate = last_purchaserate;
+        this.lastlot_purchaserate = lastlot_purchaserate;
+    }
+
+    public String getStockLotNo() {
+        return stockLotNo;
+    }
+
+    public void setStockLotNo(String stockLotNo) {
+        this.stockLotNo = stockLotNo;
+    }
+
+    public String getStockQty() {
+        return stockQty;
+    }
+
+    public void setStockQty(String stockQty) {
+        this.stockQty = stockQty;
+    }
+
+    public double getPurchaseRate() {
+        return purchaseRate;
+    }
+
+    public void setPurchaseRate(double purchaseRate) {
+        this.purchaseRate = purchaseRate;
+    }
+
+    public String getLast_purchaserate() {
+        return last_purchaserate;
+    }
+
+    public void setLast_purchaserate(String last_purchaserate) {
+        this.last_purchaserate = last_purchaserate;
+    }
+
+    public String getLastlot_purchaserate() {
+        return lastlot_purchaserate;
+    }
+
+    public void setLastlot_purchaserate(String lastlot_purchaserate) {
+        this.lastlot_purchaserate = lastlot_purchaserate;
     }
 
     public String getUpdatedExpiryDate() {
