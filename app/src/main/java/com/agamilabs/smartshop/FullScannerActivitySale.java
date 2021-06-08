@@ -2176,7 +2176,7 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
     public void catClickHandler(String id, String name) {}
 
     @Override
-    public void dataParsedStockLots(ArrayList<LotsModel> lotsModelArrayList) {
+    public void dataParsedStockLots(String name, ArrayList<LotsModel> lotsModelArrayList) {
 
     }
 

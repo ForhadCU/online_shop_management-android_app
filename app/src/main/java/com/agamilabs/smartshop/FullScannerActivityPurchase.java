@@ -2169,9 +2169,10 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
     }
 
     @Override
-    public void dataParsedStockLots(ArrayList<LotsModel> lotsModelArrayList) {
+    public void dataParsedStockLots(String itemName, ArrayList<LotsModel> lotsModelArrayList) {
 
     }
+
 
     @Override
     public void handleBottomSheet() {

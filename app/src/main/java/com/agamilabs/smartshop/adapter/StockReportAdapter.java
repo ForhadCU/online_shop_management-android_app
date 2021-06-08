@@ -95,7 +95,7 @@ public class StockReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             imgV_stockLots.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    iCallbackClickHandler.dataParsedStockLots(current.getLotsModelArrayList());
+                    iCallbackClickHandler.dataParsedStockLots(current.getItemname(), current.getLotsModelArrayList());
                     iCallbackClickHandler.handleBottomSheet();
                 }
             });

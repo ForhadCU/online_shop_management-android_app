@@ -8,7 +8,7 @@ public interface ICallbackClickHandler {
     void customerClickHandler(String id, String name);
     void productClickHandler(String name, String id);
     void catClickHandler(String id, String name);
-    void dataParsedStockLots(ArrayList<LotsModel> lotsModelArrayList);
+    void dataParsedStockLots(String itemName, ArrayList<LotsModel> lotsModelArrayList);
     void handleBottomSheet();
 
 }

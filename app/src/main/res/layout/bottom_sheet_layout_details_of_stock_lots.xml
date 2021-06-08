@@ -51,7 +51,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Item name  :"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    />
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/tv_bottomSheetProductName"
+                       android:textAppearance="@style/TextAppearance.AppCompat"
+                       android:layout_marginLeft="5dp"
+                       android:textStyle="bold"
+                       android:text="Product Name"
+                       />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="#9A9A9A"
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="horizontal">

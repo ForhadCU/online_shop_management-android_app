@@ -88,9 +88,6 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
     private static final String START_DATE = "startdate";
     private static final String END_DATE = "enddate";
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mStockRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
     private CardView mCardView;
     private TextInputEditText mProductEdit;
     private TextView tvDateFrom, tvDateTo;
@@ -122,6 +119,7 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
     private ImageView imgV_stockLots;
     private RecyclerView rvStockLotsList;
     private LinearLayout llDiscardBottomSheet;
+    private TextView tvBottomSheetProductName;
 
     private ArrayList<CategoryModel> categoryModelArrayList;
     private ArrayList<Products> productsArrayList;
@@ -158,7 +156,6 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_report);
 
-        mSwipeRefreshLayout = findViewById(R.id.refreshLayout);
         mCardView = findViewById(R.id.cardView_stock_report);
         tvProductName = findViewById(R.id.tv_productName);
         tvCategoryName = findViewById(R.id.tv_category);
@@ -186,6 +183,7 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
         frameLayoutDarkBg = findViewById(R.id.purchaseBillViewerDarkBg);
         rvStockLotsList = findViewById(R.id.rv_stockLotsList);
         llDiscardBottomSheet = findViewById(R.id.ll_discardBottomSheet);
+        tvBottomSheetProductName = findViewById(R.id.tv_bottomSheetProductName);
 
         mSheetBehaviorHandler();
         mHandleAppBar();
@@ -209,7 +207,7 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
         });
 
 
-        mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.DKGRAY);
+/*        mSwipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.DKGRAY);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -224,7 +222,7 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
                     }
                 }, 1000);
             }
-        });
+        });*/
 
         llProductSearch.setOnClickListener(this);
         llCategorySearch.setOnClickListener(this);
@@ -1123,7 +1121,8 @@ public class StockReportActivity extends AppCompatActivity implements ICallbackC
     }
 
     @Override
-    public void dataParsedStockLots(ArrayList<LotsModel> lotsModelArrayList) {
+    public void dataParsedStockLots(String itemName, ArrayList<LotsModel> lotsModelArrayList) {
+        tvBottomSheetProductName.setText(itemName);
         mStockLotsAdapterHandler(lotsModelArrayList);
     }
 
