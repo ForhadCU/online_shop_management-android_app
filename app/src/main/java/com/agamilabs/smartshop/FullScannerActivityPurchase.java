@@ -1617,7 +1617,8 @@ public class FullScannerActivityPurchase extends BaseScannerActivity implements 
         }
     }
 
-    private void mGetFilteredProductList(CharSequence s, ProgressBar progressBar2, RecyclerView recyclerViewFilteredProduct, RecyclerView recyclerViewProductSearch, ArrayList<Products> finalFilteredArray) {
+    private void mGetFilteredProductList(CharSequence s, ProgressBar progressBar2, RecyclerView recyclerViewFilteredProduct,
+                                         RecyclerView recyclerViewProductSearch, ArrayList<Products> finalFilteredArray) {
         productFilteredPageNo = 1;
         progressBar2.setVisibility(View.VISIBLE);
         HashMap<String, String> mapGetProducts = new HashMap<>();

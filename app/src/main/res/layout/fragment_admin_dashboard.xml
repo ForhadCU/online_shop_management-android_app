@@ -227,6 +227,32 @@
                     android:background="@drawable/ripple_effect"
                     android:textSize="16sp" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_layout_productList"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:text="Product List"
+                    android:background="@drawable/ripple_effect"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_layout_addNewProduct"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:text="Add new product"
+                    android:background="@drawable/ripple_effect"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
         </LinearLayout>
 

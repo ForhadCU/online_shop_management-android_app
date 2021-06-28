@@ -50,10 +50,11 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
     private Handler repeatUpdateHandler = new Handler();
     public int mValue;
     private static final int REP_DELAY = 50;
+    private TextView tv_stockQty, tv_stockValue,tv_totalLots;
 
     private String customer;
     private String product_name;
-    private String product_price;
+    private String purchaseRate;
     private String itemNo;
     private ArrayList<String> item_id;
     private String unitid;
@@ -92,7 +93,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
         this.customer = customer;
         this.context = context;
         this.product_name = product_name;
-        this.product_price = productRate;
+        this.purchaseRate = productRate;
         this.itemNo = itemNo;
         this.unitid = unitid;
         this.expirydate = expirydate;
@@ -100,7 +101,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
         this.lotsModelArrayList = lotsModelArrayList;
         this.invoiceItemModelArrayList = invoiceItemModelArrayList;
         this.orgNo = orgNo;
-        totalPriceCommon = Double.parseDouble(product_price);
+        totalPriceCommon = Double.parseDouble(purchaseRate);
     }
 
     public ScanerDilogFragmentActivitySale() {
@@ -135,6 +136,10 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
 //        editText_singleProdDiscount = view.findViewById(R.id.edtTxt_singleProductDiscount);
         checkBoxContinueScanning = view.findViewById(R.id.checkbox_continueScanning);
         recyclerViewSku = view.findViewById(R.id.rv_sku);
+        tv_stockQty = view.findViewById(R.id.tv_stockQty);
+        tv_stockValue = view.findViewById(R.id.tv_stockValue);
+        tv_totalLots = view.findViewById(R.id.tv_totalLots);
+
         setValueMethod();
 
         recyclerViewSku.setHasFixedSize(true);
@@ -206,6 +211,15 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
 
     }
 
+    private int mGetStockQty() {
+        int qty = 0;
+        for (int i = 0; i < lotsModelArrayList.size(); i++) {
+            LotsModel current = lotsModelArrayList.get(i);
+            qty += current.getQty();
+        }
+        return qty;
+    }
+
     private void discountHandler() {
         editText_singleProdDiscount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -241,8 +255,13 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
     private void setValueMethod() {
         tv_productName.setText(product_name);
         tv_productQuantity.setText("1");
-        tv_productPrice.setText(String.format("\u09F3 " + "%.2f", Double.parseDouble(product_price)));
+        tv_productPrice.setText(String.format("\u09F3 " + "%.2f", Double.parseDouble(purchaseRate)));
         tv_productTotalPrice.setText(String.format("\u09F3 " + "%.2f", totalPriceCommon));
+        tv_totalLots.setText(String.valueOf(lotsModelArrayList.size()));
+        int stockQty = mGetStockQty();
+        tv_stockQty.setText(String.valueOf(stockQty));
+        tv_stockValue.setText(String.format("\u09F3 " + "%.2f", Double.parseDouble(purchaseRate) * stockQty));
+
 
         if (invoiceItemModelArrayList.size() > 0) {
             selectedSkuArrayList = new ArrayList<>();
@@ -311,7 +330,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
                         continueScanning = false;
 //                    Toast.makeText(context, productQuantity, Toast.LENGTH_SHORT).show();
                     productDetailsInterfaceSale.dataParsingMethod(continueScanning, orgNo, itemNo, productName,
-                            productQuantity, product_price, totalBill, arrayListSku, unitid, expirydate, discount_percentage);
+                            productQuantity, purchaseRate, totalBill, arrayListSku, unitid, expirydate, discount_percentage);
                     dismiss();
                 } else
                     Toast.makeText(context, "Please select at least one product", Toast.LENGTH_SHORT).show();
@@ -324,7 +343,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
                 quantityNumber1 = quantityNumber1 + 1;
 
                 if (quantityNumber1 <= totalQty) {
-                    totalPrice1 = quantityNumber1 * Double.parseDouble(product_price);
+                    totalPrice1 = quantityNumber1 * Double.parseDouble(purchaseRate);
                     totalPriceCommon = totalPrice1;
                     tv_productQuantity.setText(String.valueOf(quantityNumber1));
                     tv_productTotalPrice.setText("\u09F3 " + String.format("%.2f", totalPriceCommon));
@@ -336,7 +355,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
                 int quantityNumber2 = Integer.parseInt(tv_productQuantity.getText().toString());
                 quantityNumber2 = quantityNumber2 - 1;
                 if (quantityNumber2 > 0) {
-                    totalPrice2 = quantityNumber2 * Double.parseDouble(product_price);
+                    totalPrice2 = quantityNumber2 * Double.parseDouble(purchaseRate);
                     totalPriceCommon = totalPrice2;
                     tv_productQuantity.setText(String.valueOf(quantityNumber2));
                     tv_productTotalPrice.setText("\u09F3 " + String.format("%.2f", totalPriceCommon));
@@ -366,7 +385,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
             totalQty += q;
             if (Integer.parseInt(tv_productQuantity.getText().toString()) == 0) {
                 tv_productQuantity.setText("1");
-                totalPriceCommon = Double.parseDouble(product_price);
+                totalPriceCommon = Double.parseDouble(purchaseRate);
                 tv_productTotalPrice.setText(String.format("\u09F3 " + "%.2f", totalPriceCommon));
             }
 //            setValueMethod();
@@ -374,7 +393,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
             totalQty -= q;
             if (totalQty < Integer.parseInt(tv_productQuantity.getText().toString())) {
                 tv_productQuantity.setText(String.valueOf(totalQty));
-                totalPriceCommon = (totalQty * Double.parseDouble(product_price));
+                totalPriceCommon = (totalQty * Double.parseDouble(purchaseRate));
                 tv_productTotalPrice.setText("\u09F3 " + String.format("%.2f", totalPriceCommon));
 
             }
@@ -401,7 +420,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
         quantityNumber1 = quantityNumber1 + 1;
 
         if (quantityNumber1 <= totalQty) {
-            totalPrice1 = quantityNumber1 * Double.parseDouble(product_price);
+            totalPrice1 = quantityNumber1 * Double.parseDouble(purchaseRate);
             totalPriceCommon = totalPrice1;
             tv_productQuantity.setText(String.valueOf(quantityNumber1));
             tv_productTotalPrice.setText("\u09F3 " + String.format("%.2f", totalPriceCommon));
@@ -412,7 +431,7 @@ public class ScanerDilogFragmentActivitySale extends DialogFragment implements V
         int quantityNumber2 = Integer.parseInt(tv_productQuantity.getText().toString());
         quantityNumber2 = quantityNumber2 - 1;
         if (quantityNumber2 > 0) {
-            totalPrice2 = quantityNumber2 * Double.parseDouble(product_price);
+            totalPrice2 = quantityNumber2 * Double.parseDouble(purchaseRate);
             totalPriceCommon = totalPrice2;
             tv_productQuantity.setText(String.valueOf(quantityNumber2));
             tv_productTotalPrice.setText("\u09F3 " + String.format("%.2f", totalPriceCommon));

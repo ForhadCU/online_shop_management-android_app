@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--    <androidx.appcompat.widget.Toolbar-->
+    <!--        android:id="@+id/toolbar"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="top"-->
+    <!--        android:background="@color/actionbar_opacity"-->
+    <!--        android:minHeight="?attr/actionBarSize"-->
+    <!--        app:theme="@style/TransparentToolbar" />-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"
+            >
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress_skuRequest"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="25dp"
+            android:background="#00FFFFFF">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="Product Scanner"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/imgBtn_flash_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:background="#00FFFFFF"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/ic_flash_off" />
+
+                <ImageButton
+                    android:id="@+id/imgBtn_flash_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:background="#00FFFFFF"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/ic_flash"
+                    android:visibility="gone"
+
+                    />
+                <!--
+                                <ImageButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/imgBtn_personSearch"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentTop="true"
+                                    android:background="#00FFFFFF"
+                                    android:backgroundTint="@color/white"
+                                    android:src="@drawable/ic_person_search"
+                                    />
+                -->
+
+                <RelativeLayout
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/tv1"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp">
+
+                    <ImageButton
+                        android:id="@+id/imgBtn_focus_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="#00FFFFFF"
+                        android:backgroundTint="@color/white"
+                        android:src="@drawable/ic_focus_on" />
+
+                    <ImageButton
+                        android:id="@+id/imgBtn_focus_off"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="#00FFFFFF"
+                        android:backgroundTint="@color/white"
+                        android:src="@drawable/ic_focus_off"
+                        android:visibility="gone" />
+
+                    <!-- <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imgBtn_flash_on"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_flash"
+                        android:background="#00FFFFFF"
+                        android:backgroundTint="@color/white"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone"
+
+                        />-->
+                    <!-- <ImageButton
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:id="@+id/imgBtn_flash_off"
+                         android:layout_alignParentLeft="true"
+                         android:src="@drawable/ic_flash_off"
+                         android:background="#00000000"
+                         android:backgroundTint="@color/white"
+                         android:layout_centerVertical="true"
+                         />-->
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+        </FrameLayout>
+    </FrameLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

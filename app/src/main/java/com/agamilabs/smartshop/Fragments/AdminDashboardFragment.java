@@ -16,14 +16,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.agamilabs.smartshop.AddNewProductActivity;
 import com.agamilabs.smartshop.FullScannerActivityPurchase;
 import com.agamilabs.smartshop.FullScannerActivitySale;
 import com.agamilabs.smartshop.Interfaces.AdminDashboardInterface;
+import com.agamilabs.smartshop.ProductListActivity;
 import com.agamilabs.smartshop.PurchaseInvoiceViewerActivity;
 import com.agamilabs.smartshop.R;
 import com.agamilabs.smartshop.SaleInvoiceViewerActivity;
 import com.agamilabs.smartshop.ShopAdminHome;
-//import com.agamilabs.smartshop.SplashScreenActivity;
 import com.agamilabs.smartshop.activity.CampaignActivity;
 import com.agamilabs.smartshop.activity.OrderReportActivity;
 import com.agamilabs.smartshop.activity.RechargeActivity;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+//import com.agamilabs.smartshop.SplashScreenActivity;
+
 public class AdminDashboardFragment extends Fragment implements AdminDashboardInterface, View.OnClickListener {
 
     public static String SETTING_JSON_URL = "http://192.168.1.5/android/AgamiLab/agami-logbook/view_section.php";
@@ -58,7 +61,7 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
     private ImageButton mAddBtn;
     private TextView mTextName, mTextDomain, logout;
     private LinearLayout mLinearDashboardPOS, mLinearNewSale, mLinearNewPurchase, mLinearSaleInvoices, mLinearPurchaseInvoices, mLinearStockReport, mLinearDashboardcommerce,
-            mLinearOrderReport, mLinearInbox, mLinearCampaign, mLinearRecharge;
+            mLinearOrderReport, mLinearInbox, mLinearCampaign, mLinearRecharge, mLinearProductList, mLinearAddNewProduct;
     private List<AdminDashboardModel> mSettingList = new ArrayList<>();
 
     private MySharedPreferenceManager mySharedPreferenceManager;
@@ -90,6 +93,8 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
         mLinearInbox.setOnClickListener(this);
         mLinearCampaign.setOnClickListener(this);
         mLinearRecharge.setOnClickListener(this);
+        mLinearProductList.setOnClickListener(this);
+        mLinearAddNewProduct.setOnClickListener(this);
         logout.setOnClickListener(this);
         return view;
     }
@@ -172,6 +177,8 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
         mLinearInbox = view.findViewById(R.id.linear_layout_inbox);
         mLinearCampaign = view.findViewById(R.id.linear_layout_campaign);
         mLinearRecharge = view.findViewById(R.id.linear_layout_recharge);
+        mLinearProductList = view.findViewById(R.id.linear_layout_productList);
+        mLinearAddNewProduct = view.findViewById(R.id.linear_layout_addNewProduct);
         logout = view.findViewById(R.id.logout);
     }
 
@@ -232,6 +239,12 @@ public class AdminDashboardFragment extends Fragment implements AdminDashboardIn
                 break;
             case R.id.linear_layout_recharge:
                 onIntent(getContext(), RechargeActivity.class);
+                break;
+            case R.id.linear_layout_productList:
+                onIntent(getContext(), ProductListActivity.class);
+                break;
+            case R.id.linear_layout_addNewProduct:
+                onIntent(getContext(), AddNewProductActivity.class);
                 break;
   /*          case R.id.logout:
                 mySharedPreferenceManager.clearDB();

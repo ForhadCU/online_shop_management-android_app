@@ -27,7 +27,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".PdfConverterActivity"></activity>
+        <activity android:name=".ScannerActivity"></activity>
+        <activity android:name=".AddNewProductActivity" />
+        <activity android:name=".ProductListActivity" />
+        <activity android:name=".PdfConverterActivity" />
         <activity android:name=".PurchaseInvoiceViewerActivity" /> <!-- rofiqul -->
         <activity android:name=".activity.DeviceListActivity" />
         <activity android:name=".activity.PrintingActivity" />
