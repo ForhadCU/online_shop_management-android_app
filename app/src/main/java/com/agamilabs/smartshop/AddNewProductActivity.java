@@ -1,11 +1,11 @@
 package com.agamilabs.smartshop;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,13 +29,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -49,6 +50,7 @@ import com.agamilabs.smartshop.adapter.RvAdapterBrandSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterCatSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterGenericNameSearch;
 import com.agamilabs.smartshop.adapter.RvAdapterProductSearch;
+import com.agamilabs.smartshop.adapter.StockReportAdapter;
 import com.agamilabs.smartshop.constants.Array_JSON;
 import com.agamilabs.smartshop.controller.AppController;
 import com.agamilabs.smartshop.model.LotsModel;
@@ -57,10 +59,14 @@ import com.agamilabs.smartshop.model.ProductCatModel;
 import com.agamilabs.smartshop.model.ProductGenNameModel;
 import com.agamilabs.smartshop.model.ProductUnitModel;
 import com.agamilabs.smartshop.model.Products;
+import com.agamilabs.smartshop.model.StockReportModel;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,7 +81,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class AddNewProductActivity extends BaseScannerActivity implements View.OnClickListener, ICallbackClickHandler, IClickHandler,
         MessageDialogFragment.MessageDialogListener,
         ZXingScannerView.ResultHandler, FormatSelectorDialogFragment.FormatSelectorDialogListener,
-        CameraSelectorDialogFragment.CameraSelectorDialogListener{
+        CameraSelectorDialogFragment.CameraSelectorDialogListener {
 
     /**
      * For Scanner..
@@ -122,11 +128,18 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
     private Button buttonCancel, buttonPreview, buttonSave;
     private Spinner unitSpinner;
     private Dialog dialogGetLink, dialogAddNewCatBrandGen;
-    private ImageView imageViewAddNewCat, imageViewAddNewBrand, imageViewAddNewGenericName, imageViewScanner;
-    private EditText editTextUpc, editTextInitialQty, editTextReorderPts, editTextDiscountRate, editTextPurchaseRate, editTextSaleRate;
+    private ImageView imageViewAddNewCat, imageViewAddNewBrand, imageViewAddNewGenericName, imageViewScanner, imageViewAddNewProductName;
+    private EditText editTextUpc, editTextRemainingQty, editTextReorderPts, editTextDiscountRate, editTextPurchaseRate, editTextSaleRate;
     private CheckBox checkBoxPurchase, checkBoxSale;
     private LinearLayout llAddProductMainPage;
     private FrameLayout flScanner;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private RelativeLayout rlBottomSheet;
+    private FrameLayout frameLayoutDarkBg;
+    private LinearLayout llDiscardBottomSheet;
+    private RecyclerView rvProductPreview;
+    private ImageView imgV_productThumbnail;
+
 
     private ArrayList<Products> productsArrayList;
     private ArrayList<ProductCatModel> productCatModelArrayList;
@@ -142,6 +155,9 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
     private RvAdapterCatSearch rvAdapterCatSearch;
     private RvAdapterBrandSearch rvAdapterBrandSearch;
     private RvAdapterGenericNameSearch rvAdapterGenericNameSearch;
+    private ArrayList<StockReportModel> stockReportModelArrayList;
+    private StockReportAdapter stockReportAdapter;
+    private StockReportModel stockReportModel;
 
     private int productPageNo = 1, productFilteredPageNo = 1, catPageNo = 1, catFilteredPageNo = 1,
             brandPageNo = 1, brandFilteredPageNo = 1, genericPageNo = 1, genericFilteredPageNo = 1;
@@ -157,7 +173,7 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
     private boolean isLoading1GenericName = false;
     private boolean isLoading2GenericName = false;
     private boolean isLoading3GenericName = false;
-    private String newCatName, newBrandName, newGenericName;
+    private String newCatName, newBrandName, newGenericName, newProductName;
     private String typeId, unitId, hasexpiry, itemno, reorderpoint,
             remainingquantity, purchaserate, salerate, taxtype, category,
             brand, generic, upc, discount_rate;
@@ -249,7 +265,7 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
         imageViewAddNewGenericName = findViewById(R.id.imgV_addGenName);
 
         editTextUpc = findViewById(R.id.edtTxt_upc);
-        editTextInitialQty = findViewById(R.id.edtTxt_initialQty);
+        editTextRemainingQty = findViewById(R.id.edtTxt_initialQty);
         editTextReorderPts = findViewById(R.id.edtTxt_reorderPts);
         editTextDiscountRate = findViewById(R.id.edtTxt_discountRate);
         editTextPurchaseRate = findViewById(R.id.edtTxt_purchaseRate);
@@ -259,14 +275,38 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
         imageViewScanner = findViewById(R.id.imgV_upcScan);
         llAddProductMainPage = findViewById(R.id.llAddProductMainPage);
         flScanner = findViewById(R.id.flScanner);
+        rlBottomSheet = findViewById(R.id.bottom_sheet_add_new_product);
+        bottomSheetBehavior = BottomSheetBehavior.from(rlBottomSheet);
+        frameLayoutDarkBg = findViewById(R.id.purchaseBillViewerDarkBg);
+        llDiscardBottomSheet = findViewById(R.id.ll_discardBottomSheet);
+        rvProductPreview = findViewById(R.id.rv_productPreview);
+        imgV_productThumbnail = findViewById(R.id.imgV_productThumbnail);
+        imageViewAddNewProductName = findViewById(R.id.imgV_addProductName);
 
 
+        mSheetBehaviorHandler();
         handleAppbar();
         handleRecyclerView();
         handleUnitSpinner();
         setOnclick();
 
+    }
 
+    private void mSheetBehaviorHandler() {
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    frameLayoutDarkBg.setVisibility(View.GONE);
+                } else
+                    frameLayoutDarkBg.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
     }
 
     private void handleUnitSpinner() {
@@ -347,6 +387,9 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
         imageViewAddNewBrand.setOnClickListener(this);
         imageViewAddNewGenericName.setOnClickListener(this);
         imageViewScanner.setOnClickListener(this);
+        llDiscardBottomSheet.setOnClickListener(this);
+        frameLayoutDarkBg.setOnClickListener(this);
+        imageViewAddNewProductName.setOnClickListener(this);
     }
 
     private void handleRecyclerView() {
@@ -369,6 +412,12 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
         recyclerViewFilteredGenericName.setHasFixedSize(true);
         recyclerViewGenericNameSearch.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewFilteredGenericName.setLayoutManager(new LinearLayoutManager(this));
+
+        stockReportModelArrayList = new ArrayList<>();
+        rvProductPreview.setHasFixedSize(true);
+        rvProductPreview.setLayoutManager(new LinearLayoutManager(this));
+        stockReportAdapter = new StockReportAdapter(this, stockReportModelArrayList, this);
+        rvProductPreview.setAdapter(stockReportAdapter);
     }
 
     private void handleAppbar() {
@@ -386,6 +435,32 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
                 break;
             case R.id.btn_cancelProduct:
                 break;*/
+            case R.id.purchaseBillViewerDarkBg:
+            case R.id.ll_discardBottomSheet:
+                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                break;
+
+            case R.id.btn_previewAddProduct:
+                if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    frameLayoutDarkBg.setVisibility(View.VISIBLE);
+                } else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    frameLayoutDarkBg.setVisibility(View.GONE);
+                }
+                reorderpoint = editTextReorderPts.getText().toString().trim();
+                remainingquantity = editTextRemainingQty.getText().toString().trim();
+                salerate = editTextSaleRate.getText().toString().trim();
+                purchaserate = editTextPurchaseRate.getText().toString().trim();
+                double sAmount = Double.parseDouble(remainingquantity) * Double.parseDouble(purchaserate);
+                stockReportModel = new StockReportModel(reorderpoint, newCatName, Integer.parseInt(remainingquantity), 0.00, Double.parseDouble(purchaserate),
+                        Double.parseDouble(salerate), sAmount, newProductName, null);
+                stockReportModelArrayList.clear();
+                stockReportModelArrayList.add(stockReportModel);
+                stockReportAdapter.notifyDataSetChanged();
+                break;
             case R.id.imgBtn_flash_off:
             case R.id.imgBtn_flash_on:
                 mFlash = !mFlash;
@@ -438,11 +513,32 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
                 dialogGetLink.setContentView(R.layout.dialog_get_link_layout);
 //                dialogGetLink.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialogGetLink.show();
+
+                /*String url1 = "https://homepages.cae.wisc.edu/~ece533/images/airplane.png";
+                String url2 = "https://i.imgur.com/tGbaZCY.jpg";*/
+                Button buttonDownloadImage = dialogGetLink.findViewById(R.id.btnDownloadImage);
+                EditText editTextLink = dialogGetLink.findViewById(R.id.edtText_searchLink);
+
+
+                buttonDownloadImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        /*String imageUri = url1;
+                        Picasso.get().load(imageUri).into(imgV_productThumbnail);
+                       */
+                       /* Intent intent = new Intent(AddNewProductActivity.this, DownloadImageActivity.class);
+                        startActivity(intent);*/
+                        String link = editTextLink.getText().toString().trim();
+                        Picasso.get().load(link).into(targetPicasso);
+                        dialogGetLink.dismiss();
+                    }
+                });
                 break;
 
             case R.id.imgV_addCat:
             case R.id.imgV_addBrand:
             case R.id.imgV_addGenName:
+            case R.id.imgV_addProductName:
                 dialogAddNewCatBrandGen = new Dialog(this);
                 dialogAddNewCatBrandGen.setContentView(R.layout.dialog_add_new_cat_brand_gen_layout);
                 dialogAddNewCatBrandGen.show();
@@ -450,17 +546,21 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
                 Button saveCat = dialogAddNewCatBrandGen.findViewById(R.id.btn_saveCat);
                 Button saveBrand = dialogAddNewCatBrandGen.findViewById(R.id.btn_saveBrand);
                 Button saveGeneric = dialogAddNewCatBrandGen.findViewById(R.id.btn_saveGeneric);
+                Button saveNameProductName = dialogAddNewCatBrandGen.findViewById(R.id.btn_saveProductName);
                 EditText editTextNewCat = dialogAddNewCatBrandGen.findViewById(R.id.edtText_newCat);
                 EditText editTextNewBrand = dialogAddNewCatBrandGen.findViewById(R.id.edtText_newBrand);
                 EditText editTextNewGen = dialogAddNewCatBrandGen.findViewById(R.id.edtText_newGenericName);
+                EditText editTextProduct = dialogAddNewCatBrandGen.findViewById(R.id.edtText_newProduct);
 
                 newCatName = editTextNewCat.getText().toString().trim();
                 newBrandName = editTextNewBrand.getText().toString().trim();
                 newGenericName = editTextNewGen.getText().toString().trim();
+                newProductName = editTextProduct.getText().toString().trim();
 
                 saveCat.setOnClickListener(this);
                 saveBrand.setOnClickListener(this);
                 saveGeneric.setOnClickListener(this);
+                saveNameProductName.setOnClickListener(this);
                 break;
 
             case R.id.btn_saveCat:
@@ -470,10 +570,15 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
                     mapInput.put(CAT_NAME, newCatName);
 
                     insert(mapInput);
-
+                    dialogAddNewCatBrandGen.dismiss();
                 } else {
                     Toast.makeText(this, "Empty!!", Toast.LENGTH_SHORT).show();
                 }
+                break;
+
+            case R.id.btn_saveProductName:
+                textViewProductName.setText(newProductName);
+                dialogAddNewCatBrandGen.dismiss();
                 break;
 
             case R.id.btn_saveBrand:
@@ -483,10 +588,10 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
                     mapInput.put(BRAND_NAME, newBrandName);
 
                     insert(mapInput);
+                    dialogAddNewCatBrandGen.dismiss();
                 } else {
                     Toast.makeText(this, "Empty!!", Toast.LENGTH_SHORT).show();
                 }
-
                 break;
 
             case R.id.btn_saveGeneric:
@@ -496,16 +601,29 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
                     mapInput.put(GENERIC_NAME, newGenericName);
 
                     insert(mapInput);
-
+                    dialogAddNewCatBrandGen.dismiss();
                 } else {
                     Toast.makeText(this, "Empty!!", Toast.LENGTH_SHORT).show();
                 }
-
                 break;
 
             case R.id.btn_saveProduct:
+                HashMap<String, String> mapInput = new HashMap<>();
+                mapInput.put("typeid", typeId);
+                mapInput.put("unitid", unitId);
+                mapInput.put("hasexpiry", hasexpiry);
+                mapInput.put("reorderpoint", reorderpoint);
+                mapInput.put("remainingquantity", remainingquantity);
+                mapInput.put("purchaserate", purchaserate);
+                mapInput.put("salerate", salerate);
+                mapInput.put("taxtype", taxtype);
+                mapInput.put("category", category);
+                mapInput.put("brand", brand);
+                mapInput.put("generic", generic);
+                mapInput.put("upc", upc);
+                mapInput.put("discount_rate", discount_rate);
 
-
+                mSave(mapInput);
                 break;
 
             case R.id.llItemName:
@@ -1389,6 +1507,31 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
         }
     }
 
+    private void mSave(HashMap<String, String> mapInput) {
+        AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getString("error").equalsIgnoreCase("false")) {
+                        Toast.makeText(AddNewProductActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else if (jsonObject.getString("error").equalsIgnoreCase("true")) {
+                        Toast.makeText(AddNewProductActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(AddNewProductActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, mapInput);
+
+
+    }
+
     private void insert(HashMap<String, String> mapInput) {
         AppController.getAppController().getAppNetworkController().makeRequest(url_2, new Response.Listener<String>() {
             @Override
@@ -1877,19 +2020,19 @@ public class AddNewProductActivity extends BaseScannerActivity implements View.O
     public void handleBottomSheet() {
     }
 
-/**
- * For Scanner
- */
+    /**
+     * For Scanner
+     */
 
-@Override
-public void onConfigurationChanged(@NonNull Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
-    if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-    } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
+        }
     }
-}
 
 
     @Override
@@ -2062,4 +2205,27 @@ public void onConfigurationChanged(@NonNull Configuration newConfig) {
         }
     }
 
+    private Target targetPicasso = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            imgV_productThumbnail.setImageBitmap(bitmap);
+            Log.d("TAG", "onBitmapLoaded: " + bitmap.toString());
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
+
+    @Override
+    public boolean isDestroyed() {
+        Picasso.get().cancelRequest(targetPicasso);
+        return super.isDestroyed();
+    }
 }

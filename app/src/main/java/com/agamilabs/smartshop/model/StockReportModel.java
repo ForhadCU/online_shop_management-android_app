@@ -8,6 +8,7 @@ public class StockReportModel {
     int orgno;
     int itemno;
     String reorderpoint;
+    String category;
     int remainingqty;
     int stockinqty;
     int stockoutqty;
@@ -22,6 +23,9 @@ public class StockReportModel {
     public StockReportModel() {
     }
 
+    /**
+     *For StockReport list
+     */
     public StockReportModel(int orgno, int itemno, String reorderpoint, int remainingqty, int stockinqty, int stockoutqty, double initialqty, double prate,
                             double salerate, double stockamount, double saleamount, String itemname, ArrayList<LotsModel> lotsModelArrayList) {
         this.orgno = orgno;
@@ -39,12 +43,39 @@ public class StockReportModel {
         this.lotsModelArrayList = lotsModelArrayList;
     }
 
+    public StockReportModel(String reorderpoint, String category, int stockinqty,  double initialqty, double prate,
+                            double salerate, double stockamount, String itemname, ArrayList<LotsModel> lotsModelArrayList) {
+        this.reorderpoint = reorderpoint;
+        this.category = category;
+        this.initialqty = initialqty;
+        this.prate = prate;
+        this.salerate = salerate;
+        this.stockamount = stockamount;
+        this.itemname = itemname;
+        this.lotsModelArrayList = lotsModelArrayList;
+    }
+
+    /**
+     * For Add new Product
+     * @return
+     */
+
+
+
     public ArrayList<LotsModel> getLotsModelArrayList() {
         return lotsModelArrayList;
     }
 
     public void setLotsModelArrayList(ArrayList<LotsModel> lotsModelArrayList) {
         this.lotsModelArrayList = lotsModelArrayList;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getOrgno() {

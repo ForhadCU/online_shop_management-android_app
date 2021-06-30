@@ -27,7 +27,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".ScannerActivity"></activity>
+        <activity android:name=".DownloadImageActivity"></activity>
+        <activity android:name=".ScannerActivity" />
         <activity android:name=".AddNewProductActivity" />
         <activity android:name=".ProductListActivity" />
         <activity android:name=".PdfConverterActivity" />

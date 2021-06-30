@@ -91,6 +91,10 @@ public class StockReportAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else{
                 mImageLogo.setBorderColor(Color.GREEN);
             }
+            if (current.getLotsModelArrayList() == null)
+                imgV_stockLots.setVisibility(View.GONE);
+            else
+                imgV_stockLots.setVisibility(View.VISIBLE);
 
             imgV_stockLots.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -23,6 +23,40 @@
             android:layout_marginTop="10dp"
             android:background="@color/lightgray"
             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Product Name"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edtText_newProduct"
+            android:background="@drawable/shape_normal_edttext"
+            android:layout_marginTop="5dp"
+            android:hint="Enter new product name here..."
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:textSize="16sp"
+            />
+        <Button
+            android:id="@+id/btn_saveProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Save Product"
+            android:textAllCaps="false"
+            android:layout_gravity="end"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="#00d37a"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textStyle="bold"
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
