@@ -132,18 +132,15 @@ public class MySharedPreferenceManager {
         editor.putString(AppConstants.USER_TOPICNAME, topic_name);
         editor.putString(AppConstants.USER_AUTHDOMAIN, auth_domain);
         editor.putString(AppConstants.USER_AUTHKEY, auth_key);
-
         editor.apply();
     }
 
     public String getSavedShopName() {
         return sharedPreferences.getString(AppConstants.USER_SHOPNAME, "");
-
     }
 
     public String getSavedTopicName() {
         return sharedPreferences.getString(AppConstants.USER_TOPICNAME, "");
-
     }
 
     public String getSavedAuthDomain() {

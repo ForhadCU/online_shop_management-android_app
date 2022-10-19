@@ -46,7 +46,6 @@ public class AppNetworkController {
             mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
         }
         this.context = context;
-
         return mRequestQueue;
     }
 

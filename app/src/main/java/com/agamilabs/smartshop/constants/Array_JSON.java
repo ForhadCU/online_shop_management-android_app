@@ -241,11 +241,6 @@ public class Array_JSON {
             "      \"parentcatid\": null\n" +
             "    },\n" +
             "    {\n" +
-            "      \"catid\": \"5\",\n" +
-            "      \"cattext\": \"\",\n" +
-            "      \"parentcatid\": null\n" +
-            "    },\n" +
-            "    {\n" +
             "      \"catid\": \"6\",\n" +
             "      \"cattext\": \"Suppository\",\n" +
             "      \"parentcatid\": null\n" +

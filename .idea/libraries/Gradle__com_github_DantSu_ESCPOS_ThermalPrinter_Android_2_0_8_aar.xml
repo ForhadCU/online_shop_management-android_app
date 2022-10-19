@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.DantSu:ESCPOS-ThermalPrinter-Android:2.0.8@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f3e533f08dc5efa12fde975cf648314/jetified-ESCPOS-ThermalPrinter-Android-2.0.8/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f3e533f08dc5efa12fde975cf648314/jetified-ESCPOS-ThermalPrinter-Android-2.0.8/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7f3e533f08dc5efa12fde975cf648314/jetified-ESCPOS-ThermalPrinter-Android-2.0.8/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6b4fb5ebc75a5f4f407a2a05acb9d0dd/jetified-ESCPOS-ThermalPrinter-Android-2.0.8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6b4fb5ebc75a5f4f407a2a05acb9d0dd/jetified-ESCPOS-ThermalPrinter-Android-2.0.8/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/6b4fb5ebc75a5f4f407a2a05acb9d0dd/jetified-ESCPOS-ThermalPrinter-Android-2.0.8/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

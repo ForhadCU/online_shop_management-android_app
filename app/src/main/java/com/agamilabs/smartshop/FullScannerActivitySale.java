@@ -583,8 +583,8 @@ public class FullScannerActivitySale extends BaseScannerActivity implements Mess
         }
 
 //        mJSON_parser(rawResult);
-        progressBarSkuRequest.setVisibility(View.VISIBLE);
-        mSendVolleyRequest(rawResult);
+//        progressBarSkuRequest.setVisibility(View.VISIBLE);
+//        mSendVolleyRequest(rawResult);
     }
 
     //00001

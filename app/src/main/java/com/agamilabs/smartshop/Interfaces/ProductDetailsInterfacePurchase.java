@@ -2,7 +2,7 @@ package com.agamilabs.smartshop.Interfaces;
 
 import com.agamilabs.smartshop.model.LotsModel;
 import com.agamilabs.smartshop.model.PurchaseItemModel;
-import com.google.android.gms.common.data.SingleRefDataBufferIterator;
+//import com.google.android.gms.common.data.SingleRefDataBufferIterator;
 
 import java.util.ArrayList;
 

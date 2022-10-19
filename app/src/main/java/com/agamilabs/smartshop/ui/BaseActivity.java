@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.agamilabs.smartshop.controller.AppController;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
+//import com.google.android.gms.common.GoogleApiAvailability;
 
 
 public class BaseActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppController.getAppController().getInAppNotifier().log("googleplay", "" + isGooglePlayAvailable());
+//        AppController.getAppController().getInAppNotifier().log("googleplay", "" + isGooglePlayAvailable());
     }
 
     public void checkPermission() {
@@ -34,6 +34,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+/*
     boolean isGooglePlayAvailable() {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
 
@@ -45,6 +46,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         return true;
     }
+*/
 
     @Override
     protected void onResume() {
@@ -162,6 +164,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
+/*
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
 
@@ -216,6 +219,7 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     }
+*/
 
     //private GPSService2 gpsService2;
 
